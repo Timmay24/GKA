@@ -2,6 +2,17 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import main.graphs.Vertex;
+import main.graphs.Edge;
+import main.graphs.BFS;
+
+import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.Graph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,4 +27,31 @@ public class main {
 		fail("Not yet implemented");
 	}
 
+	
+	@Test
+	public void testAllAdjNode() {
+		
+		//Graph<String, String> g = new Graph<String, String>;
+		UndirectedGraph<Vertex, Edge> g = new SimpleGraph<>(Edge.class);
+		  g.addVertex( Vertex.valueOf("v1"));
+	      g.addVertex( Vertex.valueOf("v2"));
+	      g.addVertex( Vertex.valueOf("v3"));
+	      g.addVertex( Vertex.valueOf("v4"));
+
+	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2") );
+	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3") );
+	      g.addEdge( Vertex.valueOf("v2"), Vertex.valueOf("v3") );
+	      g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v1") );
+	      g.addEdge( Vertex.valueOf("v4"), Vertex.valueOf("v3") );
+	      
+	      BFS.allAdjNode(g, Vertex.valueOf("v1"));
+	      List<Vertex> l = new ArrayList<>();
+	      l.add(Vertex.valueOf("v2"));
+	      l.add(Vertex.valueOf("v3"));
+	      
+	      assertSame(l, BFS.allAdjNode(g,Vertex.valueOf("v1")));
+	}
+	
+	
+	
 }
