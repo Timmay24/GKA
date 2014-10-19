@@ -157,9 +157,6 @@ public class BFS {
 			the adjacent vertex and a vertex of the shortest way  */
 			if (first.nodeWeight() == (second.nodeWeight() + 1)){
 				returnList.add(second);
-//				if(second != startNode){
-//					reverseList.remove(second);
-//				}
 			}
 		}
 		
@@ -178,6 +175,15 @@ public class BFS {
 				Vertex lastElem = l.get(i);
 				reverseList.add(lastElem);
 			}
+			
+			
+		//Number of edges in shortest way	
+		int tmp = (reverseList.size() - 1);
+		Integer anzahlInInt = new Integer(tmp); 
+	    String anzahl = anzahlInInt.toString();
+	    
+		System.out.println("Der Weg hat " + anzahl + "Kanten");
+		
 		return reverseList;
 	}
 
