@@ -22,10 +22,6 @@ public class main {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	public void test() {
-		fail("Not yet implemented");
-	}
 
 	
 	@Test
@@ -53,5 +49,24 @@ public class main {
 	}
 	
 	
+	
+	@Test
+	public void testReverse(){
+		List<Vertex> reverseList = new ArrayList<>();
+		reverseList.add(Vertex.valueOf("a"));
+		reverseList.add(Vertex.valueOf("b"));
+		reverseList.add(Vertex.valueOf("c"));
+		reverseList.add(Vertex.valueOf("d"));
+		reverseList.add(Vertex.valueOf("e"));
+		
+		List<Vertex> list = new ArrayList<>();
+		list.add(Vertex.valueOf("e"));
+		list.add(Vertex.valueOf("d"));
+		list.add(Vertex.valueOf("c"));
+		list.add(Vertex.valueOf("b"));
+		list.add(Vertex.valueOf("a"));
+		
+		assertEquals(reverseList, BFS.reverse(list));
+	}
 	
 }
