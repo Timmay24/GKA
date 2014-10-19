@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -7,6 +8,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -21,22 +24,18 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
-import org.jgraph.JGraph;
-
-import com.mxgraph.swing.mxGraphComponent;
-
+import main.graphs.GraphType;
 import controller.GraphController;
 import controller.GuiController;
 import controller.MessageListener;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.BorderLayout;
+import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
 
 public class MainWindow implements MessageListener {
 	
 	private			GuiController		guiController;
-	private 		GraphController 	graphController;
+	private 		GraphController		graphController;
 	private 		JFrame 				mainFrame;
 	private 		JMenuItem 			mntmInfo;
 	private 		JMenu 				mnQuestionmark;
@@ -54,7 +53,11 @@ public class MainWindow implements MessageListener {
 	private 		JMenuItem			mntmSaveAs;
 	private 		JSeparator 			separator;
 	private 		JMenuItem 			mntmQuit;
-	private 		int[]				verNo = {0,1,1};
+	private 		int[]				verNo = {0,2,2};
+	private 		JPopupMenu 			pmRClickReport;
+	private 		JMenuItem 			mntmClearReport;
+	private JMenu mnReporting;
+	private JMenuItem mntmAlleKantenAusgeben;
 
 	/**
 	 * Launch the application.
@@ -70,7 +73,6 @@ public class MainWindow implements MessageListener {
 				try {
 					MainWindow mainWindow = new MainWindow();
 					mainWindow.mainFrame.repaint();
-//					mainWindow.mainFrame.pack();
 					mainWindow.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,11 +87,22 @@ public class MainWindow implements MessageListener {
 	public MainWindow() {
 		guiController = new GuiController();
 		graphController = GraphController.getInstance();
-		graphController.addMessageListener(this);
 		initialize();
-		graphController.createSampleSetup();
-//		graphPanel.add((JGraph) graphController.getGraph()); //TODO: crasht eventuell wegen JGraph =/= Listenable(Un)DirectedGraph<>
-//		graphPanel.add(graphController.getGraphComponent());
+		graphController.addMessageListener(this);
+		
+		createSampleGraph();
+	}
+	
+	private void createSampleGraph() {
+		graphPanel.removeAll();
+		graphPanel.add(graphController.createSampleSetup());
+		mainFrame.repaint();
+	}
+	
+	private void newGraph() {
+		graphPanel.removeAll();
+		graphPanel.add(graphController.newGraph(GraphType.UNDIRECTED_WEIGHTED));
+		mainFrame.repaint();
 	}
 
 	/**
@@ -106,16 +119,6 @@ public class MainWindow implements MessageListener {
 		}
 
 		
-		/**
-		 * // Standartgrößen zur Formatierung
-		 * int stdWidth = 200;
-		 * int stdHeight = 40;
-		 * int initLeftOffset = 50;
-		 * int initTopOffset = 50;
-		 * int spaceOffset = 10; // Absatz zur nächsten Zeile
-		 */
-		
-
 		// Hauptframe initialisieren
 		mainFrame = new JFrame();
 		mainFrame.setResizable(false);
@@ -129,16 +132,13 @@ public class MainWindow implements MessageListener {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.getContentPane().setLayout(null); // == absolute layout
 		
+		/**
+		 * Panel fuer den JGraph-Adapter
+		 */
 		graphPanel = new JPanel();
-		graphPanel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				mainFrame.repaint(); //TODO 4 debug
-			}
-		});
 		graphPanel.setBackground(Color.LIGHT_GRAY);
 		graphPanel.setBounds(10, 11, 774, 326);
-		graphPanel.add(graphController.getGraphComponent());
+		graphController.createSampleSetup();          // Beim Start einen Beispielgraphen laden
 		mainFrame.getContentPane().add(graphPanel);
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
@@ -161,8 +161,29 @@ public class MainWindow implements MessageListener {
 		mainFrame.getContentPane().add(scrollPane);
 		
 		reportTextArea = new JTextArea();
+		reportTextArea.setEditable(false);
+		reportTextArea.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (arg0.getButton() == 3) {
+					pmRClickReport.setVisible(true);
+				}
+			}
+		});
 		reportTextArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
 		scrollPane.setViewportView(reportTextArea);
+		
+		pmRClickReport = new JPopupMenu();
+		pmRClickReport.setLabel("L\u00F6schen");
+		addPopup(reportTextArea, pmRClickReport);
+		
+		mntmClearReport = new JMenuItem("L\u00F6schen");
+		mntmClearReport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				reportTextArea.setText("");
+			}
+		});
+		pmRClickReport.add(mntmClearReport);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
@@ -171,6 +192,11 @@ public class MainWindow implements MessageListener {
 		menuBar.add(mnFile);
 		
 		mntmNewGraph = new JMenuItem("Neuer Graph");
+		mntmNewGraph.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph();
+			}
+		});
 		mnFile.add(mntmNewGraph);
 		
 		mntmOpen = new JMenuOpen();
@@ -196,6 +222,28 @@ public class MainWindow implements MessageListener {
 		});
 		mnFile.add(mntmQuit);
 		
+		JMenu mnLayout = new JMenu("Layout");
+		menuBar.add(mnLayout);
+		
+		JMenuItem mntmApplyCircleLayout = new JMenuItem("Im Kreis anordnen");
+		mntmApplyCircleLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.setCircleLayout();
+			}
+		});
+		mnLayout.add(mntmApplyCircleLayout);
+		
+		mnReporting = new JMenu("Reporting");
+		menuBar.add(mnReporting);
+		
+		mntmAlleKantenAusgeben = new JMenuItem("Alle Kanten ausgeben");
+		mntmAlleKantenAusgeben.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.printAllEdges();
+			}
+		});
+		mnReporting.add(mntmAlleKantenAusgeben);
+		
 		mnQuestionmark = new JMenu("?");
 		menuBar.add(mnQuestionmark);
 		
@@ -216,5 +264,21 @@ public class MainWindow implements MessageListener {
 	public void giveMessage(String message) {
 		reportTextArea.append(message + "\n");
 	}
-	
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
 }

@@ -11,8 +11,8 @@ import org.jgraph.graph.DefaultEdge;
 
 public class GKAEdge extends DefaultEdge {
 	
-	private String name = null;
-	private Double weight = null;
+	private String name;
+	private Double weight;
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,6 +20,12 @@ public class GKAEdge extends DefaultEdge {
 		super();
 		this.name = name;
 		this.weight = weight;
+	}
+	
+	public GKAEdge(String name) {
+		super();
+		this.name = name;
+		this.weight = null;
 	}
 
 	public GKAEdge(Object arg0) {
@@ -42,18 +48,10 @@ public class GKAEdge extends DefaultEdge {
 		return name;
 	}
 
-//	public void setName(String name) {
-//		this.name = name;
-//	}
-
 	public Double getWeight() {
 		return weight;
 	}
 
-//	public void setWeight(Double weight) {
-//		this.weight = weight;
-//	}
-	
 	public String toString() {
 		return super.toString() + name;
 	}
