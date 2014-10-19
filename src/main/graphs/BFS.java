@@ -15,34 +15,15 @@ public class BFS {
 
 	
 	private static  Graph graph;
-	private static List queue;
-	private  Vertex startNode;
-	private  Vertex endNode;
+	private Vertex startNode;
+	private Vertex endNode;
 	
 	//distance infinity
 	private int distance = Integer.MAX_VALUE;
 	
 		
 	
-	
-	private BFS(Graph g){
-		this.graph = g;
-		this.queue = new ArrayList<>();
-	}
-		
-	
-	public BFS valueOf(Graph g){
-		return new BFS(g); 
-	}
-	
-//	//getter und setter
-//	public void startNode(Vertex startNode){
-//		this.startNode = startNode;
-//	}
-//	
-//	public Vertex startNode(){
-//		return this.startNode;
-//	}
+
 	
 	
 	// adjazente Knoten holen
@@ -74,6 +55,9 @@ public class BFS {
 	
 	public static List<Vertex> findShortestWay(Graph<Vertex, Edge> g, Vertex startNode, Vertex endNode){
 	
+		//queue for the vertices
+		List<Vertex> queue = new ArrayList<>();
+		
 		//start node has no parents
 		startNode.nodeWeight(0);
 		
@@ -160,6 +144,17 @@ public class BFS {
 			}
 		}
 		
+		//Number of edges in shortest way	
+		int tmp = (returnList.size() - 1);
+		Integer anzahlInInt = new Integer(tmp); 
+		String anzahl = anzahlInInt.toString();
+			    
+		System.out.println("Der Weg hat " + anzahl + "Kanten");
+				
+		for(int i=0 ; i<returnList.size() ; i++){
+		String tmp2 = returnList.get(i).name().toString();
+		System.out.println(tmp2);
+		}
 		
 		return returnList;
 		
@@ -177,12 +172,6 @@ public class BFS {
 			}
 			
 			
-		//Number of edges in shortest way	
-		int tmp = (reverseList.size() - 1);
-		Integer anzahlInInt = new Integer(tmp); 
-	    String anzahl = anzahlInInt.toString();
-	    
-		System.out.println("Der Weg hat " + anzahl + "Kanten");
 		
 		return reverseList;
 	}
