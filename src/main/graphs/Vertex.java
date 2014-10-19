@@ -44,6 +44,16 @@ public class Vertex {
 	
 	
 	
+	private Vertex(String name){
+		this.name = name;
+		this.color = "white";
+	}
+	
+	public static Vertex valueOf(String name){
+		return new Vertex(name);
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -78,14 +88,7 @@ public class Vertex {
 		return true;
 	}
 
-	private Vertex(String name){
-		this.name = name;
-		this.color = "white";
-	}
 	
-	public static Vertex valueOf(String name){
-		return new Vertex(name);
-	}
 	
 	
 	

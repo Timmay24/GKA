@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //package tests;
 //
 //import static org.junit.Assert.*;
@@ -78,3 +79,144 @@
 //	
 //	
 //}
+=======
+package tests;
+
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import main.graphs.Vertex;
+import main.graphs.Edge;
+import main.graphs.BFS;
+
+import org.jgraph.graph.DefaultEdge;
+import org.jgrapht.Graph;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
+import org.junit.Before;
+import org.junit.Test;
+
+public class main {
+
+	@Before
+	public void setUp() throws Exception {
+	}
+
+
+	
+	@Test
+	public void testAllAdjNode() {
+		
+		
+		 UndirectedGraph<Vertex, Edge> g = new SimpleGraph<>(Edge.class);
+		 g.addVertex( Vertex.valueOf("v1"));
+	     g.addVertex( Vertex.valueOf("v2"));
+	     g.addVertex( Vertex.valueOf("v3"));
+	     g.addVertex( Vertex.valueOf("v4"));
+
+	     g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2"));
+	     g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3")); 
+	     g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v4"));
+	 
+	 
+	     List<Vertex> l = new ArrayList<>();
+	     l.add(Vertex.valueOf("v2"));
+	     l.add(Vertex.valueOf("v3"));
+	      
+	     assertEquals(l, BFS.allAdjNode(g,Vertex.valueOf("v1")));
+	}
+	
+	@Test
+	public void testFindShortestWay() {
+		
+		 // creat graph
+		 //add vertices
+		 UndirectedGraph<Vertex, Edge> graph1 = new SimpleGraph<>(Edge.class);
+		 graph1.addVertex( Vertex.valueOf("A"));
+		 graph1.addVertex( Vertex.valueOf("B"));
+		 graph1.addVertex( Vertex.valueOf("E"));
+		 graph1.addVertex( Vertex.valueOf("F"));
+		 graph1.addVertex( Vertex.valueOf("G"));
+		 graph1.addVertex( Vertex.valueOf("H"));
+		 graph1.addVertex( Vertex.valueOf("K"));
+		 graph1.addVertex( Vertex.valueOf("M"));
+		 
+		 //add edges
+		 graph1.addEdge( Vertex.valueOf("A"), Vertex.valueOf("F"));
+		 graph1.addEdge( Vertex.valueOf("A"), Vertex.valueOf("B")); 
+		 graph1.addEdge( Vertex.valueOf("A"), Vertex.valueOf("H"));
+		 
+		 graph1.addEdge( Vertex.valueOf("F"), Vertex.valueOf("E"));
+		 graph1.addEdge( Vertex.valueOf("F"), Vertex.valueOf("A"));
+		 
+		 graph1.addEdge( Vertex.valueOf("B"), Vertex.valueOf("A"));
+		 graph1.addEdge( Vertex.valueOf("B"), Vertex.valueOf("E"));
+		 graph1.addEdge( Vertex.valueOf("B"), Vertex.valueOf("G"));
+		 graph1.addEdge( Vertex.valueOf("B"), Vertex.valueOf("H"));
+		 
+		 graph1.addEdge( Vertex.valueOf("H"), Vertex.valueOf("B"));
+		 graph1.addEdge( Vertex.valueOf("H"), Vertex.valueOf("A"));
+		 graph1.addEdge( Vertex.valueOf("H"), Vertex.valueOf("G"));
+		 graph1.addEdge( Vertex.valueOf("H"), Vertex.valueOf("K"));
+		 
+		 graph1.addEdge( Vertex.valueOf("K"), Vertex.valueOf("H"));
+		 graph1.addEdge( Vertex.valueOf("K"), Vertex.valueOf("M"));
+		 
+		 graph1.addEdge( Vertex.valueOf("G"), Vertex.valueOf("H"));
+		 graph1.addEdge( Vertex.valueOf("G"), Vertex.valueOf("B"));
+		 graph1.addEdge( Vertex.valueOf("G"), Vertex.valueOf("E"));
+		 graph1.addEdge( Vertex.valueOf("G"), Vertex.valueOf("M"));
+		 
+		 graph1.addEdge( Vertex.valueOf("M"), Vertex.valueOf("K"));
+		 graph1.addEdge( Vertex.valueOf("M"), Vertex.valueOf("G"));
+		 graph1.addEdge( Vertex.valueOf("M"), Vertex.valueOf("E"));
+		 
+		 graph1.addEdge( Vertex.valueOf("E"), Vertex.valueOf("F"));
+		 graph1.addEdge( Vertex.valueOf("E"), Vertex.valueOf("B"));
+		 graph1.addEdge( Vertex.valueOf("E"), Vertex.valueOf("G"));
+		 graph1.addEdge( Vertex.valueOf("E"), Vertex.valueOf("M"));
+		 
+		 
+		 //Start vertex: A
+		 //End vertex: M
+		 
+		 List<Vertex> shortWay1 = new ArrayList<>();
+	     shortWay1.add(Vertex.valueOf("A"));
+	     shortWay1.add(Vertex.valueOf("F"));
+	     shortWay1.add(Vertex.valueOf("E"));
+	     shortWay1.add(Vertex.valueOf("M"));
+	      
+	     assertEquals(shortWay1, BFS.findShortestWay(graph1, Vertex.valueOf("A"), Vertex.valueOf("M")));
+		
+	}
+	
+	
+	
+	
+	@Test
+	public void testReverse(){
+		List<Vertex> reverseList = new ArrayList<>();
+		reverseList.add(Vertex.valueOf("a"));
+		reverseList.add(Vertex.valueOf("b"));
+		reverseList.add(Vertex.valueOf("c"));
+		reverseList.add(Vertex.valueOf("d"));
+		reverseList.add(Vertex.valueOf("e"));
+		
+		List<Vertex> list = new ArrayList<>();
+		list.add(Vertex.valueOf("e"));
+		list.add(Vertex.valueOf("d"));
+		list.add(Vertex.valueOf("c"));
+		list.add(Vertex.valueOf("b"));
+		list.add(Vertex.valueOf("a"));
+		
+		assertEquals(reverseList, BFS.reverse(list));
+	}
+	
+	
+	
+	
+}
+>>>>>>> 5726e2b74e894f8fe8c79b547e11199e7cf2ad77
