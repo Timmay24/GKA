@@ -27,10 +27,13 @@ import com.mxgraph.swing.mxGraphComponent;
 
 import controller.GraphController;
 import controller.GuiController;
+import controller.MessageListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.BorderLayout;
 
-public class MainWindow {
+public class MainWindow implements MessageListener {
 	
 	private			GuiController		guiController;
 	private 		GraphController 	graphController;
@@ -66,6 +69,8 @@ public class MainWindow {
 			public void run() {
 				try {
 					MainWindow mainWindow = new MainWindow();
+					mainWindow.mainFrame.repaint();
+//					mainWindow.mainFrame.pack();
 					mainWindow.mainFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,7 +85,9 @@ public class MainWindow {
 	public MainWindow() {
 		guiController = new GuiController();
 		graphController = GraphController.getInstance();
+		graphController.addMessageListener(this);
 		initialize();
+		graphController.createSampleSetup();
 //		graphPanel.add((JGraph) graphController.getGraph()); //TODO: crasht eventuell wegen JGraph =/= Listenable(Un)DirectedGraph<>
 //		graphPanel.add(graphController.getGraphComponent());
 	}
@@ -111,8 +118,8 @@ public class MainWindow {
 
 		// Hauptframe initialisieren
 		mainFrame = new JFrame();
-		mainFrame.setTitle("BFS Tool " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		mainFrame.setResizable(false);
+		mainFrame.setTitle("BFS Tool " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
 		mainFrame.setBounds(0, 0, 800, 600);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -133,7 +140,7 @@ public class MainWindow {
 		graphPanel.setBounds(10, 11, 774, 326);
 		graphPanel.add(graphController.getGraphComponent());
 		mainFrame.getContentPane().add(graphPanel);
-		graphPanel.setLayout(null);
+		graphPanel.setLayout(new BorderLayout(0, 0));
 		
 		controlPanel = new JPanel();
 		controlPanel.setBorder(new TitledBorder(null, "Hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -154,7 +161,7 @@ public class MainWindow {
 		mainFrame.getContentPane().add(scrollPane);
 		
 		reportTextArea = new JTextArea();
-		reportTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+		reportTextArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
 		scrollPane.setViewportView(reportTextArea);
 		
 		menuBar = new JMenuBar();
@@ -203,6 +210,11 @@ public class MainWindow {
 	
 	public JTextArea getReportTextArea() {
 		return reportTextArea;
+	}
+
+	@Override
+	public void giveMessage(String message) {
+		reportTextArea.append(message + "\n");
 	}
 	
 }

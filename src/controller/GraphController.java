@@ -13,12 +13,15 @@ import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.ListenableUndirectedGraph;
 import org.jgrapht.graph.Pseudograph;
 
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Pattern;
 
 
 
-public class GraphController {
+public class GraphController implements ListenableMessages {
 	
 	private static 		GraphController 					instance;
 	
@@ -34,7 +37,7 @@ public class GraphController {
 		createGraph();
 		vertices = new ArrayList<>();
 		edges = new ArrayList<>();
-		createSampleSetup();
+//		createSampleSetup();
 	}
 
 	public static GraphController getInstance() {
@@ -56,6 +59,7 @@ public class GraphController {
 		jgxAdapter = new JGraphXAdapter<String, GKAEdge>(getGraph());
 		
 		graphComponent = new mxGraphComponent(jgxAdapter);
+		graphComponent.setSize(774, 326);
 		
 	}
 	
@@ -67,24 +71,38 @@ public class GraphController {
         String v4 = "v4";
 
         // add some sample data (graph manipulated via JGraphX)
-        getGraph().addVertex(v1);
-        getGraph().addVertex(v2);
-        getGraph().addVertex(v3);
-        getGraph().addVertex(v4);
+        addVertex(v1);
+        addVertex(v2);
+        addVertex(v3);
+        addVertex(v4);
 
-//        getGraph().addEdge(v1, v2);
-//        getGraph().addEdge(v2, v3);
-//        getGraph().addEdge(v3, v1);
-//        getGraph().addEdge(v4, v3);
+        addEdge(v1, v2, new GKAEdge("Test", 1.0));
+        addEdge(v2, v3, new GKAEdge("Test", 1.0));
+        addEdge(v3, v1, new GKAEdge("Test", 1.0));
+        addEdge(v4, v3, new GKAEdge("Test", 1.0));
         
-//        addEdge(v1, v2);
-//        addEdge(v2, v3);
-//        addEdge(v3, v1);
-//        addEdge(v4, v3);
-        
-//        mxCircleLayout layout = new mxCircleLayout(jgxAdapter);
-//        layout.execute(jgxAdapter.getDefaultParent());
+        setGraphConfig();
+        setLayout();
+        getGraphComponent().setConnectable(false);
+		getGraphComponent().setDragEnabled(false);
 	}
+
+	public void setLayout(){
+		mxCircleLayout layout1 = new mxCircleLayout(getAdapter());
+        layout1.execute(getAdapter().getDefaultParent());
+		mxParallelEdgeLayout layout = new mxParallelEdgeLayout(getAdapter(), 50);
+        layout.execute(getAdapter().getDefaultParent());
+	}
+	
+	private void setGraphConfig(){
+		getAdapter().setAllowDanglingEdges(false);
+		getAdapter().setCellsDisconnectable(false);
+		getAdapter().setDisconnectOnMove(false);
+		getAdapter().setCellsEditable(false);
+		getAdapter().setVertexLabelsMovable(false);
+		getAdapter().setEdgeLabelsMovable(false);
+		getAdapter().setConnectableEdges(false);
+}
 	
 	public mxGraphComponent getGraphComponent() {
 		return graphComponent;
@@ -98,15 +116,9 @@ public class GraphController {
 		return jgxAdapter;
 	}
 	
-//	public mxGraph getMxGraph() {
-//		return jgxAdapter;
-//	}
-	
-	public void addEdge(String source, String target) {
-//		GKAEdge newEdge = new GKAEdge(null);
-//		newEdge.setSource(source);
-//		newEdge.setTarget(target);
-		edges.add( getGraph().addEdge(source, target) );
+	public void addEdge(String source, String target, GKAEdge newEdge) {
+		getGraph().addEdge(source, target, newEdge);
+		sendMessage(source + " : " + target);
 	}
 	
 	public boolean removeEdge(String source, String target) {
@@ -114,16 +126,10 @@ public class GraphController {
 	}
 	
 	public boolean addVertex(String name) {
-		if (getGraph().addVertex(name)) {
-			vertices.add(name);
-			return true;
-		}
-		return false;
+		return getGraph().addVertex(name);
 	}
 	
 	public boolean removeVertex(String vertexName) {
-		//TODO: unklar, ob das entfernen aus der liste so klappt, oder ob gesucht werden muss.
-		
 		if (getGraph().removeVertex(vertexName)) {
 			vertices.remove(vertexName);
 			return true;
@@ -131,4 +137,15 @@ public class GraphController {
 		return false;
 	}
 	
+    List<MessageListener> msgListerner = new ArrayList<>();
+	@Override
+	public void addMessageListener(MessageListener messageListener) {
+		msgListerner.add(messageListener);
+	}
+	
+	private void sendMessage(String message) {
+		for (MessageListener ml : msgListerner) {
+			ml.giveMessage(message);
+		}
+	}
 }
