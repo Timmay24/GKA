@@ -1,0 +1,26 @@
+package main;
+
+import gui.MainWindow;
+import controller.GraphController;
+
+public class Main {
+
+	private static 	MainWindow			app;
+	private static 	GraphController		graphController;
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		/**
+		 * TODO
+		 * GraphController init.
+		 * Gui init.
+		 * GraphController an Gui anmelden
+		 */
+		
+		graphController = GraphController.getController();
+		app.start(null);
+	}
+
+}

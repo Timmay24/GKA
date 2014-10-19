@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0-uber.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0.jar" sourcepath="lib/source/jgrapht-ext"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
