@@ -47,23 +47,23 @@ public class BFS {
 	
 	// adjazente Knoten holen
 	//allAdjNode := Vertex -> List<Vertex>
-	public static List<Vertex> allAdjNode(Graph g, Vertex startNode){
-				
+	public static List<Vertex> allAdjNode(Graph<Vertex, Edge> g, Vertex startNode){
+			
 		//alle Kanten des Startknotens holen
-//		Vertex adjNode;
 		Set<Edge> edges = g.edgesOf(startNode);
 			
 		//konvertieren vom Set zu einer List, sodass man ein nach dem anderen Element herausnehmen kann
-		List<Edge> tmpEdgeList = (List) edges;
+		List<Edge> tmpEdgeList = new ArrayList<>(edges);
 				
 		//Rückgabeliste erstellen
 		List<Vertex> adjacentTarget = new ArrayList<>();
 			
-		while(! edges.isEmpty()){
+		while(! tmpEdgeList.isEmpty()){
 			//zu der ersten zugehörigen Kante den Knoten holen
-			Edge tmp = tmpEdgeList.get(1);
+			Edge tmp = tmpEdgeList.get(0);
 			//Zielknoten in die Liste aller Zielknoten des Startknotens schreiben
-			adjacentTarget.add((Vertex)g.getEdgeTarget(tmp));
+			adjacentTarget.add(Vertex.valueOf(g.getEdgeTarget(tmp).toString()));
+			tmpEdgeList.remove(tmp);
 		}
 		
 		return adjacentTarget;
@@ -72,7 +72,7 @@ public class BFS {
 	
 	
 	
-	public static List<Vertex> findShortestWay(Graph g, Vertex startNode, Vertex endNode){
+	public static List<Vertex> findShortestWay(Graph<Vertex, Edge> g, Vertex startNode, Vertex endNode){
 	
 		//start node has no parents
 		startNode.nodeWeight(0);
@@ -157,6 +157,9 @@ public class BFS {
 			the adjacent vertex and a vertex of the shortest way  */
 			if (first.nodeWeight() == (second.nodeWeight() + 1)){
 				returnList.add(second);
+//				if(second != startNode){
+//					reverseList.remove(second);
+//				}
 			}
 		}
 		

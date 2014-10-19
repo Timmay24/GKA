@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import main.graphs.Vertex;
 import main.graphs.Edge;
@@ -34,18 +35,22 @@ public class main {
 	      g.addVertex( Vertex.valueOf("v3"));
 	      g.addVertex( Vertex.valueOf("v4"));
 
-	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2") );
-	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3") );
-	      g.addEdge( Vertex.valueOf("v2"), Vertex.valueOf("v3") );
-	      g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v1") );
-	      g.addEdge( Vertex.valueOf("v4"), Vertex.valueOf("v3") );
+	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2"));
+	      g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3")); 
+	      g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v4"));
 	      
-	      BFS.allAdjNode(g, Vertex.valueOf("v1"));
+//	      Edge.valueOf(g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2") ).toString());
+//	      Edge.valueOf(g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3") ).toString());
+//	      Edge.valueOf(g.addEdge( Vertex.valueOf("v2"), Vertex.valueOf("v3") ).toString());
+//	      Edge.valueOf(g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v1") ).toString());
+//	      Edge.valueOf(g.addEdge( Vertex.valueOf("v4"), Vertex.valueOf("v3") ).toString());
+	      
+	     // BFS.allAdjNode(g, Vertex.valueOf("v1"));
 	      List<Vertex> l = new ArrayList<>();
-	      l.add(Vertex.valueOf("v2"));
+	      l.add(Vertex.valueOf("v23"));
 	      l.add(Vertex.valueOf("v3"));
 	      
-	      assertSame(l, BFS.allAdjNode(g,Vertex.valueOf("v1")));
+	      assertEquals(l, BFS.allAdjNode(g,Vertex.valueOf("v1")));
 	}
 	
 	
@@ -68,5 +73,8 @@ public class main {
 		
 		assertEquals(reverseList, BFS.reverse(list));
 	}
+	
+	
+	
 	
 }

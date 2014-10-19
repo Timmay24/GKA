@@ -1,21 +1,15 @@
 package main.graphs;
+import org.jgrapht.graph.DefaultEdge;
 
 
-public class Edge {
+public class Edge extends DefaultEdge {
 
-	private String name;
+	private Vertex start;
+	private Vertex end;
 	private int edgeWeight;
 	
 	
 	
-	//Getter, Setter
-	public String name(){
-		return this.name;
-	}
-	
-	public void name(String name){
-		this.name = name;
-	}
 	
 	public int edgeWeight(){
 		return this.edgeWeight;
@@ -25,15 +19,10 @@ public class Edge {
 		this.edgeWeight = edgeWeight;
 	}
 	
+	public Edge() {
+	    super();
+	}
 
 	
-	
-	private Edge(String name){
-		this.name = name;
-	}
-	
-	public static Edge valueOf(String name){
-		return new Edge(name);
-	}
 	
 }
