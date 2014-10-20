@@ -28,23 +28,27 @@ public class main {
 	@Test
 	public void testAllAdjNode() {
 		
+		Vertex v1 = Vertex.valueOf("v1");
+		Vertex v2 = Vertex.valueOf("v2");
+		Vertex v3 = Vertex.valueOf("v3");
+		Vertex v4 = Vertex.valueOf("v4");
 		
 		 UndirectedGraph<Vertex, Edge> g = new SimpleGraph<>(Edge.class);
-		 g.addVertex( Vertex.valueOf("v1"));
-	     g.addVertex( Vertex.valueOf("v2"));
-	     g.addVertex( Vertex.valueOf("v3"));
-	     g.addVertex( Vertex.valueOf("v4"));
+		 g.addVertex( v1);
+	     g.addVertex( v2);
+	     g.addVertex( v3);
+	     g.addVertex( v4);
 
-	     g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v2"));
-	     g.addEdge( Vertex.valueOf("v1"), Vertex.valueOf("v3")); 
-	     g.addEdge( Vertex.valueOf("v3"), Vertex.valueOf("v4"));
+	     g.addEdge( v1, v2);
+	     g.addEdge( v1, v3); 
+	     g.addEdge( v3, v4);
 	 
 	 
 	     List<Vertex> l = new ArrayList<>();
-	     l.add(Vertex.valueOf("v2"));
-	     l.add(Vertex.valueOf("v3"));
+	     l.add(v2);
+	     l.add(v3);
 	      
-	     assertEquals(l, BFS.allAdjNode(g,Vertex.valueOf("v1")));
+	     assertEquals(l, BFS.allAdjNode(g,v1));
 	}
 	
 	@Test
