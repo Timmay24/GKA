@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.graphs.GKAEdge;
 import main.graphs.GraphType;
 
 import org.jgrapht.ListenableGraph;
