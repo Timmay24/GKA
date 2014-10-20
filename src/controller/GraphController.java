@@ -7,7 +7,6 @@ package controller;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,18 +66,21 @@ public class GraphController implements ListenableMessages, GKAController {
 			jgxAdapter.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_ENDARROW, "none");
 		}
 		
-		graphComponent = new mxGraphComponent(jgxAdapter);
-		
-		addMouseAdapter();
+		createGraphComponent(jgxAdapter);
 		
 		setGraphConfig();
 		
 		return graphComponent;
 	}
 	
+	private void createGraphComponent(JGraphXAdapter<String, GKAEdge> jgxAdapter) {
+		graphComponent = new mxGraphComponent(jgxAdapter);
+		addMouseAdapter();
+	}
+	
 	public mxGraphComponent createSampleSetup() {
 		
-		mxGraphComponent mxGC = newGraph(GraphType.UNDIRECTED_WEIGHTED);
+		mxGraphComponent mxGC = newGraph(GraphType.DIRECTED_WEIGHTED);
 		
 		String v1 = "v1";
         String v2 = "v2";

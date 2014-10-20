@@ -100,8 +100,12 @@ public class MainWindow implements MessageListener {
 	}
 	
 	private void newGraph() {
+		newGraph(GraphType.DIRECTED_WEIGHTED);
+	}
+	
+	private void newGraph(GraphType graphType) {
 		graphPanel.removeAll();
-		graphPanel.add(graphController.newGraph(GraphType.UNDIRECTED_WEIGHTED));
+		graphPanel.add(graphController.newGraph(graphType));
 		mainFrame.repaint();
 	}
 
