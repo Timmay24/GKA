@@ -36,6 +36,14 @@ public class GKAEdge extends DefaultEdge {
 		super(arg0, arg1);
 	}
 	
+	public boolean isWeighted() {
+		return weight != null;
+	}
+	
+	public boolean isEdge() {
+		return true;
+	}
+	
 	public Object getSource() {
 		return super.getSource();
 	}
