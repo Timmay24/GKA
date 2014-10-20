@@ -217,6 +217,8 @@ public class GraphController implements ListenableMessages, GKAController {
 				if (cell != null && cell instanceof mxCell) {
 					System.out.println(((mxCell) cell).getValue());
 					sendMessage("Markiert: " + ((mxCell) cell).getValue());
+//					System.out.println(((mxCell)cell).isEdge());
+//					System.out.println(((mxCell)cell).isVertex());
 				}
 			}
 		});
