@@ -9,7 +9,7 @@ import org.jgrapht.Graph;
 
 
 
-public class Vertex {
+public class Vertex{
 
 	private String name;
 	private int nodeWeight;

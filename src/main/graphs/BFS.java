@@ -38,11 +38,12 @@ public class BFS {
 //		}else{
 //			...g.
 //		}
-		
+		System.out.println("this is input graph g " + g.toString());
+		System.out.println("this is the startNode " + startNode.toString());
 		//get all edges of startNode
 		Set<GKAEdge> edges = g.edgesOf(startNode);
 		
-		
+		System.out.println("this is edges" + edges.toString());
 		//Rückgabeliste erstellen
 		List<Vertex> adjacentTarget = new ArrayList<>();
 			
@@ -51,9 +52,7 @@ public class BFS {
 			adjacentTarget.add( (Vertex)edge.getTarget());
 			
 		}
-		
-
-		
+		System.out.println(adjacentTarget.toString());
 		return adjacentTarget;
 			
 	}
@@ -79,10 +78,21 @@ public class BFS {
 		//a list of all visited vertices
 		List<Vertex> visitedVertices = new ArrayList<>();
 		
-		while (! queue.isEmpty() && (queue.get(queue.size()-1) != endNode) ){
+		System.out.println("das ist der graphen" + g.toString());
+		System.out.println("das ist die groesse des graphens" + g.toString());
+		
+/*		for (Vertex queue1 : queue){
+			if (queue1.get(queue.size()-1) != endNode){
+			....
+			}
+		
+		}*/
+		
+		while ((! queue.isEmpty()) && (queue.get(queue.size()-1) != endNode) ){
 			
 			//get a list of all adjacent vertices of the current looking Vertex
-			List<Vertex> list = allAdjNode(g, firstNode);
+			List<Vertex> list = new ArrayList<>();
+			list.addAll(allAdjNode(g, firstNode));
 			
 			//take the next adjacent Vertex to be visited -> turn it grey
 			for(int i=0; i<list.size(); i++){
