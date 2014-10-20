@@ -1,4 +1,4 @@
-package controller;
+package main.graphs;
 
 import org.jgrapht.graph.DefaultEdge;
 

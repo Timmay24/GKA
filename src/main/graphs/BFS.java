@@ -8,8 +8,6 @@ import org.hamcrest.core.IsEqual;
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.Graph;
 
-import controller.GKAEdge;
-
 
 
 

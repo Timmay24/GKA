@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import main.graphs.GKAEdge;
 import main.graphs.Vertex;
 import main.graphs.BFS;
-import controller.GKAEdge;
 
 import org.jgrapht.Graph;
 import org.jgrapht.UndirectedGraph;
