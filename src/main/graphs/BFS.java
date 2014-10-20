@@ -30,12 +30,16 @@ public class BFS {
 	//allAdjNode := Vertex -> List<Vertex>
 	public static List<Vertex> allAdjNode(Graph<Vertex, Edge> g, Vertex startNode){
 			
-		//alle Kanten des Startknotens holen
+		//get all edges of startNode
 		Set<Edge> edges = g.edgesOf(startNode);
+		
+		System.out.println("Line 36 " + edges.toString());
 			
 		//konvertieren vom Set zu einer List, sodass man ein nach dem anderen Element herausnehmen kann
 		List<Edge> tmpEdgeList = new ArrayList<>(edges);
 				
+		System.out.println("Line 41 " + tmpEdgeList.toString());
+		
 		//Rückgabeliste erstellen
 		List<Vertex> adjacentTarget = new ArrayList<>();
 			
@@ -43,9 +47,18 @@ public class BFS {
 			//zu der ersten zugehörigen Kante den Knoten holen
 			Edge tmp = tmpEdgeList.get(0);
 			//Zielknoten in die Liste aller Zielknoten des Startknotens schreiben
+			//==>hier wird ein neues objekt erzeugt, deshalb ist es nur wertegleih aber nicht referezgleich
 			adjacentTarget.add(Vertex.valueOf(g.getEdgeTarget(tmp).toString()));
+			System.out.println("Line 52 " + adjacentTarget.toString());
 			tmpEdgeList.remove(tmp);
 		}
+		
+		 
+		for(int i=0 ; i<adjacentTarget.size() ; i++){
+			System.out.println(i);
+			String tmp2 = adjacentTarget.get(i).name().toString();
+			System.out.println(tmp2);
+		} 
 		
 		return adjacentTarget;
 			
