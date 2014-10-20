@@ -7,15 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 import main.graphs.Vertex;
-import main.graphs.Edge;
 import main.graphs.BFS;
+import controller.GKAEdge;
 
-import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.Graph;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Before;
 import org.junit.Test;
+
+
 
 public class main {
 
@@ -28,20 +29,22 @@ public class main {
 	@Test
 	public void testAllAdjNode() {
 		
+		
+		
 		Vertex v1 = Vertex.valueOf("v1");
 		Vertex v2 = Vertex.valueOf("v2");
 		Vertex v3 = Vertex.valueOf("v3");
 		Vertex v4 = Vertex.valueOf("v4");
 		
-		 UndirectedGraph<Vertex, Edge> g = new SimpleGraph<>(Edge.class);
+		 UndirectedGraph<Vertex, GKAEdge> g = new SimpleGraph<>(GKAEdge.class);
 		 g.addVertex( v1);
 	     g.addVertex( v2);
 	     g.addVertex( v3);
 	     g.addVertex( v4);
 
-	     g.addEdge( v1, v2);
-	     g.addEdge( v1, v3); 
-	     g.addEdge( v3, v4);
+	     g.addEdge( v1, v2, new GKAEdge("test1"));
+	     g.addEdge( v1, v3, new GKAEdge("test2")); 
+	     g.addEdge( v3, v4, new GKAEdge("test3"));
 	 
 	 
 	     List<Vertex> l = new ArrayList<>();
@@ -56,7 +59,7 @@ public class main {
 		
 		 // creat graph
 		 //add vertices
-		 UndirectedGraph<Vertex, Edge> graph1 = new SimpleGraph<>(Edge.class);
+		 UndirectedGraph<Vertex, GKAEdge> graph1 = new SimpleGraph<>(GKAEdge.class);
 		 graph1.addVertex( Vertex.valueOf("A"));
 		 graph1.addVertex( Vertex.valueOf("B"));
 		 graph1.addVertex( Vertex.valueOf("E"));

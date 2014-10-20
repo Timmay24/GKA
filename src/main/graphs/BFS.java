@@ -8,6 +8,8 @@ import org.hamcrest.core.IsEqual;
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.Graph;
 
+import controller.GKAEdge;
+
 
 
 
@@ -28,37 +30,29 @@ public class BFS {
 	
 	// adjazente Knoten holen
 	//allAdjNode := Vertex -> List<Vertex>
-	public static List<Vertex> allAdjNode(Graph<Vertex, Edge> g, Vertex startNode){
-			
-		//get all edges of startNode
-		Set<Edge> edges = g.edgesOf(startNode);
+	public static List<Vertex> allAdjNode(Graph<Vertex, GKAEdge> g, Vertex startNode){
 		
-		System.out.println("Line 36 " + edges.toString());
-			
-		//konvertieren vom Set zu einer List, sodass man ein nach dem anderen Element herausnehmen kann
-		List<Edge> tmpEdgeList = new ArrayList<>(edges);
-				
-		System.out.println("Line 41 " + tmpEdgeList.toString());
+		
+//		if (g.isDirected()){
+//			...
+//		}else{
+//			...g.
+//		}
+		
+		//get all edges of startNode
+		Set<GKAEdge> edges = g.edgesOf(startNode);
+		
 		
 		//Rückgabeliste erstellen
 		List<Vertex> adjacentTarget = new ArrayList<>();
 			
-		while(! tmpEdgeList.isEmpty()){
-			//zu der ersten zugehörigen Kante den Knoten holen
-			Edge tmp = tmpEdgeList.get(0);
-			//Zielknoten in die Liste aller Zielknoten des Startknotens schreiben
-			//==>hier wird ein neues objekt erzeugt, deshalb ist es nur wertegleih aber nicht referezgleich
-			adjacentTarget.add(Vertex.valueOf(g.getEdgeTarget(tmp).toString()));
-			System.out.println("Line 52 " + adjacentTarget.toString());
-			tmpEdgeList.remove(tmp);
+		for(GKAEdge edge : edges){
+		
+			adjacentTarget.add( (Vertex)edge.getTarget());
+			
 		}
 		
-		 
-		for(int i=0 ; i<adjacentTarget.size() ; i++){
-			System.out.println(i);
-			String tmp2 = adjacentTarget.get(i).name().toString();
-			System.out.println(tmp2);
-		} 
+
 		
 		return adjacentTarget;
 			
@@ -66,7 +60,7 @@ public class BFS {
 	
 	
 	
-	public static List<Vertex> findShortestWay(Graph<Vertex, Edge> g, Vertex startNode, Vertex endNode){
+	public static List<Vertex> findShortestWay(Graph<Vertex, GKAEdge> g, Vertex startNode, Vertex endNode){
 	
 		//queue for the vertices
 		List<Vertex> queue = new ArrayList<>();
