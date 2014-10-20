@@ -1,99 +1,118 @@
-/**
- * TODO
- * equals() impl.
- * hashCode() impl.
- */
-
 package controller;
 
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultEdge;
 
-public class GKAEdge extends DefaultEdge {
+import org.jgrapht.graph.DefaultEdge;
+
+public class GKAEdge extends DefaultEdge{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6523434696944744833L;
 	
-	private String name;
-	private Double weight;
-
-	private static final long serialVersionUID = 1L;
-
-	public GKAEdge(String name, Double weight) {
+	private String edgeName = null;
+	private Double weight = null;
+	
+	public GKAEdge(String name, Double weight){
 		super();
-		this.name = name;
+		this.edgeName = name;
 		this.weight = weight;
 	}
 	
-	public GKAEdge(String name) {
-		super();
-		this.name = name;
-		this.weight = null;
-	}
-
-	public GKAEdge(Object arg0) {
-		super(arg0);
-	}
-
-	public GKAEdge(Object arg0, AttributeMap arg1) {
-		super(arg0, arg1);
-	}
+	public GKAEdge(String name){
+		this(name, null);
+		}
 	
-	public boolean isWeighted() {
-		return weight != null;
-	}
-	
-	public boolean isEdge() {
-		return true;
-	}
-	
-	public Object getSource() {
+	public Object getSource(){
 		return super.getSource();
 	}
 	
-	public Object getTarget() {
+	public Object getTarget(){
 		return super.getTarget();
 	}
 	
-	public String getName() {
-		return name;
-	}
-
 	public Double getWeight() {
 		return weight;
 	}
-
-	public String toString() {
-		return super.toString() + name;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((weight == null) ? 0 : weight.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		GKAEdge other = (GKAEdge) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (weight == null) {
-			if (other.weight != null)
-				return false;
-		} else if (!weight.equals(other.weight))
-			return false;
-		return true;
+	
+	public String getName(){
+		return this.edgeName;
 	}
 	
-	
+    public String toString()
+    {
+    	String retVal;
+    	if (edgeName == null){
+    		retVal = "(" + getSource() + " : " + getTarget() + ")";
+    	}
+    	else{
+    		retVal = "(" + edgeName + ")";
+    	}
+    	if (getWeight() != null){
+    		retVal += " : " + getWeight();
+    	}
+    	return retVal;
+    }
+    @Override
+    public boolean equals(Object object){
+        if(object == null){
+            return false;
+        }
+        else if(object == this){
+            return true;
+        }
+        else if(!(object instanceof GKAEdge)){
+            return false;
+        }
+        else{
+            GKAEdge edge = (GKAEdge) object;
+            boolean retval = true;
+            if(getSource() == null){
+            	retval = retval && edge.getSource() == null;
+            }
+            else{
+            	retval = retval && getSource().equals(edge.getSource());
+            }
+
+            if(getTarget() == null){
+            	retval = retval && edge.getTarget() == null;
+            }
+            else{
+            	retval = retval && getTarget().equals(edge.getTarget());
+            }
+            
+            if(getName() == null){
+            	retval = retval && edge.getName() == null;
+            }
+            else{
+            	retval = retval && getName().equals(edge.getName());
+            }
+            
+            if(getWeight() == null){
+            	retval = retval && edge.getWeight() == null;
+            }
+            else{
+            	retval = retval && getWeight().equals(edge.getWeight());
+            }
+            return retval;
+        }
+    }
+    @Override
+    public int hashCode(){
+    	int retVal = 31;
+    	if(getSource() != null){
+    		retVal += getSource().hashCode();
+        }
+    	if(getTarget() != null){
+    		retVal += getTarget().hashCode();
+        }
+    	if(getName() != null){
+    		retVal += getName().hashCode();
+        }
+    	if(getWeight() != null){
+    		retVal += getWeight().hashCode();
+        }
+        return retVal;
+    }
+
 }
