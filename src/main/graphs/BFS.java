@@ -19,7 +19,7 @@ public class BFS {
 	private Vertex endNode;
 	
 	//distance infinity
-	private int distance = Integer.MAX_VALUE;
+//	private int distance = Integer.MAX_VALUE;
 	
 		
 	
@@ -36,12 +36,11 @@ public class BFS {
 //		}else{
 //			...g.
 //		}
-		System.out.println("this is input graph g " + g.toString());
-		System.out.println("this is the startNode " + startNode.toString());
+		
 		//get all edges of startNode
 		Set<GKAEdge> edges = g.edgesOf(startNode);
 		
-		System.out.println("this is edges" + edges.toString());
+		
 		//Rückgabeliste erstellen
 		List<Vertex> adjacentTarget = new ArrayList<>();
 			
@@ -63,65 +62,67 @@ public class BFS {
 		List<Vertex> queue = new ArrayList<>();
 		
 		//start node has no parents
-		startNode.nodeWeight(0);
+//		startNode.nodeWeight(0);
 		
-		//start node was visited but not finished yet
-		startNode.color("grey");
 		
 		//write start node in queue
 		queue.add(startNode);
 		
-		Vertex firstNode = startNode;
+//		Vertex firstNode = startNode;
 		
 		//a list of all visited vertices
 		List<Vertex> visitedVertices = new ArrayList<>();
 		
-		System.out.println("das ist der graphen" + g.toString());
-		System.out.println("das ist die groesse des graphens" + g.toString());
 		
-/*		for (Vertex queue1 : queue){
-			if (queue1.get(queue.size()-1) != endNode){
-			....
-			}
 		
-		}*/
 		
-		while ((! queue.isEmpty()) && (queue.get(queue.size()-1) != endNode) ){
+		for (Vertex firstNode : queue){
+			if (queue.get((queue.size())-1) != endNode){
 			
-			//get a list of all adjacent vertices of the current looking Vertex
-			List<Vertex> list = new ArrayList<>();
-			list.addAll(allAdjNode(g, firstNode));
-			
-			//take the next adjacent Vertex to be visited -> turn it grey
-			for(int i=0; i<list.size(); i++){
-				Vertex currentVertex = list.get(i);
-				if ((currentVertex.color()=="white")){
-					
-				    //mark it as visited (color grey)
-					currentVertex.color("grey");
-					
-					//set current node-weight of the start Vertex one higher
-					currentVertex.nodeWeight(firstNode.nodeWeight() + 1);
-					
-					//add the child-vertex (current vertex) to the end of the list 
-					queue.add(currentVertex);
-					
-					/* if the current vertex is the endNode then stop the 
-					for-loop and go on with the next commmand */
-					if (currentVertex == endNode){
-						i = list.size();
+		System.out.println("this is the graph " + g.toString());
+		System.out.println("this is the startnode " + firstNode);
+//		while ((! queue.isEmpty()) && (queue.get(queue.size()-1) != endNode) ){
+				List<Vertex> list = new ArrayList<>();
+				if (g.containsVertex(startNode)){
+				//get a list of all adjacent vertices of the current looking Vertex
+//				List<Vertex> list = new ArrayList<>();
+				list.addAll(allAdjNode(g, firstNode));
+				}else{
+					System.out.println("this is the graph 1111" + g.toString());
+					System.out.println("this is the startnode 1111" + firstNode);
+				}
+				
+				//take the next adjacent Vertex to be visited -> turn it grey
+				for(int i=0; i<list.size(); i++){
+					Vertex currentVertex = list.get(i);
+					if ((!currentVertex.isVisited())){
+						
+					    //mark it as visited (color grey)
+						currentVertex.isVisited(true);
+						
+						//set current node-weight of the start Vertex one higher
+						currentVertex.nodeWeight(firstNode.nodeWeight() + 1);
+						
+						//add the child-vertex (current vertex) to the end of the list 
+						queue.add(currentVertex);
+						
+						/* if the current vertex is the endNode then stop the 
+						for-loop and go on with the next commmand */
+						if (currentVertex == endNode){
+							i = list.size();
+						}
 					}
 				}
+				
+				//done with the startNode, added all its children to the queue -> turn into black
+//				firstNode.color("black");
+				//add current vertex to the list of visited vertices
+				visitedVertices.add(firstNode);
+				//remove current visited vertex from the queue
+//				queue.remove(firstNode);
+				//next vertex in the queue becomes the new startNode
+//				firstNode = (Vertex) queue.get(0);
 			}
-			
-			//done with the startNode, added all its children to the queue -> turn into black
-			firstNode.color("black");
-			//add current vertex to the list of visited vertices
-			visitedVertices.add(firstNode);
-			//remove current visited vertex from the queue
-			queue.remove(firstNode);
-			//next vertex in the queue becomes the new startNode
-			firstNode = (Vertex) queue.get(0);
 		}
 		
 		
