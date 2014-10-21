@@ -1,20 +1,11 @@
 package main.graphs;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.jgrapht.Graph;
-
-
-
-
 public class Vertex{
 
 	private String name;
 	private int nodeWeight;
 	private String color;
-	private boolean isVisited = false;
+	private boolean visited = false;
 	
 	
 	
@@ -23,35 +14,61 @@ public class Vertex{
 		return this.name;
 	}
 	
+	public String getName() {
+		return name();
+	}
+	
 	public void name(String name){
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		name(name);
 	}
 	
 	public int nodeWeight(){
 		return this.nodeWeight;
 	}
 	
+	public int getNodeWeight() {
+		return nodeWeight;
+	}
+	
 	public void nodeWeight(int nodeWeight){
 		this.nodeWeight = nodeWeight;
+	}
+	
+	public void setNodeWeight(int nodeWeight) {
+		nodeWeight(nodeWeight);
 	}
 	
 	public String color(){
 		return this.color;
 	}
 	
+	public String getColor() {
+		return color();
+	}
+	
 	public void color(String color){
 		this.color = color;
 	}
 	
+	public void setColor(String color) {
+		color(color);
+	}
+	
 	public boolean isVisited(){
-		return this.isVisited;
+		return this.visited;
 	}
 	
-	public void isVisited(boolean isVisited){
-		this.isVisited = isVisited;
+	public void isVisited(boolean visited){
+		this.visited = visited;
 	}
 	
-	
+	public void setVisited(boolean visited) {
+		isVisited(visited);
+	}
 	
 	private Vertex(String name){
 		this.name = name;
