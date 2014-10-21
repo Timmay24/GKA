@@ -8,6 +8,7 @@ import java.util.Set;
 import org.hamcrest.core.IsEqual;
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.Graph;
+
 import com.google.common.*;
 
 
@@ -16,46 +17,6 @@ import com.google.common.*;
 public class BFS {
 
 	
-	private static  Graph graph;
-	private Vertex startNode;
-	private Vertex endNode;
-	
-	//distance infinity
-//	private int distance = Integer.MAX_VALUE;
-	
-		
-	
-
-	
-	
-	// adjazente Knoten holen
-	//allAdjNode := Vertex -> List<Vertex>
-	public static List<Vertex> allAdjNode(Graph<Vertex, GKAEdge> g, Vertex startNode){
-		
-		
-//		if (g.isDirected()){
-//			...
-//		}else{
-//			...g.
-//		}
-		
-		//get all edges of startNode
-		Set<GKAEdge> edges = g.edgesOf(startNode);
-		
-		
-		//Rückgabeliste erstellen
-		List<Vertex> adjacentTarget = new ArrayList<>();
-			
-		for(GKAEdge edge : edges){
-		
-			adjacentTarget.add( (Vertex)edge.getTarget());
-			
-		}
-		return adjacentTarget;
-			
-	}
-	
-	
 	
 	/**
 	 * @param g is the Graph
@@ -63,7 +24,7 @@ public class BFS {
 	 * @param endNode is the endvertex
 	 * @return the sortest way from the start vertex to the end vertex
 	 */
-	public static List<Vertex> findShortestWay(Graph<Vertex, GKAEdge> g, Vertex startNode, Vertex endNode){
+	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode){
 	
 		//queue for the vertices
 		List<Vertex> queue = new ArrayList<>();
@@ -88,14 +49,13 @@ public class BFS {
 					// if the vertex is in the queue
 					if (g.containsVertex(firstNode)){
 						//get a list of all adjacent vertices of the current looking Vertex
-						list.addAll(allAdjNode(g, firstNode));
+						list.addAll(g.getAllAdjacentsOf(firstNode));
 					}else{
-						System.out.println("BFS#91 this is the graph 1111" + g.toString());
-						System.out.println("BFS#92 this is the startnode 1111" + firstNode);
+						System.out.println(" Dieser Knoten existiert im Graphen nicht ");
 					}
 					
 					//mark the first vertex as visited (color grey)
-					firstNode.isVisited(true);
+					firstNode.setVisited(true);
 					
 					//take the next adjacent Vertex to be visited -> turn it grey
 					for(int i=0; i<list.size(); i++){
@@ -130,8 +90,21 @@ public class BFS {
 				}
 		
 		
+//			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
+//			
+//			visitedVertices.addAll(queue);
 		
-		visitedVertices.addAll(queue);
+		
+		if(queue.isEmpty()){
+			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
+		}
+		else if(queue.get((queue.size())-1).equals(endNode)){
+			visitedVertices.addAll(queue);
+		}
+//			
+		
+		
+		
 		
 		
 		
@@ -160,7 +133,7 @@ public class BFS {
 			/*if the nodeweight of the first element of the reverse list 
 			one higher than the second element then the second element is 
 			the adjacent vertex and a vertex of the shortest way  */
-			if (first.nodeWeight() == (second.nodeWeight() + 1)){
+			if (first.getNodeWeight() == (second.getNodeWeight() + 1)){
 				reverseReturnList.add(second);
 			}
 		}
@@ -179,7 +152,7 @@ public class BFS {
 		List<Vertex> returnList = reverse(reverseReturnList); 
 		
 		for(int i=0 ; i<returnList.size() ; i++){
-			String tmp2 = returnList.get(i).name().toString();
+			String tmp2 = returnList.get(i).getName().toString();
 			System.out.println(tmp2);
 		}
 		
@@ -188,6 +161,8 @@ public class BFS {
 }
 	
 
+	
+	
 
 	//Help method to reverse List with Vertices
 	public static List<Vertex> reverse(List<Vertex> l){
