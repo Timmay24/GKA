@@ -4,22 +4,27 @@ import org.jgrapht.graph.DefaultEdge;
 
 public class GKAEdge extends DefaultEdge {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6523434696944744833L;
 
 	private String edgeName = null;
-	private Double weight = null;
+	private Double edgeWeight = null;
 
-	public GKAEdge(String name, Double weight) {
+	private GKAEdge(String edgeName, Double edgeWeight) {
 		super();
-		this.edgeName = name;
-		this.weight = weight;
+		this.edgeName = edgeName;
+		this.edgeWeight = edgeWeight;
 	}
 	
-	public GKAEdge(String name) {
-		this(name, null);
+	private GKAEdge(String edgeName) {
+		this(edgeName, null);
+	}
+	
+	public static GKAEdge valueOf(String edgeName, Double edgeWeight) {
+		return new GKAEdge(edgeName, edgeWeight);
+	}
+	
+	public static GKAEdge valueOf(String edgeName) {
+		return new GKAEdge(edgeName);
 	}
 
 	public Object getSource() {
@@ -31,7 +36,7 @@ public class GKAEdge extends DefaultEdge {
 	}
 
 	public Double getWeight() {
-		return weight;
+		return this.edgeWeight;
 	}
 
 	public String getName() {
@@ -41,10 +46,10 @@ public class GKAEdge extends DefaultEdge {
 	@Override
 	public String toString() {
 		String retVal;
-		if (edgeName == null) {
+		if (getName() == null) {
 			retVal = "(" + getSource() + " : " + getTarget() + ")";
 		} else {
-			retVal = "(" + edgeName + ")";
+			retVal = "(" + getName() + ")";
 		}
 		if (getWeight() != null) {
 			retVal += " : " + getWeight();

@@ -1,5 +1,3 @@
 package controller;
 
-public interface GKAController {
-
-}
+public interface GKAController {}

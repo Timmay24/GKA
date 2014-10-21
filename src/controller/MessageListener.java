@@ -2,6 +2,10 @@ package controller;
 
 public interface MessageListener {
 
-	public void giveMessage(String message);
+	/**
+	 * Anlaufstelle für eingehende Nachrichten, die an MessageListener verschickt werden
+	 * @param message Eingehende Nachricht
+	 */
+	public void receiveMessage(String message);
 	
 }
