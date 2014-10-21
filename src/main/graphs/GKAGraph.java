@@ -1,8 +1,11 @@
 package main.graphs;
 
+import static main.graphs.GraphType.DIRECTED_WEIGHTED;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,17 +29,20 @@ import com.mxgraph.swing.mxGraphComponent.mxGraphControl;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
+import controller.FileHandler;
 import controller.MessageListener;
 import controller.MessageSender;
 
 
 public class GKAGraph implements MessageSender {
 	
-	private		ListenableGraph<Vertex, GKAEdge> 	jGraph;
-	private		JGraphXAdapter<Vertex, GKAEdge> 	jgxAdapter;
-	private 	mxGraphComponent 					graphComponent = null;
-	private 	List<MessageListener>				msgListener = new ArrayList<>();
-	private		GraphType							graphType;
+	private			ListenableGraph<Vertex, GKAEdge> 	jGraph;
+	private			JGraphXAdapter<Vertex, GKAEdge> 	jgxAdapter;
+	private 		mxGraphComponent 					graphComponent = null;
+	private 		List<MessageListener>				msgListener = new ArrayList<>();
+	private			GraphType							graphType;
+	private final	String								UNDIRECTED_SYMBOL = "--";
+	private final	String								  DIRECTED_SYMBOL = "->";
 	
 	/**
 	 * Konstruktor mit Angabe des Graphentypen
@@ -118,7 +124,7 @@ public class GKAGraph implements MessageSender {
 	 */
 	public mxGraphComponent createSampleGraph() {
 
-		mxGraphComponent mxGC = newGraph(GraphType.DIRECTED_WEIGHTED);
+		mxGraphComponent mxGC = newGraph(DIRECTED_WEIGHTED);
 
 //		addEdge("v1", "v2", GKAEdge.valueOf("Edge 1", 1.0));
 //		addEdge("v2", "v3", GKAEdge.valueOf("Edge 2", 2.0));
@@ -355,6 +361,7 @@ public class GKAGraph implements MessageSender {
 	 */
 	public boolean containsVertex(Vertex vertex) {
 		return getGraph().vertexSet().contains(vertex);
+		//TODO delegieren
 	}
 
 	public boolean containsVertex(String vertexName) {
@@ -387,12 +394,15 @@ public class GKAGraph implements MessageSender {
 	 * Ausgangsknoten aus anliegt. Eingehende Kanten am Ausgangsknoten zaehlen
 	 * nicht.
 	 * Intern wird anhand des Graphentypen (gerichtet / ungerichtet) ueber die
-	 * Ermittlungsmethode entschieden.
+	 * Ermittlungsmethode entschieden, wenn die ueberladene Methode ohne directed
+	 * aufgerufen wird.
 	 * 
 	 * @param sourceVertex Ausgangsknoten, dessen Adjazenten ermitteln werden sollen.
+	 * @param directed Gibt an, ob nach Richtlinie von gerichteten oder ungerichteten
+	 *        Graphen ermittelt werden soll.
 	 * @return Collection aller Adjazenten des Ausgangsknotens.
 	 */
-	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex) {
+	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex, boolean directed) {
 		Set<Vertex> resultList = new HashSet<>();
 
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
@@ -402,7 +412,7 @@ public class GKAGraph implements MessageSender {
 			
 			if (e.getSource() != e.getTarget()) {          		// Schlaufen ausschliessen Source != Target
 				
-				if (isDirected()) {								// Sonderregelung fuer gerichtete Graphen:
+				if (directed) {								// Sonderregelung fuer gerichtete Graphen:
 					if (e.getSource() == sourceVertex) {       	// Nur adjazente Knoten in die Ergebnisliste stecken,
 						resultList.add((Vertex)e.getTarget());  // zu denen man vom Knoten sourceVertex aus kommen kann.
 																// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
@@ -417,6 +427,10 @@ public class GKAGraph implements MessageSender {
 			}
 		}
 		return resultList;
+	}
+	
+	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex) {
+		return getAllAdjacentsOf(sourceVertex, isDirected());
 	}
 	
 		
@@ -509,16 +523,97 @@ public class GKAGraph implements MessageSender {
 	 * 
 	 * @param file Dateiobjekt, das den Pfad zur Datei haelt.
 	 */
-	public void loadGraph(File file) {
+	public void openGraph() {
 		throw new NotImplementedException();
 	}
+	
+//	private boolean readFile(File file) {
+//		CharsetDecoder decoder = Charset.forName("ISO-8859-1").newDecoder();
+//		
+//	    InputStreamReader reader2 = new InputStreamReader(new FileInputStream(FileHandler.checkFile(file)), decoder);
+//	    BufferedReader reader = new BufferedReader(reader2);
+//	    String line = null;
+//	    ArrayList<String> returnValue = new ArrayList<>();
+//	    while ((line = reader.readLine()) != null) 
+//	    {
+//	        returnValue.addAll(Arrays.asList(line.replace(" ","").replace("\t","").split(";")));
+//	    }
+//	    return returnValue;
+//	}
 
 	/**
-	 * TODO Speichert einen Graphen in einer GKA-Datei.
-	 * 
-	 * @param file Dateiobjekt, das den Pfad zur Zieldatei haelt.
+	 * Rechnet den Graphen zeilenweise um und laesst die Zeilen in einer GKA-Datei ablegen.
 	 */
-	public void saveGraph(File file) {
-		throw new NotImplementedException();
+	public void saveGraph() {
+		List<String> output = new ArrayList<>();
+		String edgeSym = (isDirected())?(DIRECTED_SYMBOL):(UNDIRECTED_SYMBOL);
+		String outLine = null;
+		
+		if (isWeighted()) {
+			// Kanten und zugehoerige Knoten zuerst
+			for (GKAEdge e : getGraph().edgeSet()) {
+				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + " : " + e.getWeight() + ";";
+				output.add(outLine);
+				
+			}
+		} else {
+			// dito
+			for (GKAEdge e : getGraph().edgeSet()) {
+				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ";";
+				output.add(outLine);
+			}
+		}
+		
+		// alleinstehende Knoten danach
+		for (Vertex v : getGraph().vertexSet()) {
+			if (getAllAdjacentsOf(v, false).isEmpty()) {
+				output.add(v.getName() + ";");
+			}
+		}
+		
+		// Verfahren fuer saveGraph und saveGraphAs ueberlegen.
+		try {
+			FileHandler.saveGraph();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+	}
+	
+	public void saveGraphAs() {
+		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

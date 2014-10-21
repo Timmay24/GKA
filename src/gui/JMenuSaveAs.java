@@ -2,12 +2,14 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
 
 import controller.FileHandler;
+import controller.GKAController;
 
 
 
@@ -18,12 +20,12 @@ public class JMenuSaveAs extends JMenuItem {
 	 */
 	private static final long serialVersionUID = 514649601828588358L;
 
-	public JMenuSaveAs() {
+	public JMenuSaveAs(final GKAController controller) {
 		this.setText("Speichern unter ...");
 		this.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				FileHandler.saveGraphAs();
+				controller.saveGraphAs();
 			}
 		});
 	}

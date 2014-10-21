@@ -22,51 +22,94 @@ public class GraphController implements GKAController {
 		setGraphWrapper(GKAGraph.valueOf());
 	}
 	
-	/**
-	 * @return Gibt die Instanz der Graphen-Wrapperklasse zurueck.
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#getGraph()
 	 */
+	@Override
 	public ListenableGraph<Vertex, GKAEdge> getGraph() {
 		return getGraphWrapper().getGraph();
 	}
 	
+	/* (non-Javadoc)
+	 * @see controller.MessageSender#addMessageListener(controller.MessageListener)
+	 */
+	@Override
 	public void addMessageListener(MessageListener ml) {
 		getGraphWrapper().addMessageListener(ml);
 	}
 	
-	/**
-	 * @param graphType
-	 * @return Erzeugt einen neuen Graphenwrapper, der einen Graphen des gewuenschten Typs graphType enthaelt.
-	 * 			Der Rueckgabewert (die Graphenkomponente) kann direkt in der GUI eingebunden werden, um den Graphen anzuzeigen.
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#newGraph(main.graphs.GraphType)
 	 */
+	@Override
 	public mxGraphComponent newGraph(GraphType graphType) {
 		setGraphWrapper(GKAGraph.valueOf(graphType));
 		return getGraphWrapper().getGraphComponent();
 	}
 	
-	/**
-	 * @return 
-	 * @throws Exception: Wird geworfen, falls noch keine Graphenkomponente, mangels Graphen, erzeugt wurde.
+	/* (non-Javadoc)
+	 * @see controller.GKAController#saveGraph()
 	 */
+	@Override
+	public void saveGraph() {
+		getGraphWrapper().saveGraph();
+	}
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#saveGraphAs()
+	 */
+	@Override
+	public void saveGraphAs() {
+		getGraphWrapper().saveGraphAs();
+	}
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#getGraphComponent()
+	 */
+	@Override
 	public mxGraphComponent getGraphComponent() {
 		return getGraphWrapper().getGraphComponent();
 	}
 	
-	/**
-	 * @return Die Wrapperklasse des GKA-Graphen
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#getGraphWrapper()
 	 */
+	@Override
 	public GKAGraph getGraphWrapper() {
 		return gkaGraph;
 	}
 	
+	/**
+	 * @param gkaGraph
+	 */
 	private void setGraphWrapper(GKAGraph gkaGraph) {
 		this.gkaGraph = gkaGraph;
 	}
 	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#setCircleLayout()
+	 */
+	@Override
 	public void setCircleLayout() {
 		getGraphWrapper().setCircleLayout();
 	}
 	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#setParallelEdgeLayout()
+	 */
+	@Override
 	public void setParallelEdgeLayout() {
 		getGraphWrapper().setParallelEdgeLayout();
+	}
+
+	/* (non-Javadoc)
+	 * @see controller.GKAController#openGraph()
+	 */
+	@Override
+	public void openGraph() {
+		getGraphWrapper().openGraph();
 	}
 }

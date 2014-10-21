@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
 
 public class MainWindow implements MessageListener {
 	
-	private 	int[]				verNo = {0,3,30};
+	private 	int[]				verNo = {0,4,32};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -240,15 +240,15 @@ public class MainWindow implements MessageListener {
 		separator_2.setForeground(Color.LIGHT_GRAY);
 		mnFile.add(separator_2);
 		
-		mntmOpen = new JMenuOpen();
+		mntmOpen = new JMenuOpen(graphController);
 		mntmOpen.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/open.png")));
 		mnFile.add(mntmOpen);
 		
-		mntmSave = new JMenuSave();
+		mntmSave = new JMenuSave(graphController);
 		mntmSave.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/save.png")));
 		mnFile.add(mntmSave);
 		
-		mntmSaveAs = new JMenuSaveAs();
+		mntmSaveAs = new JMenuSaveAs(graphController);
 		mntmSaveAs.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/save_as.png")));
 		mnFile.add(mntmSaveAs);
 		

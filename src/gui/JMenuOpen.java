@@ -8,6 +8,7 @@ import javax.swing.Icon;
 import javax.swing.JMenuItem;
 
 import controller.FileHandler;
+import controller.GKAController;
 
 public class JMenuOpen extends JMenuItem {
 
@@ -16,11 +17,11 @@ public class JMenuOpen extends JMenuItem {
 	 */
 	private static final long serialVersionUID = 543636227711883142L;
 
-	public JMenuOpen() {
+	public JMenuOpen(final GKAController controller) {
 		this.setText("\u00D6ffnen ...");
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				FileHandler.openGraph();
+				controller.openGraph();
 			}
 		});
 	}
