@@ -61,7 +61,7 @@ public class BFS {
 	 * @param g is the Graph
 	 * @param startNode is the startvertex
 	 * @param endNode is the endvertex
-	 * @return
+	 * @return the sortest way from the start vertex to the end vertex
 	 */
 	public static List<Vertex> findShortestWay(Graph<Vertex, GKAEdge> g, Vertex startNode, Vertex endNode){
 	
@@ -103,10 +103,10 @@ public class BFS {
 						if ((!currentVertex.isVisited())){
 							
 						    //mark it as visited (color grey)
-							currentVertex.isVisited(true);
+							currentVertex.setVisited(true);
 							
 							//set current node-weight of the start Vertex one higher
-							currentVertex.nodeWeight(firstNode.nodeWeight() + 1);
+							currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
 							
 							//add the child-vertex (current vertex) to the end of the list 
 							queue.add(currentVertex);
