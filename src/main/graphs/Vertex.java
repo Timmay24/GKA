@@ -1,92 +1,118 @@
 package main.graphs;
 
-public class Vertex{
+public class Vertex {
 
-	private String name;
-	private int nodeWeight;
-	private String color;
-	private boolean visited = false;
-	
-	
-	
-	//Getter, Setter
-	public String name(){
+	private		String 		name;
+	private 	String 		color;
+	private 	int 		nodeWeight;
+	private 	boolean 	visited = false;
+
+	/**
+	 * @return Gibt den Knotennamen zurueck.
+	 */
+	public String getName() {
 		return this.name;
 	}
-	
-	public String getName() {
-		return name();
+
+	@Deprecated
+	public String name() {
+		return this.name;
 	}
-	
-	public void name(String name){
-		this.name = name;
-	}
-	
-	public void setName(String name) {
-		name(name);
-	}
-	
-	public int nodeWeight(){
-		return this.nodeWeight;
-	}
-	
+
+	/**
+	 * Gibt die Knotengewichtung zurueck (benoetigt fuer BFS)
+	 * 
+	 * @param nodeWeight
+	 */
 	public int getNodeWeight() {
 		return nodeWeight;
 	}
-	
-	public void nodeWeight(int nodeWeight){
+
+	/**
+	 * Setzt die Knotengewichtung (benoetigt fuer BFS)
+	 * 
+	 * @param nodeWeight Knotengewicht
+	 */
+	public void setNodeWeight(int nodeWeight) {
 		this.nodeWeight = nodeWeight;
 	}
-	
-	public void setNodeWeight(int nodeWeight) {
-		nodeWeight(nodeWeight);
+
+	@Deprecated
+	public void nodeWeight(int nodeWeight) {
+		this.nodeWeight = nodeWeight;
 	}
-	
-	public String color(){
+
+	@Deprecated
+	public int nodeWeight() {
+		return this.nodeWeight;
+	}
+
+	public String getColor() {
 		return this.color;
 	}
-	
-	public String getColor() {
-		return color();
-	}
-	
-	public void color(String color){
+
+	public void setColor(String color) {
 		this.color = color;
 	}
-	
-	public void setColor(String color) {
-		color(color);
+
+	@Deprecated
+	public String color() {
+		return this.color;
 	}
-	
-	public boolean isVisited(){
+
+	@Deprecated
+	public void color(String color) {
+		this.color = color;
+	}
+
+	/**
+	 * @return Gibt an, ob Knoten bereits bei Traversierung besucht wurde.
+	 */
+	public boolean isVisited() {
 		return this.visited;
 	}
-	
-	public void isVisited(boolean visited){
+
+	public void setVisited(boolean visited) {
 		this.visited = visited;
 	}
-	
-	public void setVisited(boolean visited) {
-		isVisited(visited);
+
+	@Deprecated
+	public void isVisited(boolean visited) {
+		this.visited = visited;
 	}
-	
-	private Vertex(String name){
+
+	/**
+	 * Konstruktor
+	 * 
+	 * @param name Name des Knotens.
+	 */
+	private Vertex(String name) {
 		this.name = name;
 		this.color = "white";
 	}
-	
-	public static Vertex valueOf(String name){
+
+	/**
+	 * Factory-Methode zur Erzeugung einer Instanz.
+	 * 
+	 * @param name Name des Knotens
+	 * @return Gibt eine neue Instanz der Klasse zurueck.
+	 */
+	public static Vertex valueOf(String name) {
 		return new Vertex(name);
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-//		result = prime * result + ((color == null) ? 0 : color.hashCode());
+		// result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-//		result = prime * result + nodeWeight;
+		// result = prime * result + nodeWeight;
 		return result;
 	}
 
@@ -99,24 +125,19 @@ public class Vertex{
 		if (getClass() != obj.getClass())
 			return false;
 		Vertex other = (Vertex) obj;
-//		if (color == null) {
-//			if (other.color != null)
-//				return false;
-//		} else if (!color.equals(other.color))
-//			return false;
+		// if (color == null) {
+		// if (other.color != null)
+		// return false;
+		// } else if (!color.equals(other.color))
+		// return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-//		if (nodeWeight != other.nodeWeight)
-//			return false;
+		// if (nodeWeight != other.nodeWeight)
+		// return false;
 		return true;
 	}
 
-	
-	
-	
-	
-	
 }

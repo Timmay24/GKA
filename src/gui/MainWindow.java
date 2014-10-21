@@ -11,7 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -27,12 +30,14 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
 import main.graphs.GraphType;
+import main.graphs.Vertex;
 import controller.GraphController;
 import controller.MessageListener;
+import javax.swing.ImageIcon;
 
 public class MainWindow implements MessageListener {
 	
-	private 	int[]				verNo = {0,3,22};
+	private 	int[]				verNo = {0,3,30};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -67,7 +72,6 @@ public class MainWindow implements MessageListener {
 	/**
 	 * Launch the application.
 	 */
-	
 	public static void main(String[] args) {
 		start(args);
 	}
@@ -169,7 +173,7 @@ public class MainWindow implements MessageListener {
 		reportTextArea.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if (arg0.getButton() == 3) {
+				if (arg0.getButton() == 3) {			// Rechts Maustaste
 					pmRClickReport.setVisible(true);
 				}
 			}
@@ -178,16 +182,28 @@ public class MainWindow implements MessageListener {
 		scrollPane.setViewportView(reportTextArea);
 		
 		pmRClickReport = new JPopupMenu();
-		pmRClickReport.setLabel("L\u00F6schen");
 		addPopup(reportTextArea, pmRClickReport);
 		
 		mntmClearReport = new JMenuItem("L\u00F6schen");
+		mntmClearReport.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/delete.png")));
 		mntmClearReport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				reportTextArea.setText("");
 			}
 		});
 		pmRClickReport.add(mntmClearReport);
+		
+		JButton btnNewButton = new JButton("Alle Adjazenten von v1");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Collection<Vertex> res = graphController.getGraphWrapper().getAllAdjacents( graphController.getGraphWrapper().getVertex("v1") );
+				for (Vertex v : res) {
+					report(v.toString());
+				}
+			}
+		});
+		btnNewButton.setBounds(217, 369, 89, 23);
+		mainFrame.getContentPane().add(btnNewButton);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
@@ -196,6 +212,7 @@ public class MainWindow implements MessageListener {
 		menuBar.add(mnFile);
 		
 		mnNeuerGraph = new JMenu("Neuer Graph");
+		mnNeuerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/graph.jpg")));
 		mnFile.add(mnNeuerGraph);
 		
 		mntmGerichtet = new JMenuItem("Gerichtet");
@@ -215,15 +232,19 @@ public class MainWindow implements MessageListener {
 		mnNeuerGraph.add(separator_1);
 		
 		mntmBeispiel = new JMenuItem("Beispielgraphen");
+		mntmBeispiel.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/example.png")));
 		mnNeuerGraph.add(mntmBeispiel);
 		
 		mntmOpen = new JMenuOpen();
+		mntmOpen.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/open.png")));
 		mnFile.add(mntmOpen);
 		
 		mntmSave = new JMenuSave();
+		mntmSave.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/save.png")));
 		mnFile.add(mntmSave);
 		
 		mntmSaveAs = new JMenuSaveAs();
+		mntmSaveAs.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/save_as.png")));
 		mnFile.add(mntmSaveAs);
 		
 		separator = new JSeparator();
@@ -231,6 +252,7 @@ public class MainWindow implements MessageListener {
 		mnFile.add(separator);
 		
 		mntmQuit = new JMenuItem("Beenden");
+		mntmQuit.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/quit.png")));
 		mntmQuit.addActionListener(new ActionListener() {
 			
 			@Override
@@ -266,6 +288,7 @@ public class MainWindow implements MessageListener {
 		menuBar.add(mnQuestionmark);
 		
 		mntmInfo = new JMenuItem("Info ...");
+		mntmInfo.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/info.png")));
 		mntmInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				InfoPopup.showInfo(null);
@@ -279,6 +302,10 @@ public class MainWindow implements MessageListener {
 	 */
 	@Override
 	public void receiveMessage(String message) {
+		report(message);
+	}
+	
+	private void report(String message) {
 		reportTextArea.append(message + "\n");
 	}
 	
