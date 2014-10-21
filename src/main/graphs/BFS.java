@@ -56,6 +56,12 @@ public class BFS {
 	
 	
 	
+	/**
+	 * @param g is the Graph
+	 * @param startNode is the startvertex
+	 * @param endNode is the endvertex
+	 * @return
+	 */
 	public static List<Vertex> findShortestWay(Graph<Vertex, GKAEdge> g, Vertex startNode, Vertex endNode){
 	
 		//queue for the vertices
@@ -72,9 +78,9 @@ public class BFS {
 		List<Vertex> visitedVertices = new ArrayList<>();
 		
 		
-		while(!queue.isEmpty()){
+		while(!queue.isEmpty() && (queue.get((queue.size())-1) != endNode)){
 			
-			if (queue.get((queue.size())-1) != endNode){
+//			if (queue.get((queue.size())-1) != endNode){
 					Vertex firstNode = queue.get(0);
 				 				
 					List<Vertex> list = new ArrayList<>();
@@ -108,6 +114,7 @@ public class BFS {
 							for-loop and go on with the next commmand */
 							if (currentVertex == endNode){
 								i = list.size();
+//								queue.add(currentVertex);
 							}
 						}
 					}
@@ -120,7 +127,7 @@ public class BFS {
 				queue.remove(0);
 				
 				}
-		}
+		
 		
 		
 		visitedVertices.addAll(queue);
@@ -138,13 +145,13 @@ public class BFS {
 		List<Vertex> reverseList = reverse(visitedVertices);
 		
 		
-		List<Vertex> returnList = new ArrayList<Vertex>();
+		List<Vertex> reverseReturnList = new ArrayList<Vertex>();
 		
 		//put the first element (the endNode of the way) in the return list
-		returnList.add(reverseList.get(0));
+		reverseReturnList.add(reverseList.get(0));
 		
 		//gives the shortest way in a list
-		for(int i=0 ; i<reverseList.size(); i++){
+		for(int i=0 ; i<reverseList.size()-1; i++){
 			
 			Vertex first = reverseList.get(i);
 			Vertex second = reverseList.get(i+1);
@@ -153,25 +160,31 @@ public class BFS {
 			one higher than the second element then the second element is 
 			the adjacent vertex and a vertex of the shortest way  */
 			if (first.nodeWeight() == (second.nodeWeight() + 1)){
-				returnList.add(second);
+				reverseReturnList.add(second);
 			}
 		}
 		
 		//Number of edges in shortest way	
-		int tmp = (returnList.size() - 1);
+		int tmp = (reverseReturnList.size() - 1);
 		Integer anzahlInInt = new Integer(tmp); 
 		String anzahl = anzahlInInt.toString();
-			    
-		System.out.println("Der Weg hat " + anzahl + "Kanten");
-				
+		
+		
+		//FOR TIM: Anzahl der benoetigten Kanten
+		System.out.println("Der Weg hat " + anzahl + " Kanten");
+		System.out.println("Der Weg ist: ");	
+		
+		//reverse the reverseList to get the way from the StartVertex to the EndVertex
+		List<Vertex> returnList = reverse(reverseReturnList); 
+		
 		for(int i=0 ; i<returnList.size() ; i++){
-		String tmp2 = returnList.get(i).name().toString();
-		System.out.println(tmp2);
+			String tmp2 = returnList.get(i).name().toString();
+			System.out.println(tmp2);
 		}
 		
 		return returnList;
 		
-	}
+}
 	
 
 
