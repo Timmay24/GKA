@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -16,6 +17,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
@@ -26,38 +28,41 @@ import javax.swing.border.TitledBorder;
 
 import main.graphs.GraphType;
 import controller.GraphController;
-import controller.GuiController;
 import controller.MessageListener;
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import java.awt.Component;
 
 public class MainWindow implements MessageListener {
 	
-	private			GuiController		guiController;
-	private 		GraphController		graphController;
-	private 		JFrame 				mainFrame;
-	private 		JMenuItem 			mntmInfo;
-	private 		JMenu 				mnQuestionmark;
-	private 		JPanel 				graphPanel;
-	private 		JPanel 				controlPanel;
-	private 		JToggleButton		tglbtnNewVertice;
-	private 		JToggleButton 		tglbtnNewEdge;
-	private 		JScrollPane 		scrollPane;
-	private 		JTextArea 			reportTextArea;
-	private 		JMenuBar 			menuBar;
-	private 		JMenu 				mnFile;
-	private 		JMenuItem 			mntmNewGraph;
-	private 		JMenuItem 			mntmOpen;
-	private 		JMenuItem 			mntmSave;
-	private 		JMenuItem			mntmSaveAs;
-	private 		JSeparator 			separator;
-	private 		JMenuItem 			mntmQuit;
-	private 		int[]				verNo = {0,2,2};
-	private 		JPopupMenu 			pmRClickReport;
-	private 		JMenuItem 			mntmClearReport;
-	private JMenu mnReporting;
-	private JMenuItem mntmAlleKantenAusgeben;
+	private 	int[]				verNo = {0,3,22};
+	private 	GraphController		graphController;
+	private 	JFrame 				mainFrame;
+	private 	JMenuItem 			mntmInfo;
+	private 	JMenu 				mnQuestionmark;
+	private 	JPanel 				graphPanel;
+	private 	JPanel 				controlPanel;
+	private 	JToggleButton		tglbtnNewVertice;
+	private 	JToggleButton 		tglbtnNewEdge;
+	private 	JScrollPane 		scrollPane;
+	private 	JTextArea 			reportTextArea;
+	private 	JMenuBar 			menuBar;
+	private 	JMenu 				mnFile;
+	private 	JMenuItem 			mntmOpen;
+	private 	JMenuItem 			mntmSave;
+	private 	JMenuItem			mntmSaveAs;
+	private 	JSeparator 			separator;
+	private 	JMenuItem 			mntmQuit;
+	private 	JPopupMenu 			pmRClickReport;
+	private 	JMenuItem 			mntmClearReport;
+	private 	JMenu 				mnReporting;
+	private 	JMenuItem 			mntmAlleKantenAusgeben;
+	private 	JMenu 				mnLayout;
+	private		JMenuItem 			mntmApplyCircleLayout;
+	private		JMenu 				mnNeuerGraph;
+	private 	JMenuItem 			mntmGerichtet;
+	private 	JMenuItem 			mntmUngerichtet;
+	private 	JMenuItem 			mntmGerichtetGewichtet;
+	private 	JMenuItem 			mntmGerichtetUngewichtet;
+	private 	JMenuItem 			mntmBeispiel;
+	private 	JSeparator 			separator_1;
 
 	/**
 	 * Launch the application.
@@ -85,8 +90,7 @@ public class MainWindow implements MessageListener {
 	 * Create the application.
 	 */
 	public MainWindow() {
-		guiController = new GuiController();
-		graphController = GraphController.getInstance();
+		graphController = new GraphController();
 		initialize();
 		graphController.addMessageListener(this);
 		
@@ -95,12 +99,8 @@ public class MainWindow implements MessageListener {
 	
 	private void createSampleGraph() {
 		graphPanel.removeAll();
-		graphPanel.add(graphController.createSampleSetup());
+		graphPanel.add(graphController.getGraphComponent());
 		mainFrame.repaint();
-	}
-	
-	private void newGraph() {
-		newGraph(GraphType.DIRECTED_WEIGHTED);
 	}
 	
 	private void newGraph(GraphType graphType) {
@@ -142,7 +142,7 @@ public class MainWindow implements MessageListener {
 		graphPanel = new JPanel();
 		graphPanel.setBackground(Color.LIGHT_GRAY);
 		graphPanel.setBounds(10, 11, 774, 326);
-		graphController.createSampleSetup();          // Beim Start einen Beispielgraphen laden
+		createSampleGraph(); // Beim Start einen Beispielgraphen laden
 		mainFrame.getContentPane().add(graphPanel);
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
@@ -195,13 +195,27 @@ public class MainWindow implements MessageListener {
 		mnFile = new JMenu("Datei");
 		menuBar.add(mnFile);
 		
-		mntmNewGraph = new JMenuItem("Neuer Graph");
-		mntmNewGraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				newGraph();
-			}
-		});
-		mnFile.add(mntmNewGraph);
+		mnNeuerGraph = new JMenu("Neuer Graph");
+		mnFile.add(mnNeuerGraph);
+		
+		mntmGerichtet = new JMenuItem("Gerichtet");
+		mnNeuerGraph.add(mntmGerichtet);
+		
+		mntmUngerichtet = new JMenuItem("Ungerichtet");
+		mnNeuerGraph.add(mntmUngerichtet);
+		
+		mntmGerichtetGewichtet = new JMenuItem("Gerichtet + Gewichtet");
+		mnNeuerGraph.add(mntmGerichtetGewichtet);
+		
+		mntmGerichtetUngewichtet = new JMenuItem("Gerichtet + Ungewichtet");
+		mnNeuerGraph.add(mntmGerichtetUngewichtet);
+		
+		separator_1 = new JSeparator();
+		separator_1.setForeground(Color.LIGHT_GRAY);
+		mnNeuerGraph.add(separator_1);
+		
+		mntmBeispiel = new JMenuItem("Beispielgraphen");
+		mnNeuerGraph.add(mntmBeispiel);
 		
 		mntmOpen = new JMenuOpen();
 		mnFile.add(mntmOpen);
@@ -226,10 +240,10 @@ public class MainWindow implements MessageListener {
 		});
 		mnFile.add(mntmQuit);
 		
-		JMenu mnLayout = new JMenu("Layout");
+		mnLayout = new JMenu("Layout");
 		menuBar.add(mnLayout);
 		
-		JMenuItem mntmApplyCircleLayout = new JMenuItem("Im Kreis anordnen");
+		mntmApplyCircleLayout = new JMenuItem("Im Kreis anordnen");
 		mntmApplyCircleLayout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				graphController.setCircleLayout();
@@ -243,7 +257,7 @@ public class MainWindow implements MessageListener {
 		mntmAlleKantenAusgeben = new JMenuItem("Alle Kanten ausgeben");
 		mntmAlleKantenAusgeben.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				graphController.printAllEdges();
+				graphController.getGraphWrapper().printAllEdges();
 			}
 		});
 		mnReporting.add(mntmAlleKantenAusgeben);
@@ -260,14 +274,14 @@ public class MainWindow implements MessageListener {
 		mnQuestionmark.add(mntmInfo);
 	}
 	
-	public JTextArea getReportTextArea() {
-		return reportTextArea;
-	}
-
+	/* (non-Javadoc)
+	 * @see controller.MessageListener#receiveMessage(java.lang.String)
+	 */
 	@Override
-	public void giveMessage(String message) {
+	public void receiveMessage(String message) {
 		reportTextArea.append(message + "\n");
 	}
+	
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
