@@ -129,6 +129,7 @@ public class MainWindow implements MessageListener {
 		
 		// Hauptframe initialisieren
 		mainFrame = new JFrame();
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/ressources/images/graph.jpg")));
 		mainFrame.setResizable(false);
 		mainFrame.setTitle("BFS Tool " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
@@ -178,7 +179,7 @@ public class MainWindow implements MessageListener {
 				}
 			}
 		});
-		reportTextArea.setFont(new Font("Monospaced", Font.PLAIN, 11));
+		reportTextArea.setFont(new Font("Consolas", Font.PLAIN, 11));
 		scrollPane.setViewportView(reportTextArea);
 		
 		pmRClickReport = new JPopupMenu();
@@ -202,7 +203,7 @@ public class MainWindow implements MessageListener {
 				}
 			}
 		});
-		btnNewButton.setBounds(217, 369, 89, 23);
+		btnNewButton.setBounds(217, 369, 151, 23);
 		mainFrame.getContentPane().add(btnNewButton);
 		
 		menuBar = new JMenuBar();
@@ -212,7 +213,7 @@ public class MainWindow implements MessageListener {
 		menuBar.add(mnFile);
 		
 		mnNeuerGraph = new JMenu("Neuer Graph");
-		mnNeuerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/graph.jpg")));
+		mnNeuerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/new_graph.png")));
 		mnFile.add(mnNeuerGraph);
 		
 		mntmGerichtet = new JMenuItem("Gerichtet");
@@ -234,6 +235,10 @@ public class MainWindow implements MessageListener {
 		mntmBeispiel = new JMenuItem("Beispielgraphen");
 		mntmBeispiel.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/example.png")));
 		mnNeuerGraph.add(mntmBeispiel);
+		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setForeground(Color.LIGHT_GRAY);
+		mnFile.add(separator_2);
 		
 		mntmOpen = new JMenuOpen();
 		mntmOpen.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/open.png")));
@@ -284,7 +289,8 @@ public class MainWindow implements MessageListener {
 		});
 		mnReporting.add(mntmAlleKantenAusgeben);
 		
-		mnQuestionmark = new JMenu("?");
+		mnQuestionmark = new JMenu("");
+		mnQuestionmark.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/question_blue.png")));
 		menuBar.add(mnQuestionmark);
 		
 		mntmInfo = new JMenuItem("Info ...");
