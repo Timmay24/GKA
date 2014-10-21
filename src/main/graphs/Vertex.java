@@ -9,11 +9,12 @@ import org.jgrapht.Graph;
 
 
 
-public class Vertex {
+public class Vertex{
 
 	private String name;
 	private int nodeWeight;
 	private String color;
+	private boolean isVisited = false;
 	
 	
 	
@@ -40,6 +41,14 @@ public class Vertex {
 	
 	public void color(String color){
 		this.color = color;
+	}
+	
+	public boolean isVisited(){
+		return this.isVisited;
+	}
+	
+	public void isVisited(boolean isVisited){
+		this.isVisited = isVisited;
 	}
 	
 	
