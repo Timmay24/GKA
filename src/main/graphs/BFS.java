@@ -8,6 +8,7 @@ import java.util.Set;
 import org.hamcrest.core.IsEqual;
 import org.jgraph.graph.DefaultEdge;
 import org.jgrapht.Graph;
+import com.google.common.*;
 
 
 
@@ -190,6 +191,7 @@ public class BFS {
 
 	//Help method to reverse List with Vertices
 	public static List<Vertex> reverse(List<Vertex> l){
+		if (l == null){throw new NullPointerException("the input is null");}
 		
 		List<Vertex> reverseList = new ArrayList<>();
 			for (int i=l.size()-1 ; i>=0 ; i--){

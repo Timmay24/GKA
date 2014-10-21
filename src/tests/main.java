@@ -129,7 +129,7 @@ public class main {
 	
 	
 	
-	
+	@Ignore
 	@Test
 	public void testFindShortestWay() {
 		
@@ -211,9 +211,13 @@ public class main {
 	
 	
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void testReverse(){
+		
+		/*
+		 * Test 1: einfache Liste aus Vertices
+		 * */
 		List<Vertex> reverseList = new ArrayList<>();
 		reverseList.add(Vertex.valueOf("a"));
 		reverseList.add(Vertex.valueOf("b"));
@@ -229,9 +233,58 @@ public class main {
 		list.add(Vertex.valueOf("a"));
 		
 		assertEquals(reverseList, BFS.reverse(list));
+		
+		
+		/*
+		 * Test 2: Liste mit Vertices mit String Zahlen
+		 * */
+		List<Vertex> reverseList1 = new ArrayList<>();
+		reverseList1.add(Vertex.valueOf("1"));
+		reverseList1.add(Vertex.valueOf("1"));
+		reverseList1.add(Vertex.valueOf("2"));
+		reverseList1.add(Vertex.valueOf("0"));
+		reverseList1.add(Vertex.valueOf("03"));
+		
+		List<Vertex> list1 = new ArrayList<>();
+		list1.add(Vertex.valueOf("03"));
+		list1.add(Vertex.valueOf("0"));
+		list1.add(Vertex.valueOf("2"));
+		list1.add(Vertex.valueOf("1"));
+		list1.add(Vertex.valueOf("1"));
+		
+		assertEquals(reverseList1, BFS.reverse(list1));
+		
+		
+		/*
+		 * Test 3: ein Elementige Liste aus Vertices
+		 * */
+		List<Vertex> reverseList2 = new ArrayList<>();
+		reverseList1.add(Vertex.valueOf("0"));
+		
+		List<Vertex> list2 = new ArrayList<>();
+		list1.add(Vertex.valueOf("0"));
+		
+		assertEquals(reverseList2, BFS.reverse(list2));
+		
+		
+		/*
+		 * Test 4: Liste mit Vertices mit String Zahlen
+		 * */
+		List<Vertex> reverseList3 = new ArrayList<>();
+		
+		List<Vertex> list3 = new ArrayList<>();
+		
+		assertEquals(reverseList3, BFS.reverse(list3));
 	}
 	
-	
-	
+	/*
+	 * Test 5: Null-Objekt Exeption
+	 * */
+	 @Ignore
+	 @Test(expected = NullPointerException.class)
+	    public void testReverseFail(){
+		 
+		BFS.reverse(null);
+	 }
 	
 }
