@@ -43,7 +43,7 @@ public class GKAGraph implements MessageSender {
 	 * 
 	 * @param graphType
 	 */
-	public GKAGraph(GraphType graphType) {
+	private GKAGraph(GraphType graphType) {
 		newGraph(graphType);
 	}
 
@@ -51,7 +51,7 @@ public class GKAGraph implements MessageSender {
 	 * Standart-Konstruktor fuer den Start des Programms, mit dem der
 	 * Beispielgraph geladen wird.
 	 */
-	public GKAGraph() {
+	private GKAGraph() {
 		createSampleGraph();
 	}
 
