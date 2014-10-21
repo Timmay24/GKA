@@ -87,36 +87,36 @@ public class main {
 		 graph1.addEdge( a, b, new GKAEdge("e2")); 
 		 graph1.addEdge( a, h, new GKAEdge("e3"));
 		 
-//		 graph1.addEdge( f, e, new GKAEdge("e4"));
-//		 graph1.addEdge( f, a, new GKAEdge("e5"));
-//		
-//		 graph1.addEdge( b, a, new GKAEdge("e6"));
-//		 graph1.addEdge( b, e, new GKAEdge("e7"));
-//		 graph1.addEdge( b, g, new GKAEdge("e8"));
-//		 graph1.addEdge( b, h, new GKAEdge("e9"));
-//		 
-//		 graph1.addEdge( h, b, new GKAEdge("e10"));
-//		 graph1.addEdge( h, a, new GKAEdge("e11"));
-//		 graph1.addEdge( h, g, new GKAEdge("e12"));
-//		 graph1.addEdge( h, k, new GKAEdge("e13"));
-//		 
-//		 graph1.addEdge( k, h, new GKAEdge("e14"));
-//		 graph1.addEdge( k, m, new GKAEdge("e15"));
-//		 
-//		 graph1.addEdge( g, h, new GKAEdge("e16"));
-//		 graph1.addEdge( g, b, new GKAEdge("e17"));
-//		 graph1.addEdge( g, e, new GKAEdge("e18"));
-//		 graph1.addEdge( g, m, new GKAEdge("e19"));
-//		 
-//		 graph1.addEdge( m, k, new GKAEdge("e20"));
-//		 graph1.addEdge( m, g, new GKAEdge("e21"));
-//		 graph1.addEdge( m, e, new GKAEdge("e22"));
-//		 
-//		 graph1.addEdge( e, f, new GKAEdge("e23"));
-//		 graph1.addEdge( e, b, new GKAEdge("e24"));
-//		 graph1.addEdge( e, g, new GKAEdge("e25"));
-//		 graph1.addEdge( e, m, new GKAEdge("e26"));
-//		 
+		 graph1.addEdge( f, e, new GKAEdge("e4"));
+		 graph1.addEdge( f, a, new GKAEdge("e5"));
+		
+		 graph1.addEdge( b, a, new GKAEdge("e6"));
+		 graph1.addEdge( b, e, new GKAEdge("e7"));
+		 graph1.addEdge( b, g, new GKAEdge("e8"));
+		 graph1.addEdge( b, h, new GKAEdge("e9"));
+		 
+		 graph1.addEdge( h, b, new GKAEdge("e10"));
+		 graph1.addEdge( h, a, new GKAEdge("e11"));
+		 graph1.addEdge( h, g, new GKAEdge("e12"));
+		 graph1.addEdge( h, k, new GKAEdge("e13"));
+		 
+		 graph1.addEdge( k, h, new GKAEdge("e14"));
+		 graph1.addEdge( k, m, new GKAEdge("e15"));
+		 
+		 graph1.addEdge( g, h, new GKAEdge("e16"));
+		 graph1.addEdge( g, b, new GKAEdge("e17"));
+		 graph1.addEdge( g, e, new GKAEdge("e18"));
+		 graph1.addEdge( g, m, new GKAEdge("e19"));
+		 
+		 graph1.addEdge( m, k, new GKAEdge("e20"));
+		 graph1.addEdge( m, g, new GKAEdge("e21"));
+		 graph1.addEdge( m, e, new GKAEdge("e22"));
+		 
+		 graph1.addEdge( e, f, new GKAEdge("e23"));
+		 graph1.addEdge( e, b, new GKAEdge("e24"));
+		 graph1.addEdge( e, g, new GKAEdge("e25"));
+		 graph1.addEdge( e, m, new GKAEdge("e26"));
+		 
 		 
 		 List<Vertex> l = new ArrayList<>();
 	     l.add(f);
@@ -165,36 +165,36 @@ public class main {
 		 graph1.addEdge( a, b, new GKAEdge("e2")); 
 		 graph1.addEdge( a, h, new GKAEdge("e3"));
 		 
-//		 graph1.addEdge( f, e, new GKAEdge("e4"));
-//		 graph1.addEdge( f, a, new GKAEdge("e5"));
-//		
-//		 graph1.addEdge( b, a, new GKAEdge("e6"));
-//		 graph1.addEdge( b, e, new GKAEdge("e7"));
-//		 graph1.addEdge( b, g, new GKAEdge("e8"));
-//		 graph1.addEdge( b, h, new GKAEdge("e9"));
-//		 
-//		 graph1.addEdge( h, b, new GKAEdge("e10"));
-//		 graph1.addEdge( h, a, new GKAEdge("e11"));
-//		 graph1.addEdge( h, g, new GKAEdge("e12"));
-//		 graph1.addEdge( h, k, new GKAEdge("e13"));
-//		 
-//		 graph1.addEdge( k, h, new GKAEdge("e14"));
-//		 graph1.addEdge( k, m, new GKAEdge("e15"));
-//		 
-//		 graph1.addEdge( g, h, new GKAEdge("e16"));
-//		 graph1.addEdge( g, b, new GKAEdge("e17"));
-//		 graph1.addEdge( g, e, new GKAEdge("e18"));
-//		 graph1.addEdge( g, m, new GKAEdge("e19"));
-//		 
-//		 graph1.addEdge( m, k, new GKAEdge("e20"));
-//		 graph1.addEdge( m, g, new GKAEdge("e21"));
-//		 graph1.addEdge( m, e, new GKAEdge("e22"));
-//		 
-//		 graph1.addEdge( e, f, new GKAEdge("e23"));
-//		 graph1.addEdge( e, b, new GKAEdge("e24"));
-//		 graph1.addEdge( e, g, new GKAEdge("e25"));
-//		 graph1.addEdge( e, m, new GKAEdge("e26"));
-//		 
+		 graph1.addEdge( f, e, new GKAEdge("e4"));
+		 graph1.addEdge( f, a, new GKAEdge("e5"));
+		
+		 graph1.addEdge( b, a, new GKAEdge("e6"));
+		 graph1.addEdge( b, e, new GKAEdge("e7"));
+		 graph1.addEdge( b, g, new GKAEdge("e8"));
+		 graph1.addEdge( b, h, new GKAEdge("e9"));
+		 
+		 graph1.addEdge( h, b, new GKAEdge("e10"));
+		 graph1.addEdge( h, a, new GKAEdge("e11"));
+		 graph1.addEdge( h, g, new GKAEdge("e12"));
+		 graph1.addEdge( h, k, new GKAEdge("e13"));
+		 
+		 graph1.addEdge( k, h, new GKAEdge("e14"));
+		 graph1.addEdge( k, m, new GKAEdge("e15"));
+		 
+		 graph1.addEdge( g, h, new GKAEdge("e16"));
+		 graph1.addEdge( g, b, new GKAEdge("e17"));
+		 graph1.addEdge( g, e, new GKAEdge("e18"));
+		 graph1.addEdge( g, m, new GKAEdge("e19"));
+		 
+		 graph1.addEdge( m, k, new GKAEdge("e20"));
+		 graph1.addEdge( m, g, new GKAEdge("e21"));
+		 graph1.addEdge( m, e, new GKAEdge("e22"));
+		 
+		 graph1.addEdge( e, f, new GKAEdge("e23"));
+		 graph1.addEdge( e, b, new GKAEdge("e24"));
+		 graph1.addEdge( e, g, new GKAEdge("e25"));
+		 graph1.addEdge( e, m, new GKAEdge("e26"));
+		 
 		 
 		 //Start vertex: A
 		 //End vertex: M

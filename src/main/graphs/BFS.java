@@ -1,6 +1,7 @@
 package main.graphs;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,6 @@ public class BFS {
 			adjacentTarget.add( (Vertex)edge.getTarget());
 			
 		}
-		System.out.println(adjacentTarget.toString());
 		return adjacentTarget;
 			
 	}
@@ -68,61 +68,58 @@ public class BFS {
 		//write start node in queue
 		queue.add(startNode);
 		
-//		Vertex firstNode = startNode;
-		
 		//a list of all visited vertices
 		List<Vertex> visitedVertices = new ArrayList<>();
 		
 		
-		
-		
-		for (Vertex firstNode : queue){
-			if (queue.get((queue.size())-1) != endNode){
+		while(!queue.isEmpty()){
 			
-		System.out.println("this is the graph " + g.toString());
-		System.out.println("this is the startnode " + firstNode);
-//		while ((! queue.isEmpty()) && (queue.get(queue.size()-1) != endNode) ){
-				List<Vertex> list = new ArrayList<>();
-				if (g.containsVertex(startNode)){
-				//get a list of all adjacent vertices of the current looking Vertex
-//				List<Vertex> list = new ArrayList<>();
-				list.addAll(allAdjNode(g, firstNode));
-				}else{
-					System.out.println("this is the graph 1111" + g.toString());
-					System.out.println("this is the startnode 1111" + firstNode);
-				}
-				
-				//take the next adjacent Vertex to be visited -> turn it grey
-				for(int i=0; i<list.size(); i++){
-					Vertex currentVertex = list.get(i);
-					if ((!currentVertex.isVisited())){
-						
-					    //mark it as visited (color grey)
-						currentVertex.isVisited(true);
-						
-						//set current node-weight of the start Vertex one higher
-						currentVertex.nodeWeight(firstNode.nodeWeight() + 1);
-						
-						//add the child-vertex (current vertex) to the end of the list 
-						queue.add(currentVertex);
-						
-						/* if the current vertex is the endNode then stop the 
-						for-loop and go on with the next commmand */
-						if (currentVertex == endNode){
-							i = list.size();
+			if (queue.get((queue.size())-1) != endNode){
+					Vertex firstNode = queue.get(0);
+				 				
+					List<Vertex> list = new ArrayList<>();
+					// if the vertex is in the queue
+					if (g.containsVertex(firstNode)){
+						//get a list of all adjacent vertices of the current looking Vertex
+						list.addAll(allAdjNode(g, firstNode));
+					}else{
+						System.out.println("BFS#91 this is the graph 1111" + g.toString());
+						System.out.println("BFS#92 this is the startnode 1111" + firstNode);
+					}
+					
+					//mark the first vertex as visited (color grey)
+					firstNode.isVisited(true);
+					
+					//take the next adjacent Vertex to be visited -> turn it grey
+					for(int i=0; i<list.size(); i++){
+						Vertex currentVertex = list.get(i);
+						if ((!currentVertex.isVisited())){
+							
+						    //mark it as visited (color grey)
+							currentVertex.isVisited(true);
+							
+							//set current node-weight of the start Vertex one higher
+							currentVertex.nodeWeight(firstNode.nodeWeight() + 1);
+							
+							//add the child-vertex (current vertex) to the end of the list 
+							queue.add(currentVertex);
+							
+							/* if the current vertex is the endNode then stop the 
+							for-loop and go on with the next commmand */
+							if (currentVertex == endNode){
+								i = list.size();
+							}
 						}
 					}
-				}
 				
-				//done with the startNode, added all its children to the queue -> turn into black
-//				firstNode.color("black");
+				//done with the start vertex, added all its children to the queue 
+				
 				//add current vertex to the list of visited vertices
 				visitedVertices.add(firstNode);
-				//remove current visited vertex from the queue
-//				queue.remove(firstNode);
-				//next vertex in the queue becomes the new startNode
-//				firstNode = (Vertex) queue.get(0);
-			}
+				//Done with first vertex. Remove it from queue. 
+				queue.remove(0);
+				
+				}
 		}
 		
 		
