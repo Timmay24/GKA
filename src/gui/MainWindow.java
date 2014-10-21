@@ -196,7 +196,7 @@ public class MainWindow implements MessageListener {
 		JButton btnNewButton = new JButton("Alle Adjazenten von v1");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Collection<Vertex> res = graphController.getGraphWrapper().getAllAdjacents( graphController.getGraphWrapper().getVertex("v1") );
+				Collection<Vertex> res = graphController.getGraphWrapper().getAllAdjacentsOf( graphController.getGraphWrapper().getVertex("v1") );
 				for (Vertex v : res) {
 					report(v.toString());
 				}

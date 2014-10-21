@@ -392,7 +392,7 @@ public class GKAGraph implements MessageSender {
 	 * @param sourceVertex Ausgangsknoten, dessen Adjazenten ermitteln werden sollen.
 	 * @return Collection aller Adjazenten des Ausgangsknotens.
 	 */
-	public Collection<Vertex> getAllAdjacents(Vertex sourceVertex) {
+	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex) {
 		Set<Vertex> resultList = new HashSet<>();
 
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
