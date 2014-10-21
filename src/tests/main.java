@@ -129,7 +129,7 @@ public class main {
 	
 	
 	
-	@Ignore
+//	@Ignore
 	@Test
 	public void testFindShortestWay() {
 		
@@ -165,44 +165,29 @@ public class main {
 		 graph1.addEdge( a, h, GKAEdge.valueOf("e3"));
 		                     
 		 graph1.addEdge( f, e, GKAEdge.valueOf("e4"));
-		 graph1.addEdge( f, a, GKAEdge.valueOf("e5"));
 		                       
-		 graph1.addEdge( b, a, GKAEdge.valueOf("e6"));
-		 graph1.addEdge( b, e, GKAEdge.valueOf("e7"));
-		 graph1.addEdge( b, g, GKAEdge.valueOf("e8"));
-		 graph1.addEdge( b, h, GKAEdge.valueOf("e9"));
+		 graph1.addEdge( b, e, GKAEdge.valueOf("e5"));
+		 graph1.addEdge( b, g, GKAEdge.valueOf("e6"));
+		 graph1.addEdge( b, h, GKAEdge.valueOf("e7"));
 		                      
-		 graph1.addEdge( h, b, GKAEdge.valueOf("e10"));
-		 graph1.addEdge( h, a, GKAEdge.valueOf("e11"));
-		 graph1.addEdge( h, g, GKAEdge.valueOf("e12"));
-		 graph1.addEdge( h, k, GKAEdge.valueOf("e13"));
+		 graph1.addEdge( h, g, GKAEdge.valueOf("e8"));
+		 graph1.addEdge( h, k, GKAEdge.valueOf("e9"));
 		                      
-		 graph1.addEdge( k, h, GKAEdge.valueOf("e14"));
-		 graph1.addEdge( k, m, GKAEdge.valueOf("e15"));
+		 graph1.addEdge( k, m, GKAEdge.valueOf("e10"));
 		                      
-		 graph1.addEdge( g, h, GKAEdge.valueOf("e16"));
-		 graph1.addEdge( g, b, GKAEdge.valueOf("e17"));
-		 graph1.addEdge( g, e, GKAEdge.valueOf("e18"));
-		 graph1.addEdge( g, m, GKAEdge.valueOf("e19"));
+		 graph1.addEdge( g, e, GKAEdge.valueOf("e11"));
+		 graph1.addEdge( g, m, GKAEdge.valueOf("e12"));
 		                       
-		 graph1.addEdge( m, k, GKAEdge.valueOf("e20"));
-		 graph1.addEdge( m, g, GKAEdge.valueOf("e21"));
-		 graph1.addEdge( m, e, GKAEdge.valueOf("e22"));
+		 graph1.addEdge( m, e, GKAEdge.valueOf("e13"));
 		                      
-		 graph1.addEdge( e, f, GKAEdge.valueOf("e23"));
-		 graph1.addEdge( e, b, GKAEdge.valueOf("e24"));
-		 graph1.addEdge( e, g, GKAEdge.valueOf("e25"));
-		 graph1.addEdge( e, m, GKAEdge.valueOf("e26"));
-		 
-		 
 		 
 		 //Start vertex: A
 		 //End vertex: M
 		 
 		 List<Vertex> shortWay1 = new ArrayList<>();
 	     shortWay1.add(a);
-	     shortWay1.add(f);
-	     shortWay1.add(e);
+	     shortWay1.add(h);
+	     shortWay1.add(k);
 	     shortWay1.add(m);
 	      
 	     assertEquals(shortWay1, BFS.findShortestWay(graph1, a, m));
