@@ -475,13 +475,20 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	}
 	
 	public void findShortestWay(Vertex start, Vertex goal) {
-		List<Vertex> way = BFS.findShortestWay(this, start, goal);
-		
-		sendMessage("Kürzester Weg:");
-		for (Vertex v : way) {
-			sendMessage(v.getName());
+		try {
+			List<Vertex> way = BFS.findShortestWay(this, start, goal);
+			
+			sendMessage("\nKürzester Weg:");
+			for (Vertex v : way) {
+				sendMessage(v.getName());
+			}
+			sendMessage("--------------------------------");
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			sendMessage("FEHLER: " + e.getMessage());
 		}
-		sendMessage("--------------------------------");
+		
+		
 	}
 	
 		
@@ -553,7 +560,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 				Object cell = getGraphComponent().getCellAt(e.getX(), e.getY());
 				
 				if (cell != null && cell instanceof mxCell) {
-					System.out.println(((mxCell) cell).getValue());
+//					System.out.println(((mxCell) cell).getValue());
 					sendMessage("Markiert: " + ((mxCell) cell).getValue()); // debug
 					sendCell((mxCell) cell, e);		// Weiterleiten der Zelle an alle angemeldeten CellListeners
 				}

@@ -21,7 +21,7 @@ public class BFS {
 	 * @param endNode is the endvertex
 	 * @return the sortest way from the start vertex to the end vertex
 	 */
-	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode){
+	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode) throws IllegalArgumentException {
 	
 		//queue for the vertices
 		List<Vertex> queue = new ArrayList<>();
