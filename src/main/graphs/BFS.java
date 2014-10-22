@@ -38,7 +38,9 @@ public class BFS {
 		
 		//a list of all visited vertices
 		List<Vertex> visitedVertices = new ArrayList<>();
-				
+		
+		//as long as the queue is not empty an the end vertex is not in the queue 
+		//add all possible vertices for the way in queue
 		while(!queue.isEmpty() && (queue.get((queue.size())-1) != endNode)){
 			
 					Vertex firstNode = queue.get(0);
