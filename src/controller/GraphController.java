@@ -128,5 +128,17 @@ public class GraphController implements GKAController {
 	public void addAdapterUpdateListener(AdapterUpdateListener adapterUpdateListener) {
 		getGraphWrapper().addAdapterUpdateListener(adapterUpdateListener);
 	}
+
+
+	@Override
+	public void addVertex(String vertexName) {
+		getGraphWrapper().addVertex(vertexName);
+	}
+
+
+	@Override
+	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge) {
+		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge);
+	}
 	
 }

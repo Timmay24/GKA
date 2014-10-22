@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphXAdapter;
@@ -32,11 +35,11 @@ import controller.CellSender;
 import controller.FileHandler;
 import controller.MessageListener;
 import controller.MessageSender;
+import controller.StatsListener;
+import controller.StatsSender;
 
-import static main.graphs.GraphType.*;
 
-
-public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender {
+public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender {
 	
 	private			ListenableGraph<Vertex, GKAEdge> 	jGraph;
 	private			JGraphXAdapter<Vertex, GKAEdge> 	jgxAdapter;
@@ -48,6 +51,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	private final	String								UNDIRECTED_SYMBOL = "--";
 	private final	String								  DIRECTED_SYMBOL = "->";
 	private 		String								currentFilePath = null;
+	private 		List<StatsListener> 				statsListeners;
 	
 	/**
 	 * Konstruktor mit Angabe des Graphentypen
@@ -134,18 +138,19 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	public void createSampleGraph() {
 
 		if (false) {
-			newGraph(DIRECTED_UNWEIGHTED);
+			newGraph(GraphType.DIRECTED_UNWEIGHTED);
 	
 			addEdge("v1", "v2", GKAEdge.valueOf("e1"));
 			addEdge("v1", "v3", GKAEdge.valueOf("e2"));
 			addEdge("v1", "v3", GKAEdge.valueOf("e4"));
 			addEdge("v4", "v1", GKAEdge.valueOf("e3"));
 		} else {
-			newGraph(UNDIRECTED_UNWEIGHTED);
+			newGraph(GraphType.UNDIRECTED_WEIGHTED);
 			addEdge("v1", "v2", GKAEdge.valueOf("e1"));
 			addEdge("v1", "v3", GKAEdge.valueOf("e2"));
 			addEdge("v1", "v3", GKAEdge.valueOf("e4"));
 			addEdge("v4", "v1", GKAEdge.valueOf("e3", 4));
+			addEdge("v3", "v1", GKAEdge.valueOf("e5", 14));
 		}
 			
 		sendMessage("FERTIG: Beispiel-Graph erstellt!");
@@ -553,8 +558,9 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		try {
 			File inFile = FileHandler.getInFile();				// Dateiobjekt holen
 			List<String> input = FileHandler.readFile(inFile);	// Datei auslesen
-			if (parseFileInput(input)) {						// Ergebnisliste parsen
+			if (parseFile(input)) {								// Ergebnisliste parsen
 				currentFilePath = inFile.getAbsolutePath();		// bei Erfolg: Dateipfad merken
+				setCircleLayout();
 			};
 			sendMessage("ERFOLG: Graphendatei geladen.");
 			sendMessage("ERFOLG: " + "\"" + currentFilePath + "\"");
@@ -603,32 +609,67 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		};
 	}
 	
-	/**
-	 * IN ARBEIT!
-	 * Tim
-	 */
-	private boolean parseFileInput(List<String> input) {
-		
+	private boolean parseFile(List<String> input) {
+		String regex = "^([a-zA-Z0-9üÜäÄöÖ]+) ?((-[>|-]) ?([a-zA-Z0-9üÜäÄöÖ]+) ?([a-zA-Z0-9üÜäÄöÖ]+)?)? ?( ?: ?([0-9]+))?;$";
+		Pattern p = Pattern.compile(regex);
+		Matcher m;
 		GraphType graphType = null;
+		Integer tempEdgeNo = 0;
 		
 		for (String line : input) {
+			m = p.matcher(line);
 			
-			if (!line.isEmpty()) {
+			if (m.find()) {
+				/**
+				 * group id schluessel:
+				 * 1: Vertex Source
+				 * 3: EdgeSymbol
+				 * 4: Vertex Target
+				 * 5: EdgeName
+				 * 7: EdgeWeight
+				 */
 				
+				String  source 		= m.group(1); // Source
+				String  edgeSym 	= m.group(3); // EdgeSym
+				String  target 		= m.group(4); // Target
+				String  edgeName 	= m.group(5); // EdgeName
+				String  edgeWeight 	= m.group(7); // EdgeWeight
+				Integer eW = null;
 				
+				// Falls Graphtyp noch nicht festgelegt:
+				// Ermittlung anhand der ersten gueltigen Zeile.
+				if (graphType == null) {
+					if (edgeSym.equals(DIRECTED_SYMBOL)) {
+						if (edgeWeight == null) {
+							graphType = GraphType.DIRECTED_UNWEIGHTED;
+						} else {
+							graphType = GraphType.DIRECTED_WEIGHTED;
+						}
+					} else if (edgeSym.equals(UNDIRECTED_SYMBOL)) {
+						if (edgeWeight == null) {
+							graphType = GraphType.UNDIRECTED_UNWEIGHTED;
+						} else {
+							graphType = GraphType.UNDIRECTED_WEIGHTED;
+						}
+					}
+					newGraph(graphType);
+				}
 				
+				if (edgeWeight != null) eW = Integer.parseInt(edgeWeight);
+				
+				if (edgeName == null) {
+					edgeName = "e" + tempEdgeNo.toString();
+					tempEdgeNo++;
+				}
+				
+				if (edgeSym == null) {
+					addVertex(source);
+				} else {
+					addEdge(source, target, GKAEdge.valueOf( edgeName, eW ));
+				}
 			}
-			
 		}
-		
-		newGraph(graphType);
-		
-		
 		return true;
-		
-		
-		
-		
 	}
 	
 	/**
@@ -639,20 +680,23 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		String edgeSym = (isDirected())?(DIRECTED_SYMBOL):(UNDIRECTED_SYMBOL);
 		String outLine = null;
 		
-		if (isWeighted()) {
-			// Kanten und zugehoerige Knoten zuerst
+//		if (isWeighted()) {
+//			// Kanten und zugehoerige Knoten zuerst
+//			for (GKAEdge e : getGraph().edgeSet()) {
+//				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + " : " + e.getWeight() + ";";
+//				resultList.add(outLine);
+//				
+//			}
+//		} else {
+//			// dito
 			for (GKAEdge e : getGraph().edgeSet()) {
-				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + " : " + e.getWeight() + ";";
-				resultList.add(outLine);
+//				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ";";
 				
-			}
-		} else {
-			// dito
-			for (GKAEdge e : getGraph().edgeSet()) {
-				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ";";
+				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ((e.getName()==null)?(" "):(" " + e.getName())) + ((isWeighted())?(" : " + e.getWeight()):("")) + ";";
+				
 				resultList.add(outLine);
 			}
-		}
+//		}
 		
 		// alleinstehende Knoten danach
 		for (Vertex v : getGraph().vertexSet()) {
@@ -696,6 +740,18 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			aul.receiveAdapterUpdate(graphComponent);
 		}
 	}
+	
+	@Override
+	public void addStatsListener( StatsListener statsListener) {
+		if (statsListener != null)
+			statsListeners.add(statsListener);
+	}
+	
+	private void sendStats(Map<String, Object> stats) {
+		for (StatsListener sl : statsListeners) {
+			sl.receiveStats(stats);
+		}
+	} 
 }
 
 

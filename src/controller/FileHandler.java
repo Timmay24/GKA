@@ -77,7 +77,8 @@ public class FileHandler {
 			 *  keine Schwierigkeiten bereiten.
 			 *  addAll fuegt anschließend das Unterliste der Ergebnisliste hinzu.
 			 */
-			resultList.addAll(Arrays.asList(line.replace(" ", "").replace("\t", "").split(";")));
+//			resultList.addAll(Arrays.asList(line.replace(" ", "").replace("\t", "").split(";")));
+			resultList.add(line);
 		}
 		reader.close();
         return resultList;

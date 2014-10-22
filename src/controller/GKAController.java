@@ -57,6 +57,10 @@ public interface GKAController extends MessageSender, CellSender<mxCell>, Adapte
 	 */
 	public void saveGraph();
 	
+	public void addVertex(String vertexName);
+	
+	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge);
+	
 	
 	/**
 	 * Positioniert den Graphen in Form eines Kreises.

@@ -44,18 +44,20 @@ import controller.AdapterUpdateListener;
 import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener {
 	
-	private 	int[]				verNo = {0,5,35};
+	private 	int[]				verNo = {0,6,40};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
 	private 	JMenu 				mnQuestionmark;
 	private 	JPanel 				graphPanel;
-	private 	JPanel 				controlPanel;
-	private 	JToggleButton		tglbtnNewVertice;
-	private 	JToggleButton 		tglbtnNewEdge;
 	private 	JScrollPane 		scrollPane;
 	private 	JTextArea 			reportTextArea;
 	private 	JMenuBar 			menuBar;
@@ -81,6 +83,21 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenuItem mntmGerichtetGewichtet;
 	private JMenu mnUngerichtet;
 	private JMenuItem mntmUngerichtetGewichtet;
+	private JTextField txtAddVertex;
+	private JPanel vertexPanel;
+	private JLabel lblNewLabel;
+	private JButton btnAddVertex;
+	private JLabel label;
+	private JTextField txtAESource;
+	private JLabel label_1;
+	private JTextField txtADTarget;
+	private JTextField txtAEName;
+	private JLabel lblName;
+	private JTextField txtBFSStart;
+	private JTextField txtBFSGoal;
+	private JTextField txtBFSStatsVertex;
+	private JTextField txtBFSStatsEdges;
+	private JTextField txtBFSStatsTime;
 
 	/**
 	 * Launch the application.
@@ -108,7 +125,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 * 
 	 * Zuerst muss der GraphController erstellt werden.
 	 * Danach folgt die Initialisierung der Oberflaeche.
-	 * Anschliessend werden alle notwendigen Listener via GraphCtrl.
+	 * Anschliessend werden alle notwendigen Listener via GraphControll.
 	 * am GraphenWrapper GKAGraph angemeldet.
 	 * DANN kann die Erstellung von Graphen beginnen.
 	 */
@@ -177,22 +194,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mainFrame.getContentPane().add(graphPanel);
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
-		controlPanel = new JPanel();
-		controlPanel.setBorder(new TitledBorder(null, "Hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		controlPanel.setBounds(10, 348, 194, 56);
-		mainFrame.getContentPane().add(controlPanel);
-		controlPanel.setLayout(null);
-		
-		tglbtnNewVertice = new JToggleButton("Knoten");
-		tglbtnNewVertice.setBounds(11, 21, 80, 23);
-		controlPanel.add(tglbtnNewVertice);
-		
-		tglbtnNewEdge = new JToggleButton("Kante");
-		tglbtnNewEdge.setBounds(101, 21, 80, 23);
-		controlPanel.add(tglbtnNewEdge);
-		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 414, 774, 126);
+		scrollPane.setBounds(10, 410, 446, 130);
 		mainFrame.getContentPane().add(scrollPane);
 		
 		reportTextArea = new JTextArea();
@@ -220,17 +223,142 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		pmRClickReport.add(mntmClearReport);
 		
-		JButton btnNewButton = new JButton("Alle Adjazenten von v1");
-		btnNewButton.addActionListener(new ActionListener() {
+		vertexPanel = new JPanel();
+		vertexPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Knoten", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
+		vertexPanel.setBounds(10, 343, 214, 56);
+		mainFrame.getContentPane().add(vertexPanel);
+		vertexPanel.setLayout(null);
+		
+		lblNewLabel = new JLabel("Name:");
+		lblNewLabel.setBounds(10, 23, 37, 14);
+		vertexPanel.add(lblNewLabel);
+		
+		txtAddVertex = new JTextField();
+		txtAddVertex.setBounds(46, 20, 51, 20);
+		vertexPanel.add(txtAddVertex);
+		txtAddVertex.setColumns(10);
+		
+		btnAddVertex = new JButton("hinzuf\u00FCgen");
+		btnAddVertex.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Collection<Vertex> res = graphController.getGraphWrapper().getAllAdjacentsOf( graphController.getGraphWrapper().getVertex("v1") );
-				for (Vertex v : res) {
-					report(v.toString());
+				if (!txtAddVertex.getText().isEmpty()) {
+					graphController.addVertex(txtAddVertex.getText());
 				}
 			}
 		});
-		btnNewButton.setBounds(217, 369, 151, 23);
-		mainFrame.getContentPane().add(btnNewButton);
+		btnAddVertex.setBounds(107, 19, 89, 23);
+		vertexPanel.add(btnAddVertex);
+		
+		JPanel edgePanel = new JPanel();
+		edgePanel.setBorder(new TitledBorder(null, "Kanten", TitledBorder.LEADING, TitledBorder.TOP, null, Color.DARK_GRAY));
+		edgePanel.setBounds(234, 343, 550, 56);
+		mainFrame.getContentPane().add(edgePanel);
+		edgePanel.setLayout(null);
+		
+		label = new JLabel("Source:");
+		label.setBounds(10, 23, 37, 14);
+		edgePanel.add(label);
+		
+		txtAESource = new JTextField();
+		txtAESource.setColumns(10);
+		txtAESource.setBounds(57, 20, 51, 20);
+		edgePanel.add(txtAESource);
+		
+		label_1 = new JLabel("Target:");
+		label_1.setBounds(118, 23, 37, 14);
+		edgePanel.add(label_1);
+		
+		txtADTarget = new JTextField();
+		txtADTarget.setColumns(10);
+		txtADTarget.setBounds(165, 20, 51, 20);
+		edgePanel.add(txtADTarget);
+		
+		txtAEName = new JTextField();
+		txtAEName.setBounds(273, 20, 51, 20);
+		edgePanel.add(txtAEName);
+		txtAEName.setColumns(10);
+		
+		lblName = new JLabel("Name:");
+		lblName.setBounds(230, 23, 37, 14);
+		edgePanel.add(lblName);
+		
+		JSpinner spinAEWeight = new JSpinner();
+		spinAEWeight.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
+		spinAEWeight.setBounds(390, 20, 51, 20);
+		edgePanel.add(spinAEWeight);
+		
+		JLabel lblGewicht = new JLabel("Gewicht:");
+		lblGewicht.setBounds(334, 23, 46, 14);
+		edgePanel.add(lblGewicht);
+		
+		JButton btnAddEdge = new JButton("hinzuf\u00FCgen");
+		btnAddEdge.setBounds(451, 19, 89, 23);
+		edgePanel.add(btnAddEdge);
+		
+		JPanel bfsPanel = new JPanel();
+		bfsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "BFS Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
+		bfsPanel.setBounds(466, 410, 318, 130);
+		mainFrame.getContentPane().add(bfsPanel);
+		bfsPanel.setLayout(null);
+		
+		txtBFSStart = new JTextField();
+		txtBFSStart.setBounds(54, 21, 51, 20);
+		bfsPanel.add(txtBFSStart);
+		txtBFSStart.setColumns(10);
+		
+		txtBFSGoal = new JTextField();
+		txtBFSGoal.setBounds(54, 52, 51, 20);
+		bfsPanel.add(txtBFSGoal);
+		txtBFSGoal.setColumns(10);
+		
+		JLabel lblStart = new JLabel("Start:");
+		lblStart.setLabelFor(txtBFSStart);
+		lblStart.setBounds(16, 24, 28, 14);
+		bfsPanel.add(lblStart);
+		
+		JLabel lblZiel = new JLabel("Ziel:");
+		lblZiel.setBounds(16, 55, 28, 14);
+		bfsPanel.add(lblZiel);
+		
+		JPanel bfsStatsPanel = new JPanel();
+		bfsStatsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zugriffsstatistik", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
+		bfsStatsPanel.setBounds(127, 21, 181, 98);
+		bfsPanel.add(bfsStatsPanel);
+		bfsStatsPanel.setLayout(null);
+		
+		JLabel lblZugriffe = new JLabel("Knoten:");
+		lblZugriffe.setBounds(10, 21, 57, 14);
+		bfsStatsPanel.add(lblZugriffe);
+		
+		JLabel lblKanten = new JLabel("Kanten:");
+		lblKanten.setBounds(10, 46, 57, 14);
+		bfsStatsPanel.add(lblKanten);
+		
+		JLabel lblGesamtzeit = new JLabel("Zeit (ms):");
+		lblGesamtzeit.setBounds(10, 71, 57, 14);
+		bfsStatsPanel.add(lblGesamtzeit);
+		
+		txtBFSStatsVertex = new JTextField();
+		txtBFSStatsVertex.setEditable(false);
+		txtBFSStatsVertex.setBounds(77, 18, 86, 20);
+		bfsStatsPanel.add(txtBFSStatsVertex);
+		txtBFSStatsVertex.setColumns(10);
+		
+		txtBFSStatsEdges = new JTextField();
+		txtBFSStatsEdges.setEditable(false);
+		txtBFSStatsEdges.setBounds(77, 43, 86, 20);
+		bfsStatsPanel.add(txtBFSStatsEdges);
+		txtBFSStatsEdges.setColumns(10);
+		
+		txtBFSStatsTime = new JTextField();
+		txtBFSStatsTime.setEditable(false);
+		txtBFSStatsTime.setBounds(77, 68, 86, 20);
+		bfsStatsPanel.add(txtBFSStatsTime);
+		txtBFSStatsTime.setColumns(10);
+		
+		JButton btnBFSSearch = new JButton("suchen");
+		btnBFSSearch.setBounds(16, 83, 89, 23);
+		bfsPanel.add(btnBFSSearch);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
