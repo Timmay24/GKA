@@ -3,7 +3,7 @@ package main.graphs;
 public class Vertex {
 
 	private		String 		name;
-	private 	String 		color;
+	private 	String 		parent;
 	private 	int 		nodeWeight;
 	private 	boolean 	visited = false;
 
@@ -11,11 +11,6 @@ public class Vertex {
 	 * @return Gibt den Knotennamen zurueck.
 	 */
 	public String getName() {
-		return this.name;
-	}
-
-	@Deprecated
-	public String name() {
 		return this.name;
 	}
 
@@ -37,33 +32,15 @@ public class Vertex {
 		this.nodeWeight = nodeWeight;
 	}
 
-	@Deprecated
-	public void nodeWeight(int nodeWeight) {
-		this.nodeWeight = nodeWeight;
+
+	public void setParent(String parent){
+		this.parent = parent;
+	}
+	
+	public String getParent(){
+		return this.parent;
 	}
 
-	@Deprecated
-	public int nodeWeight() {
-		return this.nodeWeight;
-	}
-
-	public String getColor() {
-		return this.color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-
-	@Deprecated
-	public String color() {
-		return this.color;
-	}
-
-	@Deprecated
-	public void color(String color) {
-		this.color = color;
-	}
 
 	/**
 	 * @return Gibt an, ob Knoten bereits bei Traversierung besucht wurde.
@@ -76,11 +53,6 @@ public class Vertex {
 		this.visited = visited;
 	}
 
-	@Deprecated
-	public void isVisited(boolean visited) {
-		this.visited = visited;
-	}
-
 	/**
 	 * Konstruktor
 	 * 
@@ -88,7 +60,7 @@ public class Vertex {
 	 */
 	private Vertex(String name) {
 		this.name = name;
-		this.color = "white";
+//		this.color = "white";
 	}
 
 	/**
@@ -110,9 +82,7 @@ public class Vertex {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		// result = prime * result + ((color == null) ? 0 : color.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		// result = prime * result + nodeWeight;
 		return result;
 	}
 
@@ -125,18 +95,11 @@ public class Vertex {
 		if (getClass() != obj.getClass())
 			return false;
 		Vertex other = (Vertex) obj;
-		// if (color == null) {
-		// if (other.color != null)
-		// return false;
-		// } else if (!color.equals(other.color))
-		// return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		// if (nodeWeight != other.nodeWeight)
-		// return false;
 		return true;
 	}
 
