@@ -141,4 +141,8 @@ public class GraphController implements GKAController {
 		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge);
 	}
 	
+	public void findShortestWay(String startVertex, String goalVertex) {
+		getGraphWrapper().findShortestWay(startVertex, goalVertex);
+	}
+	
 }

@@ -137,7 +137,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void createSampleGraph() {
 
-		if (false) {
+		if (true) {
 			newGraph(GraphType.DIRECTED_UNWEIGHTED);
 	
 			addEdge("v1", "v2", GKAEdge.valueOf("e1"));
@@ -462,6 +462,28 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		return getAllAdjacentsOf(sourceVertex, isDirected());
 	}
 	
+	
+	public void findShortestWay(String startVertex, String goalVertex) {
+		Vertex start = getVertex(startVertex);
+		Vertex goal = getVertex(goalVertex);
+		
+		if (start != null && goal != null) {
+			findShortestWay(start, goal);
+		} else {
+			sendMessage("FEHLER: Start- oder Zielknoten ungültig oder nicht existent.");
+		}
+	}
+	
+	public void findShortestWay(Vertex start, Vertex goal) {
+		List<Vertex> way = BFS.findShortestWay(this, start, goal);
+		
+		sendMessage("Kürzester Weg:");
+		for (Vertex v : way) {
+			sendMessage(v.getName());
+		}
+		sendMessage("--------------------------------");
+	}
+	
 		
 	/**
 	 * Gibt alle Kanten des Graphen aus.
@@ -518,6 +540,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			ml.receiveMessage(message);
 		}
 	}
+	
+	
 
 	/**
 	 * Meldet an der Graphenkontrolleinheit einen MouseListener an, um
@@ -747,7 +771,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			statsListeners.add(statsListener);
 	}
 	
-	private void sendStats(Map<String, Object> stats) {
+	public void sendStats(Map<String, String> stats) {
 		for (StatsListener sl : statsListeners) {
 			sl.receiveStats(stats);
 		}

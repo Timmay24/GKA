@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface StatsListener {
 
-	public void receiveStats(Map<String, Object> stats);
+	public void receiveStats(Map<String, String> stats);
 	
 }

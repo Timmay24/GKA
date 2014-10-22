@@ -16,11 +16,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,14 +29,15 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
 import main.graphs.GraphType;
-import main.graphs.Vertex;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -44,15 +46,11 @@ import controller.AdapterUpdateListener;
 import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
+import controller.StatsListener;
 
-public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener {
+public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener {
 	
-	private 	int[]				verNo = {0,6,40};
+	private 	int[]				verNo = {0,7,45};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -77,27 +75,39 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private 	JMenuItem 			mntmBeispiel;
 	private 	JSeparator 			separator_1;
 	private 	JSeparator 			separator_2;
-	private JMenuItem mntmUngerichtetUngewichtet;
-	private JMenu mnGerichtet;
-	private JMenuItem mntmGerichtetUngewichtet;
-	private JMenuItem mntmGerichtetGewichtet;
-	private JMenu mnUngerichtet;
-	private JMenuItem mntmUngerichtetGewichtet;
-	private JTextField txtAddVertex;
-	private JPanel vertexPanel;
-	private JLabel lblNewLabel;
-	private JButton btnAddVertex;
-	private JLabel label;
-	private JTextField txtAESource;
-	private JLabel label_1;
-	private JTextField txtADTarget;
-	private JTextField txtAEName;
-	private JLabel lblName;
-	private JTextField txtBFSStart;
-	private JTextField txtBFSGoal;
-	private JTextField txtBFSStatsVertex;
-	private JTextField txtBFSStatsEdges;
-	private JTextField txtBFSStatsTime;
+	private     JMenuItem 			mntmUngerichtetUngewichtet;
+	private     JMenu 				mnGerichtet;
+	private     JMenuItem 			mntmGerichtetUngewichtet;
+	private     JMenuItem 			mntmGerichtetGewichtet;
+	private     JMenu 				mnUngerichtet;
+	private     JMenuItem 			mntmUngerichtetGewichtet;
+	private     JTextField 			txtAddVertex;
+	private     JPanel 				vertexPanel;
+	private     JLabel 				lblNewLabel;
+	private     JButton 			btnAddVertex;
+	private     JLabel 				label;
+	private     JTextField 			txtAESource;
+	private     JLabel 				label_1;
+	private     JTextField 			txtADTarget;
+	private     JTextField 			txtAEName;
+	private     JLabel 				lblName;
+	private     JTextField 			txtBFSStart;
+	private     JTextField 			txtBFSGoal;
+	private     JTextField 			txtBFSStatsVertex;
+	private     JTextField 			txtBFSStatsEdges;
+	private     JTextField 			txtBFSStatsTime;
+	private     JPanel 				edgePanel;
+	private     JSpinner 			spinAEWeight;
+	private     JLabel 				lblGewicht;
+	private     JButton 			btnAddEdge;
+	private     JPanel 				bfsPanel;
+	private     JLabel 				lblStart;
+	private     JLabel 				lblZiel;
+	private     JPanel 				bfsStatsPanel;
+	private     JLabel	 			lblZugriffe;
+	private     JLabel 				lblKanten;
+	private     JLabel 				lblGesamtzeit;
+	private     JButton 			btnBFSSearch;
 
 	/**
 	 * Launch the application.
@@ -249,7 +259,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		btnAddVertex.setBounds(107, 19, 89, 23);
 		vertexPanel.add(btnAddVertex);
 		
-		JPanel edgePanel = new JPanel();
+		edgePanel = new JPanel();
 		edgePanel.setBorder(new TitledBorder(null, "Kanten", TitledBorder.LEADING, TitledBorder.TOP, null, Color.DARK_GRAY));
 		edgePanel.setBounds(234, 343, 550, 56);
 		mainFrame.getContentPane().add(edgePanel);
@@ -282,20 +292,20 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		lblName.setBounds(230, 23, 37, 14);
 		edgePanel.add(lblName);
 		
-		JSpinner spinAEWeight = new JSpinner();
+		spinAEWeight = new JSpinner();
 		spinAEWeight.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
 		spinAEWeight.setBounds(390, 20, 51, 20);
 		edgePanel.add(spinAEWeight);
 		
-		JLabel lblGewicht = new JLabel("Gewicht:");
+		lblGewicht = new JLabel("Gewicht:");
 		lblGewicht.setBounds(334, 23, 46, 14);
 		edgePanel.add(lblGewicht);
 		
-		JButton btnAddEdge = new JButton("hinzuf\u00FCgen");
+		btnAddEdge = new JButton("hinzuf\u00FCgen");
 		btnAddEdge.setBounds(451, 19, 89, 23);
 		edgePanel.add(btnAddEdge);
 		
-		JPanel bfsPanel = new JPanel();
+		bfsPanel = new JPanel();
 		bfsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "BFS Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
 		bfsPanel.setBounds(466, 410, 318, 130);
 		mainFrame.getContentPane().add(bfsPanel);
@@ -311,30 +321,29 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsPanel.add(txtBFSGoal);
 		txtBFSGoal.setColumns(10);
 		
-		JLabel lblStart = new JLabel("Start:");
-		lblStart.setLabelFor(txtBFSStart);
+		lblStart = new JLabel("Start:");
 		lblStart.setBounds(16, 24, 28, 14);
 		bfsPanel.add(lblStart);
 		
-		JLabel lblZiel = new JLabel("Ziel:");
+		lblZiel = new JLabel("Ziel:");
 		lblZiel.setBounds(16, 55, 28, 14);
 		bfsPanel.add(lblZiel);
 		
-		JPanel bfsStatsPanel = new JPanel();
+		bfsStatsPanel = new JPanel();
 		bfsStatsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zugriffsstatistik", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
 		bfsStatsPanel.setBounds(127, 21, 181, 98);
 		bfsPanel.add(bfsStatsPanel);
 		bfsStatsPanel.setLayout(null);
 		
-		JLabel lblZugriffe = new JLabel("Knoten:");
+		lblZugriffe = new JLabel("Knoten:");
 		lblZugriffe.setBounds(10, 21, 57, 14);
 		bfsStatsPanel.add(lblZugriffe);
 		
-		JLabel lblKanten = new JLabel("Kanten:");
+		lblKanten = new JLabel("Kanten:");
 		lblKanten.setBounds(10, 46, 57, 14);
 		bfsStatsPanel.add(lblKanten);
 		
-		JLabel lblGesamtzeit = new JLabel("Zeit (ms):");
+		lblGesamtzeit = new JLabel("Zeit (ms):");
 		lblGesamtzeit.setBounds(10, 71, 57, 14);
 		bfsStatsPanel.add(lblGesamtzeit);
 		
@@ -356,7 +365,17 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsStatsPanel.add(txtBFSStatsTime);
 		txtBFSStatsTime.setColumns(10);
 		
-		JButton btnBFSSearch = new JButton("suchen");
+		btnBFSSearch = new JButton("suchen");
+		btnBFSSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String start = txtBFSStart.getText();
+				String goal = txtBFSGoal.getText();
+				
+				if (!(start.isEmpty() || goal.isEmpty())) {
+					graphController.findShortestWay(start, goal);
+				}
+			}
+		});
 		btnBFSSearch.setBounds(16, 83, 89, 23);
 		bfsPanel.add(btnBFSSearch);
 		
@@ -523,6 +542,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveCell(mxCell cell, MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void receiveStats(Map<String, String> stats) {
 		// TODO Auto-generated method stub
 		
 	}
