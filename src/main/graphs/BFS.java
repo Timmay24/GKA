@@ -1,21 +1,14 @@
 package main.graphs;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import org.hamcrest.core.IsEqual;
-import org.jgraph.graph.DefaultEdge;
-import org.jgrapht.Graph;
-
-import com.google.common.*;
 
 
 
 
 /**
- * @author Louisa
+ * @author Louisa und Tim
  *
  */
 public class BFS {
@@ -54,19 +47,22 @@ public class BFS {
 						System.out.println(" Dieser Knoten existiert im Graphen nicht ");
 					}
 					
-					//mark the first vertex as visited (color grey)
+					//mark the first vertex as visited 
 					firstNode.setVisited(true);
 					
-					//take the next adjacent Vertex to be visited -> turn it grey
+					//take the next adjacent Vertex to be visited 
 					for(int i=0; i<list.size(); i++){
 						Vertex currentVertex = list.get(i);
 						if ((!currentVertex.isVisited())){
 							
-						    //mark it as visited (color grey)
+						    //mark it as visited
 							currentVertex.setVisited(true);
 							
 							//set current node-weight of the start Vertex one higher
 							currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
+							
+							//set the parent 
+							currentVertex.setParent(firstNode.toString());
 							
 							//add the child-vertex (current vertex) to the end of the list 
 							queue.add(currentVertex);
@@ -90,10 +86,10 @@ public class BFS {
 				}
 		
 		
-		if(queue.isEmpty()){
+		if(queue.isEmpty() && !visitedVertices.get(visitedVertices.size()-1).equals(endNode)){
 			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
 		}
-		else if(queue.get((queue.size())-1).equals(endNode)){
+		else{
 			visitedVertices.addAll(queue);
 		}
 		
@@ -113,16 +109,16 @@ public class BFS {
 		reverseReturnList.add(reverseList.get(0));
 		
 		//gives the shortest way in a list
-		for(int i=0 ; i<reverseList.size()-1; i++){
-			
-			Vertex first = reverseList.get(i);
-			Vertex second = reverseList.get(i+1);
-			
-			/*if the nodeweight of the first element of the reverse list 
-			one higher than the second element then the second element is 
-			the adjacent vertex and a vertex of the shortest way  */
-			if (first.getNodeWeight() == (second.getNodeWeight() + 1)){
-				reverseReturnList.add(second);
+		/*
+		 *starts at the end vertex and finds the parent vertex with a nodeweight one less than the end vertex, if found
+		 *takes the current parent vertex as the new child vertex and find the parent vertex of this one...
+		 *stops when start vertex is found
+		 */
+		Vertex tmpVertex = reverseList.get(0); // dummy: first vertex of the way
+		for(Vertex v : reverseList){
+			if ((tmpVertex.getNodeWeight() == (v.getNodeWeight() + 1)) && (tmpVertex.getParent().equals(v.getName()))){
+				reverseReturnList.add(v);
+				tmpVertex = v;
 			}
 		}
 		

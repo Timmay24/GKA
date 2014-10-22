@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.graphs.BFS;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;

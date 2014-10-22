@@ -4,9 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.GrayFilter;
 
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
@@ -14,11 +11,7 @@ import main.graphs.GraphType;
 import main.graphs.Vertex;
 import main.graphs.BFS;
 
-import org.jgrapht.Graph;
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.SimpleGraph;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -84,8 +77,8 @@ public class TestBFS {
 		  */
 		 List<Vertex> shortWay1 = new ArrayList<>();
 	     shortWay1.add(a);
-	     shortWay1.add(h);
-	     shortWay1.add(k);
+	     shortWay1.add(b);
+	     shortWay1.add(e);
 	     shortWay1.add(m);
 	      
 	     assertEquals(shortWay1, BFS.findShortestWay(graph1, a, m));
@@ -148,14 +141,60 @@ public class TestBFS {
 		  */
 	     List<Vertex> shortWay2 = new ArrayList<>();
 	     shortWay2.add(a1);
-	     shortWay2.add(a8);
+	     shortWay2.add(a3);
 	     shortWay2.add(a5);
 	     
 	     
 	     assertEquals(shortWay2, BFS.findShortestWay(graph2, a1, a5));
 	     
 	     
-		
+	     /*Test 2
+	      * Directed Graph
+	      * */
+	     Vertex b1 = Vertex.valueOf("A1");
+		 Vertex b2 = Vertex.valueOf("B1");
+		 Vertex b3 = Vertex.valueOf("C1");
+		 Vertex b4 = Vertex.valueOf("D1");
+		 Vertex b5 = Vertex.valueOf("E1");
+		 Vertex b6 = Vertex.valueOf("F1");
+		 Vertex b7 = Vertex.valueOf("G1");
+		 Vertex b8 = Vertex.valueOf("H1");
+		 Vertex b9 = Vertex.valueOf("I1");
+		 Vertex b10 = Vertex.valueOf("K1");
+		 Vertex b11 = Vertex.valueOf("L1");
+		 Vertex b12 = Vertex.valueOf("M1");
+		 Vertex b13 = Vertex.valueOf("N1");
+		 Vertex b14 = Vertex.valueOf("O1");
+	     /*
+		  * create graph
+		  * add vertices
+		  */
+		 GKAGraph graph3 = GKAGraph.valueOf(GraphType.UNDIRECTED_UNWEIGHTED);
+		 graph3.addEdge(b1, b2, GKAEdge.valueOf("edge1"));
+		 graph3.addEdge(b1, b3, GKAEdge.valueOf("edge2"));
+		 graph3.addEdge(b1, b4, GKAEdge.valueOf("edge3"));
+		 graph3.addEdge(b1, b5, GKAEdge.valueOf("edge4"));
+		 graph3.addEdge(b2, b6, GKAEdge.valueOf("edge5"));
+		 graph3.addEdge(b2, b7, GKAEdge.valueOf("edge6"));
+		 graph3.addEdge(b3, b8, GKAEdge.valueOf("edge7"));
+		 graph3.addEdge(b4, b9, GKAEdge.valueOf("edge8"));
+		 graph3.addEdge(b5, b10, GKAEdge.valueOf("edge9"));
+		 graph3.addEdge(b8, b14, GKAEdge.valueOf("edge10"));
+		 graph3.addEdge(b10, b11, GKAEdge.valueOf("edge11"));
+		 graph3.addEdge(b14, b13, GKAEdge.valueOf("edge12"));
+		 graph3.addEdge(b14, b12, GKAEdge.valueOf("edge13"));
+		 
+		 /*Start vertex: A1 (b1)
+		  * End vertex: M1 (b12)
+		  */
+	     List<Vertex> shortWay3 = new ArrayList<>();
+	     shortWay3.add(b1);
+	     shortWay3.add(b3);
+	     shortWay3.add(b8);
+	     shortWay3.add(b14);
+	     shortWay3.add(b12);
+		 
+		 assertEquals(shortWay3, BFS.findShortestWay(graph3, b1, b12));
 	}
 	
 	
