@@ -1,10 +1,11 @@
 package main.graphs;
 
 public enum GraphType {
-	UNDIRECTED_UNWEIGHTED(false, false),
 	DIRECTED_UNWEIGHTED(true, false),
+	DIRECTED_WEIGHTED(true, true),
 	UNDIRECTED_WEIGHTED(false, true),
-	DIRECTED_WEIGHTED(true, true);
+	UNDIRECTED_UNWEIGHTED(false, false);
+	
 	
 	private boolean isDirected = false;
 	private boolean isWeighted = false;

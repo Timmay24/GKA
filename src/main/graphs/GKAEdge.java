@@ -7,9 +7,9 @@ public class GKAEdge extends DefaultEdge {
 	private static final long serialVersionUID = -6523434696944744833L;
 
 	private String edgeName = null;
-	private Double edgeWeight = null;
+	private Integer edgeWeight = null;
 
-	private GKAEdge(String edgeName, Double edgeWeight) {
+	private GKAEdge(String edgeName, Integer edgeWeight) {
 		super();
 		this.edgeName = edgeName;
 		this.edgeWeight = edgeWeight;
@@ -19,7 +19,7 @@ public class GKAEdge extends DefaultEdge {
 		this(edgeName, null);
 	}
 	
-	public static GKAEdge valueOf(String edgeName, Double edgeWeight) {
+	public static GKAEdge valueOf(String edgeName, Integer edgeWeight) {
 		return new GKAEdge(edgeName, edgeWeight);
 	}
 	
@@ -35,12 +35,16 @@ public class GKAEdge extends DefaultEdge {
 		return super.getTarget();
 	}
 
-	public Double getWeight() {
+	public Integer getWeight() {
 		return this.edgeWeight;
 	}
 
 	public String getName() {
 		return this.edgeName;
+	}
+	
+	public boolean isWeighted() {
+		return edgeWeight != null;
 	}
 	
 	@Override
