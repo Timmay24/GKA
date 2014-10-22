@@ -7,9 +7,10 @@ import main.graphs.Vertex;
 
 import org.jgrapht.ListenableGraph;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
-public interface GKAController extends MessageSender {
+public interface GKAController extends MessageSender, CellSender<mxCell>, AdapterUpdateSender {
 	
 	/**
 	 * @return Instanz der Graphen-Wrapperklasse.
@@ -22,17 +23,19 @@ public interface GKAController extends MessageSender {
 	 */
 	public mxGraphComponent getGraphComponent();
 	
+	
 	/**
 	 * @return Die Wrapperklasse des GKA-Graphen
 	 */
 	public GKAGraph getGraphWrapper();
 	
+	
 	/**
+	 * Laesst den Wrapper einen neuen Graphen erzeugen.
+	 * 
 	 * @param graphType
-	 * @return Erzeugt einen neuen Graphenwrapper, der einen Graphen des gewuenschten Typs graphType enthaelt.
-	 * 			Der Rueckgabewert (die Graphenkomponente) kann direkt in der GUI eingebunden werden, um den Graphen anzuzeigen.
 	 */
-	public mxGraphComponent newGraph(GraphType graphType);
+	public void newGraph(GraphType graphType);
 	
 	
 	/**
@@ -43,19 +46,23 @@ public interface GKAController extends MessageSender {
 	
 	/**
 	 * Zum Speichern eines Graphen in einer Datei.
+	 * Zwingt zur Wahl des Dateipfades. 
 	 */
-	public void saveGraph();
+	public void saveGraph(String filePath);
+	
 	
 	/**
-	 * siehe saveGraph(). Waehlt zusaetzlich einen neuen Dateipfad aus.
+	 * Zum Speichern eines Graphen in einer Datei.
+	 * Benutzt ggf. vorhandenen Dateipfad, sonst --> Pfadwahl.
 	 */
-	public void saveGraphAs();
+	public void saveGraph();
 	
 	
 	/**
 	 * Positioniert den Graphen in Form eines Kreises.
 	 */
 	public void setCircleLayout();
+	
 	
 	/**
 	 * Passt die Einstellungen fuer parallele Kanten an.

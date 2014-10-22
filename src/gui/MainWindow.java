@@ -1,5 +1,10 @@
 package gui;
 
+/**
+ * TODO!!!: Wenn ein neuer oder bestehender Graph geladen werden soll
+ *          --> sobald der interne graph fertig ist, muss der Adapter in der Gui ausgetauscht werden.
+ */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -12,8 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
-import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -31,13 +36,18 @@ import javax.swing.border.TitledBorder;
 
 import main.graphs.GraphType;
 import main.graphs.Vertex;
+
+import com.mxgraph.model.mxCell;
+import com.mxgraph.swing.mxGraphComponent;
+
+import controller.AdapterUpdateListener;
+import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
-import javax.swing.ImageIcon;
 
-public class MainWindow implements MessageListener {
+public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener {
 	
-	private 	int[]				verNo = {0,4,32};
+	private 	int[]				verNo = {0,5,35};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -62,12 +72,15 @@ public class MainWindow implements MessageListener {
 	private 	JMenu 				mnLayout;
 	private		JMenuItem 			mntmApplyCircleLayout;
 	private		JMenu 				mnNeuerGraph;
-	private 	JMenuItem 			mntmGerichtet;
-	private 	JMenuItem 			mntmUngerichtet;
-	private 	JMenuItem 			mntmGerichtetGewichtet;
-	private 	JMenuItem 			mntmGerichtetUngewichtet;
 	private 	JMenuItem 			mntmBeispiel;
 	private 	JSeparator 			separator_1;
+	private 	JSeparator 			separator_2;
+	private JMenuItem mntmUngerichtetUngewichtet;
+	private JMenu mnGerichtet;
+	private JMenuItem mntmGerichtetUngewichtet;
+	private JMenuItem mntmGerichtetGewichtet;
+	private JMenu mnUngerichtet;
+	private JMenuItem mntmUngerichtetGewichtet;
 
 	/**
 	 * Launch the application.
@@ -91,25 +104,39 @@ public class MainWindow implements MessageListener {
 	}
 	
 	/**
-	 * Create the application.
+	 * Applikation starten.
+	 * 
+	 * Zuerst muss der GraphController erstellt werden.
+	 * Danach folgt die Initialisierung der Oberflaeche.
+	 * Anschliessend werden alle notwendigen Listener via GraphCtrl.
+	 * am GraphenWrapper GKAGraph angemeldet.
+	 * DANN kann die Erstellung von Graphen beginnen.
 	 */
 	public MainWindow() {
 		graphController = new GraphController();
 		initialize();
-		graphController.addMessageListener(this);
-		
-		createSampleGraph();
+		graphController.addMessageListener(this); // Fuer den Empfang von Nachrichten
+		graphController.addCellListener(this);    // und Zellen anmelden
+		graphController.addAdapterUpdateListener(this);
+		graphController.newGraph(null); // durch uebergeben von null -> Beispielgraphen erzeugen lassen
 	}
 	
-	private void createSampleGraph() {
-		graphPanel.removeAll();
-		graphPanel.add(graphController.getGraphComponent());
-		mainFrame.repaint();
-	}
-	
+	/**
+	 * Veranlasst den Controller einen neuen Graphen erstellen zu lassen.
+	 * 
+	 * @param graphType
+	 */
 	private void newGraph(GraphType graphType) {
+		graphController.newGraph(graphType);
+	}
+	
+	/* (non-Javadoc)
+	 * @see controller.AdapterUpdateListener#receiveAdapterUpdate(com.mxgraph.swing.mxGraphComponent)
+	 */
+	@Override
+	public void receiveAdapterUpdate(mxGraphComponent graphComponent) {
 		graphPanel.removeAll();
-		graphPanel.add(graphController.newGraph(graphType));
+		graphPanel.add(graphComponent);
 		mainFrame.repaint();
 	}
 
@@ -131,7 +158,7 @@ public class MainWindow implements MessageListener {
 		mainFrame = new JFrame();
 		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("/ressources/images/graph.jpg")));
 		mainFrame.setResizable(false);
-		mainFrame.setTitle("BFS Tool " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
+		mainFrame.setTitle("GKA Graph Visualizer " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
 		mainFrame.setBounds(0, 0, 800, 600);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -147,7 +174,6 @@ public class MainWindow implements MessageListener {
 		graphPanel = new JPanel();
 		graphPanel.setBackground(Color.LIGHT_GRAY);
 		graphPanel.setBounds(10, 11, 774, 326);
-		createSampleGraph(); // Beim Start einen Beispielgraphen laden
 		mainFrame.getContentPane().add(graphPanel);
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
@@ -216,27 +242,58 @@ public class MainWindow implements MessageListener {
 		mnNeuerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/new_graph.png")));
 		mnFile.add(mnNeuerGraph);
 		
-		mntmGerichtet = new JMenuItem("Gerichtet");
-		mnNeuerGraph.add(mntmGerichtet);
+		mnGerichtet = new JMenu("Gerichtet");
+		mnNeuerGraph.add(mnGerichtet);
 		
-		mntmUngerichtet = new JMenuItem("Ungerichtet");
-		mnNeuerGraph.add(mntmUngerichtet);
+		mntmGerichtetUngewichtet = new JMenuItem("Ungewichtet");
+		mntmGerichtetUngewichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph(GraphType.DIRECTED_UNWEIGHTED);
+			}
+		});
+		mnGerichtet.add(mntmGerichtetUngewichtet);
 		
-		mntmGerichtetGewichtet = new JMenuItem("Gerichtet + Gewichtet");
-		mnNeuerGraph.add(mntmGerichtetGewichtet);
+		mntmGerichtetGewichtet = new JMenuItem("Gewichtet");
+		mntmGerichtetGewichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph(GraphType.DIRECTED_WEIGHTED);
+			}
+		});
+		mnGerichtet.add(mntmGerichtetGewichtet);
 		
-		mntmGerichtetUngewichtet = new JMenuItem("Gerichtet + Ungewichtet");
-		mnNeuerGraph.add(mntmGerichtetUngewichtet);
+		mnUngerichtet = new JMenu("Ungerichtet");
+		mnNeuerGraph.add(mnUngerichtet);
+		
+		mntmUngerichtetUngewichtet = new JMenuItem("Ungewichtet");
+		mntmUngerichtetUngewichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph(GraphType.UNDIRECTED_UNWEIGHTED);
+			}
+		});
+		mnUngerichtet.add(mntmUngerichtetUngewichtet);
+		
+		mntmUngerichtetGewichtet = new JMenuItem("Gewichtet");
+		mntmUngerichtetGewichtet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph(GraphType.UNDIRECTED_WEIGHTED);
+			}
+		});
+		mnUngerichtet.add(mntmUngerichtetGewichtet);
 		
 		separator_1 = new JSeparator();
 		separator_1.setForeground(Color.LIGHT_GRAY);
 		mnNeuerGraph.add(separator_1);
 		
 		mntmBeispiel = new JMenuItem("Beispielgraphen");
+		mntmBeispiel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				newGraph(null);
+			}
+		});
 		mntmBeispiel.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/example.png")));
 		mnNeuerGraph.add(mntmBeispiel);
 		
-		JSeparator separator_2 = new JSeparator();
+		separator_2 = new JSeparator();
 		separator_2.setForeground(Color.LIGHT_GRAY);
 		mnFile.add(separator_2);
 		
@@ -331,5 +388,14 @@ public class MainWindow implements MessageListener {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		});
+	}
+
+	/* (non-Javadoc)
+	 * @see controller.CellListener#receiveCell(java.lang.Object, java.awt.event.MouseEvent)
+	 */
+	@Override
+	public void receiveCell(mxCell cell, MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

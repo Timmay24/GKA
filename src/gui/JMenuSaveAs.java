@@ -23,9 +23,8 @@ public class JMenuSaveAs extends JMenuItem {
 	public JMenuSaveAs(final GKAController controller) {
 		this.setText("Speichern unter ...");
 		this.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent arg0) {
-				controller.saveGraphAs();
+				controller.saveGraph(null);
 			}
 		});
 	}

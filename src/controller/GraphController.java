@@ -7,6 +7,7 @@ import main.graphs.Vertex;
 
 import org.jgrapht.ListenableGraph;
 
+import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
 public class GraphController implements GKAController {
@@ -44,9 +45,16 @@ public class GraphController implements GKAController {
 	 * @see controller.GKAController#newGraph(main.graphs.GraphType)
 	 */
 	@Override
-	public mxGraphComponent newGraph(GraphType graphType) {
-		setGraphWrapper(GKAGraph.valueOf(graphType));
-		return getGraphWrapper().getGraphComponent();
+	public void newGraph(GraphType graphType) {
+		getGraphWrapper().newGraph(graphType);
+	}
+	
+	/* (non-Javadoc)
+	 * @see controller.GKAController#saveGraph(java.lang.String)
+	 */
+	@Override
+	public void saveGraph(String filePath) {
+		getGraphWrapper().saveGraph(filePath);
 	}
 	
 	/* (non-Javadoc)
@@ -55,14 +63,6 @@ public class GraphController implements GKAController {
 	@Override
 	public void saveGraph() {
 		getGraphWrapper().saveGraph();
-	}
-	
-	/* (non-Javadoc)
-	 * @see controller.GKAController#saveGraphAs()
-	 */
-	@Override
-	public void saveGraphAs() {
-		getGraphWrapper().saveGraphAs();
 	}
 	
 	/* (non-Javadoc)
@@ -112,4 +112,21 @@ public class GraphController implements GKAController {
 	public void openGraph() {
 		getGraphWrapper().openGraph();
 	}
+
+	/* (non-Javadoc)
+	 * @see controller.CellSender#addCellListener(controller.CellListener)
+	 */
+	public void addCellListener(CellListener<mxCell> cellListener) {
+		getGraphWrapper().addCellListener(cellListener);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see controller.AdapterUpdateSender#addAdapterUpdateListener(controller.AdapterUpdateListener)
+	 */
+	@Override
+	public void addAdapterUpdateListener(AdapterUpdateListener adapterUpdateListener) {
+		getGraphWrapper().addAdapterUpdateListener(adapterUpdateListener);
+	}
+	
 }
