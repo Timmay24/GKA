@@ -42,7 +42,7 @@ public class BFS {
 		while(!queue.isEmpty() && (queue.get((queue.size())-1) != endNode)){
 			
 					Vertex firstNode = queue.get(0);
-				 				
+				 						
 					List<Vertex> list = new ArrayList<>();
 					// if the vertex is in the queue
 					if (g.containsVertex(firstNode)){
@@ -54,6 +54,8 @@ public class BFS {
 					
 					//mark the first vertex as visited 
 					firstNode.setVisited(true);
+										
+					hitcount += 1;
 					
 					//take the next adjacent Vertex to be visited 
 					for(int i=0; i<list.size(); i++){
@@ -62,6 +64,8 @@ public class BFS {
 							
 						    //mark it as visited
 							currentVertex.setVisited(true);
+							
+							hitcount += 1;
 							
 							//set current node-weight of the start Vertex one higher
 							currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
@@ -136,6 +140,7 @@ public class BFS {
 		//Number of edges in the way
 		System.out.println("Der Weg hat " + anzahl + " Kanten");
 		System.out.println("Der Weg ist: ");	
+		System.out.println("Es wurde " + hitcount.toString() + " Mal auf den Graphen zugegriffen");
 		
 		//reverse the reverseList to get the way from the StartVertex to the EndVertex
 		List<Vertex> returnList = reverse(reverseReturnList); 
