@@ -48,6 +48,7 @@ public class BFS {
 					if (g.containsVertex(firstNode)){
 						//get a list of all adjacent vertices of the current looking Vertex
 						list.addAll(g.getAllAdjacentsOf(firstNode));
+						hitcount += list.size();
 					}else{
 						System.out.println(" Dieser Knoten existiert im Graphen nicht ");
 					}
@@ -64,8 +65,6 @@ public class BFS {
 							
 						    //mark it as visited
 							currentVertex.setVisited(true);
-							
-							hitcount += 1;
 							
 							//set current node-weight of the start Vertex one higher
 							currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
@@ -152,8 +151,6 @@ public class BFS {
 		
 		Map<String,String> stats = new HashMap<>();
 		stats.put("hitcount", hitcount.toString());
-		//debug value
-		stats.put("hitcount", Integer.valueOf(42).toString());
 		// transmitting stats to graph wrapper for further processment
 		g.sendStats(stats);
 		
