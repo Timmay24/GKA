@@ -134,6 +134,11 @@ public class GraphController implements GKAController {
 	public void addVertex(String vertexName) {
 		getGraphWrapper().addVertex(vertexName);
 	}
+	
+
+	public void addStatsListener(StatsListener statsListener) {
+		getGraphWrapper().addStatsListener(statsListener);
+	}
 
 
 	@Override
@@ -143,6 +148,14 @@ public class GraphController implements GKAController {
 	
 	public void findShortestWay(String startVertex, String goalVertex) {
 		getGraphWrapper().findShortestWay(startVertex, goalVertex);
+	}
+	
+	public boolean isWeighted() {
+		return getGraphWrapper().isWeighted();
+	}
+	
+	public boolean isDirected() {
+		return getGraphWrapper().isDirected();
 	}
 	
 }

@@ -37,6 +37,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
+import main.graphs.GKAEdge;
 import main.graphs.GraphType;
 
 import com.mxgraph.model.mxCell;
@@ -47,6 +48,8 @@ import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
 import controller.StatsListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener {
 	
@@ -88,13 +91,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JLabel 				label;
 	private     JTextField 			txtAESource;
 	private     JLabel 				label_1;
-	private     JTextField 			txtADTarget;
+	private     JTextField 			txtAETarget;
 	private     JTextField 			txtAEName;
 	private     JLabel 				lblName;
 	private     JTextField 			txtBFSStart;
 	private     JTextField 			txtBFSGoal;
-	private     JTextField 			txtBFSStatsVertex;
-	private     JTextField 			txtBFSStatsEdges;
+	private     JTextField 			txtBFSStatsHitcount;
 	private     JTextField 			txtBFSStatsTime;
 	private     JPanel 				edgePanel;
 	private     JSpinner 			spinAEWeight;
@@ -105,7 +107,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JLabel 				lblZiel;
 	private     JPanel 				bfsStatsPanel;
 	private     JLabel	 			lblZugriffe;
-	private     JLabel 				lblKanten;
 	private     JLabel 				lblGesamtzeit;
 	private     JButton 			btnBFSSearch;
 
@@ -145,6 +146,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		graphController.addMessageListener(this); // Fuer den Empfang von Nachrichten
 		graphController.addCellListener(this);    // und Zellen anmelden
 		graphController.addAdapterUpdateListener(this);
+		graphController.addStatsListener(this);
 		graphController.newGraph(null); // durch uebergeben von null -> Beispielgraphen erzeugen lassen
 	}
 	
@@ -244,6 +246,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		vertexPanel.add(lblNewLabel);
 		
 		txtAddVertex = new JTextField();
+		txtAddVertex.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAddVertex.setText("");
+			}
+		});
 		txtAddVertex.setBounds(46, 20, 51, 20);
 		vertexPanel.add(txtAddVertex);
 		txtAddVertex.setColumns(10);
@@ -270,6 +278,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		edgePanel.add(label);
 		
 		txtAESource = new JTextField();
+		txtAESource.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAESource.setText("");
+			}
+		});
 		txtAESource.setColumns(10);
 		txtAESource.setBounds(57, 20, 51, 20);
 		edgePanel.add(txtAESource);
@@ -278,12 +292,24 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		label_1.setBounds(118, 23, 37, 14);
 		edgePanel.add(label_1);
 		
-		txtADTarget = new JTextField();
-		txtADTarget.setColumns(10);
-		txtADTarget.setBounds(165, 20, 51, 20);
-		edgePanel.add(txtADTarget);
+		txtAETarget = new JTextField();
+		txtAETarget.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAETarget.setText("");
+			}
+		});
+		txtAETarget.setColumns(10);
+		txtAETarget.setBounds(165, 20, 51, 20);
+		edgePanel.add(txtAETarget);
 		
 		txtAEName = new JTextField();
+		txtAEName.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtAEName.setText("");
+			}
+		});
 		txtAEName.setBounds(273, 20, 51, 20);
 		edgePanel.add(txtAEName);
 		txtAEName.setColumns(10);
@@ -302,6 +328,20 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		edgePanel.add(lblGewicht);
 		
 		btnAddEdge = new JButton("hinzuf\u00FCgen");
+		btnAddEdge.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String source = txtAESource.getText();
+				String target = txtAETarget.getText();
+				String edgeName = txtAEName.getText();
+				Integer edgeWeight = (Integer) spinAEWeight.getModel().getValue();
+				
+				if (graphController.isWeighted()) {
+					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName, edgeWeight));
+				} else {
+					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName));
+				}
+			}
+		});
 		btnAddEdge.setBounds(451, 19, 89, 23);
 		edgePanel.add(btnAddEdge);
 		
@@ -312,11 +352,23 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsPanel.setLayout(null);
 		
 		txtBFSStart = new JTextField();
+		txtBFSStart.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtBFSStart.setText("");
+			}
+		});
 		txtBFSStart.setBounds(54, 21, 51, 20);
 		bfsPanel.add(txtBFSStart);
 		txtBFSStart.setColumns(10);
 		
 		txtBFSGoal = new JTextField();
+		txtBFSGoal.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtBFSGoal.setText("");
+			}
+		});
 		txtBFSGoal.setBounds(54, 52, 51, 20);
 		bfsPanel.add(txtBFSGoal);
 		txtBFSGoal.setColumns(10);
@@ -335,33 +387,24 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsPanel.add(bfsStatsPanel);
 		bfsStatsPanel.setLayout(null);
 		
-		lblZugriffe = new JLabel("Knoten:");
+		lblZugriffe = new JLabel("Hitcount:");
 		lblZugriffe.setBounds(10, 21, 57, 14);
 		bfsStatsPanel.add(lblZugriffe);
 		
-		lblKanten = new JLabel("Kanten:");
-		lblKanten.setBounds(10, 46, 57, 14);
-		bfsStatsPanel.add(lblKanten);
-		
 		lblGesamtzeit = new JLabel("Zeit (ms):");
-		lblGesamtzeit.setBounds(10, 71, 57, 14);
+		lblGesamtzeit.setBounds(10, 49, 57, 14);
 		bfsStatsPanel.add(lblGesamtzeit);
 		
-		txtBFSStatsVertex = new JTextField();
-		txtBFSStatsVertex.setEditable(false);
-		txtBFSStatsVertex.setBounds(77, 18, 86, 20);
-		bfsStatsPanel.add(txtBFSStatsVertex);
-		txtBFSStatsVertex.setColumns(10);
-		
-		txtBFSStatsEdges = new JTextField();
-		txtBFSStatsEdges.setEditable(false);
-		txtBFSStatsEdges.setBounds(77, 43, 86, 20);
-		bfsStatsPanel.add(txtBFSStatsEdges);
-		txtBFSStatsEdges.setColumns(10);
+		txtBFSStatsHitcount = new JTextField();
+		txtBFSStatsHitcount.setEditable(false);
+		txtBFSStatsHitcount.setBounds(77, 18, 86, 20);
+		bfsStatsPanel.add(txtBFSStatsHitcount);
+		txtBFSStatsHitcount.setColumns(10);
 		
 		txtBFSStatsTime = new JTextField();
+		txtBFSStatsTime.setText("--later--");
 		txtBFSStatsTime.setEditable(false);
-		txtBFSStatsTime.setBounds(77, 68, 86, 20);
+		txtBFSStatsTime.setBounds(77, 46, 86, 20);
 		bfsStatsPanel.add(txtBFSStatsTime);
 		txtBFSStatsTime.setColumns(10);
 		
@@ -548,7 +591,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 
 	@Override
 	public void receiveStats(Map<String, String> stats) {
-		// TODO Auto-generated method stub
-		
+		if (stats != null) {
+			txtBFSStatsHitcount.setText(stats.get("hitcount"));
+		}
 	}
 }

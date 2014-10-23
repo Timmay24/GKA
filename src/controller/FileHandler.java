@@ -36,11 +36,12 @@ public class FileHandler {
 				if (!filePath.toLowerCase().endsWith(FILE_SUFFIX)) {
 					filePath += FILE_SUFFIX;
 				}
-				file = new File(filePath);
-				return file;
+//				file = new File(filePath);
+//				return file;
 			}
 		}
-		return null;
+		file = new File(filePath);
+		return file;
 	}
 	
 	public static File getInFile() throws IOException {

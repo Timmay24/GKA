@@ -1,7 +1,9 @@
 package main.graphs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -22,6 +24,9 @@ public class BFS {
 	 * @return the sortest way from the start vertex to the end vertex
 	 */
 	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode) throws IllegalArgumentException {
+		
+		//hit-counter for graph accesses
+		Integer hitcount = 0;
 	
 		//queue for the vertices
 		List<Vertex> queue = new ArrayList<>();
@@ -139,6 +144,13 @@ public class BFS {
 			String tmp2 = returnList.get(i).getName().toString();
 			System.out.println(tmp2);
 		}
+		
+		Map<String,String> stats = new HashMap<>();
+		stats.put("hitcount", hitcount.toString());
+		//debug value
+		stats.put("hitcount", Integer.valueOf(42).toString());
+		// transmitting stats to graph wrapper for further processment
+		g.sendStats(stats);
 		
 		return returnList;
 		

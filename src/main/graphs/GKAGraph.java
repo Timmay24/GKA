@@ -51,7 +51,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	private final	String								UNDIRECTED_SYMBOL = "--";
 	private final	String								  DIRECTED_SYMBOL = "->";
 	private 		String								currentFilePath = null;
-	private 		List<StatsListener> 				statsListeners;
+	private 		List<StatsListener> 				statsListeners = new ArrayList<>();;
 	
 	/**
 	 * Konstruktor mit Angabe des Graphentypen
