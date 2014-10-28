@@ -5,19 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
-
-
 /**
  * @author Louisa und Tim
  *
  */
 public class BFS {
-
-	
 	
 	/**
+	 * Finds a shortest way from given startNode to given endNode within g, if it exists. 
+	 * 
 	 * @param g is the Graph
 	 * @param startNode is the startvertex
 	 * @param endNode is the endvertex
@@ -25,79 +21,82 @@ public class BFS {
 	 */
 	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode) throws IllegalArgumentException {
 		
-		//hit-counter for graph accesses
+		// hit-counter for graph accesses
 		Integer hitcount = 0;
 	
-		//queue for the vertices
+		// queue for the vertices
 		List<Vertex> queue = new ArrayList<>();
 				
-		//write start node in queue
+		// write start node in queue
 		queue.add(startNode);
 		
-		//a list of all visited vertices
+		// a list of all visited vertices
 		List<Vertex> visitedVertices = new ArrayList<>();
 		
-		//as long as the queue is not empty an the end vertex is not in the queue 
-		//add all possible vertices for the way in queue
-		while(!queue.isEmpty() && (queue.get((queue.size())-1) != endNode)){
-			
-					Vertex firstNode = queue.get(0);
-				 						
-					List<Vertex> list = new ArrayList<>();
-					// if the vertex is in the queue
-					if (g.containsVertex(firstNode)){
-						//get a list of all adjacent vertices of the current looking Vertex
-						list.addAll(g.getAllAdjacentsOf(firstNode));
-						hitcount += list.size();
-					}else{
-						System.out.println(" Dieser Knoten existiert im Graphen nicht ");
+		// as long as the queue is not empty an the end vertex is not in the queue 
+		// add all possible vertices for the way in queue
+		while (!queue.isEmpty() && (queue.get((queue.size()) - 1) != endNode)) {
+
+			Vertex firstNode = queue.get(0);
+
+			List<Vertex> list = new ArrayList<>();
+			// if the vertex is in the queue
+			if (g.containsVertex(firstNode)) {
+				// get a list of all adjacent vertices of the current looking
+				// Vertex
+				list.addAll(g.getAllAdjacentsOf(firstNode));
+				hitcount += list.size();
+			} else {
+				System.out.println("Es existiert kein Weg zum Zielknoten.");
+			}
+
+			// mark the first vertex as visited
+			firstNode.setVisited(true);
+
+			hitcount += 1;
+
+			// take the next adjacent Vertex to be visited
+			for (int i = 0; i < list.size(); i++) {
+				Vertex currentVertex = list.get(i);
+				if ((!currentVertex.isVisited())) {
+
+					// mark it as visited
+					currentVertex.setVisited(true);
+
+					// set current node-weight of the start Vertex one higher
+					currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
+
+					// set the parent
+					currentVertex.setParent(firstNode.toString());
+
+					// add the child-vertex (current vertex) to the end of the
+					// list
+					queue.add(currentVertex);
+
+					/*
+					 * if the current vertex is the endNode then stop the
+					 * for-loop and go on with the next commmand
+					 */
+					if (currentVertex == endNode) {
+						i = list.size();
+						// queue.add(currentVertex);
 					}
-					
-					//mark the first vertex as visited 
-					firstNode.setVisited(true);
-										
-					hitcount += 1;
-					
-					//take the next adjacent Vertex to be visited 
-					for(int i=0; i<list.size(); i++){
-						Vertex currentVertex = list.get(i);
-						if ((!currentVertex.isVisited())){
-							
-						    //mark it as visited
-							currentVertex.setVisited(true);
-							
-							//set current node-weight of the start Vertex one higher
-							currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
-							
-							//set the parent 
-							currentVertex.setParent(firstNode.toString());
-							
-							//add the child-vertex (current vertex) to the end of the list 
-							queue.add(currentVertex);
-							
-							/* if the current vertex is the endNode then stop the 
-							for-loop and go on with the next commmand */
-							if (currentVertex == endNode){
-								i = list.size();
-//								queue.add(currentVertex);
-							}
-						}
-					}
-				
-				//done with the start vertex, added all its children to the queue 
-				
-				//add current vertex to the list of visited vertices
-				visitedVertices.add(firstNode);
-				//Done with first vertex. Remove it from queue. 
-				queue.remove(0);
-				
 				}
-		
-		
-		if(queue.isEmpty() && !visitedVertices.get(visitedVertices.size()-1).equals(endNode)){
-			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
+			}
+
+			// done with the start vertex, added all its children to the queue
+
+			// add current vertex to the list of visited vertices
+			visitedVertices.add(firstNode);
+			// Done with first vertex. Remove it from queue.
+			queue.remove(0);
+
 		}
-		else{
+		
+		
+		if (queue.isEmpty() && !visitedVertices.get(visitedVertices.size() - 1).equals(endNode)) {
+			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
+		} else {
 			visitedVertices.addAll(queue);
 		}
 		
@@ -116,32 +115,32 @@ public class BFS {
 		//put the first element (the endNode of the way) in the return list
 		reverseReturnList.add(reverseList.get(0));
 		
-		//gives the shortest way in a list
-		/*
+		/* gives the shortest way in a list
+		 * 
 		 *starts at the end vertex and finds the parent vertex with a nodeweight one less than the end vertex, if found
 		 *takes the current parent vertex as the new child vertex and find the parent vertex of this one...
 		 *stops when start vertex is found
 		 */
 		Vertex tmpVertex = reverseList.get(0); // dummy: first vertex of the way
-		for(Vertex v : reverseList){
-			if ((tmpVertex.getNodeWeight() == (v.getNodeWeight() + 1)) && (tmpVertex.getParent().equals(v.getName()))){
+		for (Vertex v : reverseList) {
+			if ((tmpVertex.getNodeWeight() == (v.getNodeWeight() + 1)) && (tmpVertex.getParent().equals(v.getName()))) {
 				reverseReturnList.add(v);
 				tmpVertex = v;
 			}
 		}
 		
-		//Number of edges in shortest way	
+		// Number of edges in shortest way	
 		int tmp = (reverseReturnList.size() - 1);
 		Integer anzahlInInt = new Integer(tmp); 
 		String anzahl = anzahlInInt.toString();
 		
 		
-		//Number of edges in the way
+		// Number of edges in the way
 		System.out.println("Der Weg hat " + anzahl + " Kanten");
-		System.out.println("Der Weg ist: ");	
 		System.out.println("Es wurde " + hitcount.toString() + " Mal auf den Graphen zugegriffen");
+		System.out.println("Der Weg ist: ");	
 		
-		//reverse the reverseList to get the way from the StartVertex to the EndVertex
+		// reverse the reverseList to get the way from the StartVertex to the EndVertex
 		List<Vertex> returnList = reverse(reverseReturnList); 
 		
 		for(int i=0 ; i<returnList.size() ; i++){
@@ -156,16 +155,11 @@ public class BFS {
 		
 		return returnList;
 		
-}
-	
-
-	
-	
-	
+	}
 	
 
 	/**
-	 * Help method 
+	 * Help function 
 	 * 
 	 * @param l: a list with vertices
 	 * @return the reversed list of the input list
@@ -186,9 +180,4 @@ public class BFS {
 			
 		return reverseList;
 	}
-
-
-
-
-
 }
