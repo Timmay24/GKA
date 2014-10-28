@@ -63,6 +63,13 @@ public class FileHandler {
 		}
 	}
 	
+	/**
+	 * Liest das uebergebene Dateiobjekt in eine Liste ein.
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	public static List<String> readFile(File file) throws IOException {
 		CharsetDecoder 		decoder = Charset.forName("ISO-8859-1").newDecoder();
 		InputStreamReader 	inStreamReader = new InputStreamReader(new FileInputStream(checkFile(file)), decoder);
@@ -72,44 +79,49 @@ public class FileHandler {
         List<String> resultList = new ArrayList<>();
         
 		while ((line = reader.readLine()) != null) {
-			/**
-			 *  Pro Zeile werden Whitespaces (Leerzeichen, Tabs) entfernt und sie wird
-			 *  nochmal in eine Unterliste nach Semikolons gesplittet, damit fehlende Umbrueche
-			 *  keine Schwierigkeiten bereiten.
-			 *  addAll fuegt anschließend das Unterliste der Ergebnisliste hinzu.
-			 */
-//			resultList.addAll(Arrays.asList(line.replace(" ", "").replace("\t", "").split(";")));
 			resultList.add(line);
 		}
 		reader.close();
         return resultList;
 	}
 
+	/**
+	 * @return Gibt das Objekt der im Chooser gewaehlten Datei zurueck.
+	 * @throws FileSystemException
+	 */
 	public static File openGraph() throws FileSystemException {
-		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Graphendateien (*.gka)", "gka");
-		chooser.setFileFilter(filter);
-		int returnVal = chooser.showOpenDialog(null);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File graphFile = new File(chooser.getSelectedFile().getAbsolutePath());
-			checkFile(graphFile);
-			return graphFile;
-		} else {
-			return null;
+		JFileChooser chooser = new JFileChooser();									// FileChooser init.
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(				// Dateisuffix Filter auf .gka setzen
+				"Graphendateien (*.gka)", "gka");									// "
+		chooser.setFileFilter(filter);												// "
+		int returnVal = chooser.showOpenDialog(null);								// Chooser oeffnen
+		if (returnVal == JFileChooser.APPROVE_OPTION) {								// 
+			File graphFile = new File(chooser.getSelectedFile().getAbsolutePath());	// Absoluten Pfad der gewählten Datei holen
+			checkFile(graphFile);													// Zugriff auf Datei prüfen
+			return graphFile;														// Erzeugtes Dateiobjekt zurückgeben.
+		} else {																	// 
+			return null;															// Bei Fehlschlägen wird null zurückgegeben
 		}
 	}
 	
+	/**
+	 * @param coll		Eingabe-Coll., die in die Datei outFile geschrieben werden soll
+	 * @param outFile	Zu beschreibendes File-Objekt
+	 * @return			Operation erfolgreich?
+	 * @throws IOException
+	 */
 	public static boolean writeToFile(Collection<String> coll, File outFile) throws IOException {
-		OutputStreamWriter outStreamWriter = null;
+		// exisitiert die Datei?
 		if (!outFile.exists()) { 
+			// Falls nicht --> erstellen
 			outFile.createNewFile();
 		}
-		checkFile(outFile);
-		outStreamWriter = new OutputStreamWriter(new FileOutputStream(outFile), "ISO-8859-1");
+		checkFile(outFile); // Zugriff prüfen
 		
-		// outStreamWriter.write(""); // ???
-		//TODO: eventuell append() statt write() nehmen, falls es probleme gibt.
+		// Stream init.
+		OutputStreamWriter outStreamWriter = new OutputStreamWriter(new FileOutputStream(outFile), "ISO-8859-1");
+		
+		// Alle Zeilen der Collection in die Datei schreiben (mit Umbruechen).
 		for (String line : coll) {
 			outStreamWriter.write(line + System.getProperty("line.separator"));
 		}
@@ -121,6 +133,13 @@ public class FileHandler {
 	
 	
 	
+	/**
+	 * Prueft, ob korrekt auf file zugegriffen werden kann.
+	 * 
+	 * @param file Dateiobjekt
+	 * @return Gibt bei validem Zugriff das gepruefte Objekt zurueck.
+	 * @throws FileSystemException
+	 */
 	public static File checkFile(File file) throws FileSystemException {
 		if (!(file.exists() && file.isFile() && file.canRead())) {
 			throw new FileSystemException("Dateizugriffsfehler");

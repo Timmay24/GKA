@@ -392,6 +392,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsStatsPanel.add(lblZugriffe);
 		
 		lblGesamtzeit = new JLabel("Zeit (ms):");
+		lblGesamtzeit.setEnabled(false);
 		lblGesamtzeit.setBounds(10, 49, 57, 14);
 		bfsStatsPanel.add(lblGesamtzeit);
 		
@@ -402,6 +403,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		txtBFSStatsHitcount.setColumns(10);
 		
 		txtBFSStatsTime = new JTextField();
+		txtBFSStatsTime.setEnabled(false);
 		txtBFSStatsTime.setText("--later--");
 		txtBFSStatsTime.setEditable(false);
 		txtBFSStatsTime.setBounds(77, 46, 86, 20);

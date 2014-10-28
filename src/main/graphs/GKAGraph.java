@@ -47,11 +47,11 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	private 		List<MessageListener>				msgListeners = new ArrayList<>();
 	private			List<CellListener<mxCell>>			cellListeners = new ArrayList<>();
 	private			List<AdapterUpdateListener>			adapterUpdateListeners = new ArrayList<>();
+	private 		List<StatsListener> 				statsListeners = new ArrayList<>();
 	private			GraphType							graphType;
 	private final	String								UNDIRECTED_SYMBOL = "--";
 	private final	String								  DIRECTED_SYMBOL = "->";
 	private 		String								currentFilePath = null;
-	private 		List<StatsListener> 				statsListeners = new ArrayList<>();;
 	
 	/**
 	 * Konstruktor mit Angabe des Graphentypen
@@ -437,8 +437,6 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
 		
 		for (GKAEdge e : incidentEdges) {
-//			sendMessage(e.getSource().toString() + " -" + e.getName() + "- " + e.getTarget().toString()); // debug
-			
 			if (e.getSource() != e.getTarget()) {          		// Schlaufen ausschliessen Source != Target
 				
 				if (directed) {									// Sonderregelung fuer gerichtete Graphen:

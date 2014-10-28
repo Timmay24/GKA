@@ -57,8 +57,21 @@ public interface GKAController extends MessageSender, CellSender<mxCell>, Adapte
 	 */
 	public void saveGraph();
 	
+	
+	/**
+	 * Fuegt einen Knoten hinzu.
+	 * 
+	 * @param vertexName
+	 */
 	public void addVertex(String vertexName);
 	
+	/**
+	 * Fuegt Kanten hinzu.
+	 * 
+	 * @param sourceVertex
+	 * @param targetVertex
+	 * @param edge
+	 */
 	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge);
 	
 	
