@@ -2,15 +2,19 @@ package main.graphs;
 
 import org.jgrapht.graph.DefaultEdge;
 
+import static com.google.common.base.Preconditions.*;
+
 public class GKAEdge extends DefaultEdge {
 
 	private static final long serialVersionUID = -6523434696944744833L;
 
-	private String edgeName = null;
+	private String  edgeName = null;
 	private Integer edgeWeight = null;
 
 	private GKAEdge(String edgeName, Integer edgeWeight) {
 		super();
+		checkNotNull(edgeName);
+		checkArgument(!edgeName.isEmpty());
 		this.edgeName = edgeName;
 		this.edgeWeight = edgeWeight;
 	}
@@ -24,7 +28,7 @@ public class GKAEdge extends DefaultEdge {
 	}
 	
 	public static GKAEdge valueOf(String edgeName) {
-		return new GKAEdge(edgeName);
+		return valueOf(edgeName, null);
 	}
 
 	public Object getSource() {

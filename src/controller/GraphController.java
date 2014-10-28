@@ -135,6 +135,10 @@ public class GraphController implements GKAController {
 		getGraphWrapper().addVertex(vertexName);
 	}
 	
+	public void addVertex(Vertex vertex) {
+		getGraphWrapper().addVertex(vertex);
+	}
+	
 
 	public void addStatsListener(StatsListener statsListener) {
 		getGraphWrapper().addStatsListener(statsListener);

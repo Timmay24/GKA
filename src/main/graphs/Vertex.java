@@ -98,7 +98,7 @@ public class Vertex {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!name.equals(other.name)) //TODO pruefen, ob Abgleich mit dem Namen korrekt ist
 			return false;
 		return true;
 	}

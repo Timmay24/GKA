@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -113,8 +114,10 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	
 			createGraphComponent(jgxAdapter);
 			setGraphConfig();
-		
-//		sendAdapterUpdate(getGraphComponent()); // Gibt Listenern Bescheid, dass der Adapter erneuert wurde.
+			
+			for (String key : getAdapter().getStylesheet().getDefaultEdgeStyle().keySet()) {
+				System.out.println(key + " => " + getAdapter().getStylesheet().getDefaultEdgeStyle().get(key));
+			}
 		}
 	}
 	
@@ -165,7 +168,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		getAdapter().setAllowDanglingEdges(false);
 		getAdapter().setCellsDisconnectable(false);
 		getAdapter().setDisconnectOnMove(false);
-		getAdapter().setCellsEditable(false);
+		getAdapter().setCellsEditable(false); // true setzen, falls Einzelteile geaendert werden duerfen sollen
 		getAdapter().setVertexLabelsMovable(false);
 		getAdapter().setEdgeLabelsMovable(false);
 		getAdapter().setConnectableEdges(false);
@@ -326,6 +329,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Prueft, ob die Kante edge im Graphen enthalten ist.
 	 */
 	public boolean containsEdge(GKAEdge edge) {
+//		return getGraph().containsEdge(edge);
 		return getGraph().edgeSet().contains(edge);
 		//TODO delegieren statt selbst machen: return getGraph().containsEdge(edge);
 	}
@@ -352,11 +356,9 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Fuegt einen Knoten dem Graphen hinzu.
 	 */
 	public boolean addVertex(Vertex vertex) {
-//		if (containsVertex(vertex)) {
-//			
-//		}
 		if (getGraph().addVertex(vertex)) {
 			sendMessage("Knoten " + vertex + " hinzugefuegt");
+			sendMessage("Knoten existiert: " + containsVertex(vertex));
 			return true;
 		}
 		return false;
@@ -389,6 +391,10 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Prueft, ob der Knoten vertex im Graphen enthalten ist.
 	 */
 	public boolean containsVertex(Vertex vertex) {
+		System.out.println("Aktuelles VertexSet:");
+		for (Vertex v : getGraph().vertexSet()) {
+			System.out.println(v.toString());
+		}
 		return getGraph().vertexSet().contains(vertex);
 		//TODO delegieren statt selbst machen: return getGraph().containsVertex(vertex);
 	}
@@ -589,7 +595,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			List<String> input = FileHandler.readFile(inFile);	// Datei auslesen
 			if (parseFile(input)) {								// Ergebnisliste parsen
 				currentFilePath = inFile.getAbsolutePath();		// bei Erfolg: Dateipfad merken
-				setCircleLayout();
+				setLayout();
 			};
 			sendMessage("ERFOLG: Graphendatei geladen.");
 			sendMessage("ERFOLG: " + "\"" + currentFilePath + "\"");

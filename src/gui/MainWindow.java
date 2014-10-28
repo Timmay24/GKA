@@ -39,6 +39,7 @@ import javax.swing.border.TitledBorder;
 
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
+import main.graphs.Vertex;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -48,6 +49,7 @@ import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
 import controller.StatsListener;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -260,7 +262,17 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		btnAddVertex.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!txtAddVertex.getText().isEmpty()) {
+					// EXPERIMENTAL DEBUG ZONE - plz don't touch
+					// Tim
+					Vertex nv = Vertex.valueOf(txtAddVertex.getText());
+							
+//					graphController.addVertex(nv);
+//					
+//					System.out.println("vertex exists: " + graphController.getGraphWrapper().containsVertex(nv));
+					
 					graphController.addVertex(txtAddVertex.getText());
+					
+					System.out.println("vertex exists: " + graphController.getGraphWrapper().containsVertex(txtAddVertex.getText()));
 				}
 			}
 		});
