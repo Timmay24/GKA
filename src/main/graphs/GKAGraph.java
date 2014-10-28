@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import org.jgrapht.graph.Pseudograph;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphComponent.mxGraphControl;
@@ -186,15 +186,30 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void setLayout() {
 		setCircleLayout();
+//		setHierarchyLayout();
+	}
+	
+	/**
+	 * Ordnet den Graphen in einem kreisfoermigen Layout an.
+	 */
+	public void setCircleLayout() {
+		mxCircleLayout layout = new mxCircleLayout(getAdapter());
+		layout.setX0(150);
+		layout.setY0(30);
+		layout.execute(getAdapter().getDefaultParent());
 		setParallelEdgeLayout();
 	}
 	
 	/**
-	 * Ordnet den Graphen in einem kreisfoermigen Layout an
+	 * Ordnet den Graphen in einem hierarchischem Layout an.
 	 */
-	public void setCircleLayout() {
-		mxCircleLayout layout1 = new mxCircleLayout(getAdapter());
-		layout1.execute(getAdapter().getDefaultParent());
+	public void setHierarchyLayout() {
+		mxHierarchicalLayout layout = new mxHierarchicalLayout(getAdapter());
+		layout.setInterHierarchySpacing(100);
+        layout.setInterRankCellSpacing(100);
+        layout.setIntraCellSpacing(100);
+		layout.execute(getAdapter().getDefaultParent());
+		setParallelEdgeLayout();
 	}
 	
 	/**
@@ -202,8 +217,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * werden sollen).
 	 */
 	public void setParallelEdgeLayout() {
-		mxParallelEdgeLayout layout = new mxParallelEdgeLayout(getAdapter(), 50);
-		layout.execute(getAdapter().getDefaultParent());
+		new mxParallelEdgeLayout(getAdapter(), 50).execute(getAdapter().getDefaultParent());
 	}
 
 	/**

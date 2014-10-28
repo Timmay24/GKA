@@ -1,10 +1,5 @@
 package gui;
 
-/**
- * TODO!!!: Wenn ein neuer oder bestehender Graph geladen werden soll
- *          --> sobald der interne graph fertig ist, muss der Adapter in der Gui ausgetauscht werden.
- */
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,7 +50,7 @@ import java.awt.event.FocusEvent;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener {
 	
-	private 	int[]				verNo = {0,7,45};
+	private 	int[]				verNo = {0,7,47};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -111,6 +106,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JLabel	 			lblZugriffe;
 	private     JLabel 				lblGesamtzeit;
 	private     JButton 			btnBFSSearch;
+	private JMenuItem mntmApplyHierarchyLayout;
 
 	/**
 	 * Launch the application.
@@ -531,13 +527,21 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mnLayout = new JMenu("Layout");
 		menuBar.add(mnLayout);
 		
-		mntmApplyCircleLayout = new JMenuItem("Im Kreis anordnen");
+		mntmApplyCircleLayout = new JMenuItem("Kreis");
 		mntmApplyCircleLayout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				graphController.setCircleLayout();
 			}
 		});
 		mnLayout.add(mntmApplyCircleLayout);
+		
+		mntmApplyHierarchyLayout = new JMenuItem("Hierarchisch");
+		mntmApplyHierarchyLayout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.getGraphWrapper().setHierarchyLayout();
+			}
+		});
+		mnLayout.add(mntmApplyHierarchyLayout);
 		
 		mnReporting = new JMenu("Reporting");
 		menuBar.add(mnReporting);
