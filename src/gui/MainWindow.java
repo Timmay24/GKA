@@ -43,14 +43,15 @@ import controller.AdapterUpdateListener;
 import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
+import controller.SetListener;
 import controller.StatsListener;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
-public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener {
+public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener {
 	
-	private 	int[]				verNo = {0,7,47};
+	private 	int[]				verNo = {0,7,51};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -107,6 +108,11 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JLabel 				lblGesamtzeit;
 	private     JButton 			btnBFSSearch;
 	private 	JMenuItem 			mntmApplyHierarchyLayout;
+	
+	
+	
+	//TODO DEBUG UTIL
+	private JTextArea textArea;
 
 	/**
 	 * Launch the application.
@@ -145,6 +151,9 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		graphController.addCellListener(this);    // und Zellen anmelden
 		graphController.addAdapterUpdateListener(this);
 		graphController.addStatsListener(this);
+		
+		graphController.getGraphWrapper().addSetListener(this); //TODO DEBUG LISTENER
+		
 		graphController.newGraph(null); // durch uebergeben von null -> Beispielgraphen erzeugen lassen
 	}
 	
@@ -187,7 +196,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mainFrame.setResizable(false);
 		mainFrame.setTitle("GKA Graph Visualizer " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
-		mainFrame.setBounds(0, 0, 800, 600);
+		mainFrame.setBounds(0, 0, 800, 900);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		mainFrame.setLocation(
 				(dim.width / 2 - mainFrame.getSize().width / 2),
@@ -258,17 +267,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		btnAddVertex.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (!txtAddVertex.getText().isEmpty()) {
-					// EXPERIMENTAL DEBUG ZONE - plz don't touch
-					// Tim
-					Vertex nv = Vertex.valueOf(txtAddVertex.getText());
-							
-//					graphController.addVertex(nv);
-//					
-//					System.out.println("vertex exists: " + graphController.getGraphWrapper().containsVertex(nv));
-					
 					graphController.addVertex(txtAddVertex.getText());
-					
-					System.out.println("vertex exists: " + graphController.getGraphWrapper().containsVertex(txtAddVertex.getText()));
 				}
 			}
 		});
@@ -431,6 +430,14 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		btnBFSSearch.setBounds(16, 83, 89, 23);
 		bfsPanel.add(btnBFSSearch);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 551, 178, 289);
+		mainFrame.getContentPane().add(scrollPane_1);
+		
+		textArea = new JTextArea();
+		textArea.setFont(new Font("Consolas", Font.PLAIN, 11));
+		scrollPane_1.setViewportView(textArea);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
@@ -612,5 +619,15 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		if (stats != null) {
 			txtBFSStatsHitcount.setText(stats.get("hitcount"));
 		}
+	}
+
+	
+	//TODO DEBUG LISTENER METHOD
+	@Override
+	public void receiveSetLine(String message) {
+		if (message == null)
+			textArea.setText("");
+		else
+			textArea.append(message + "\n");
 	}
 }

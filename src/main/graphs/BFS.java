@@ -39,13 +39,13 @@ public class BFS {
 
 			Vertex firstNode = queue.get(0);
 
-			List<Vertex> list = new ArrayList<>();
+			List<Vertex> adjacents = new ArrayList<>();
 			// if the vertex is in the queue
 			if (g.containsVertex(firstNode)) {
 				// get a list of all adjacent vertices of the current looking
 				// Vertex
-				list.addAll(g.getAllAdjacentsOf(firstNode));
-				hitcount += list.size();
+				adjacents.addAll(g.getAllAdjacentsOf(firstNode));
+				hitcount += adjacents.size();
 			} else {
 				System.out.println("Es existiert kein Weg zum Zielknoten.");
 			}
@@ -56,8 +56,8 @@ public class BFS {
 			hitcount += 1;
 
 			// take the next adjacent Vertex to be visited
-			for (int i = 0; i < list.size(); i++) {
-				Vertex currentVertex = list.get(i);
+			for (int i = 0; i < adjacents.size(); i++) {
+				Vertex currentVertex = adjacents.get(i);
 				if ((!currentVertex.isVisited())) {
 
 					// mark it as visited
@@ -78,7 +78,7 @@ public class BFS {
 					 * for-loop and go on with the next commmand
 					 */
 					if (currentVertex == endNode) {
-						i = list.size();
+						i = adjacents.size();
 						// queue.add(currentVertex);
 					}
 				}
