@@ -95,7 +95,7 @@ public class BFS {
 		
 		
 		if (queue.isEmpty() && !visitedVertices.get(visitedVertices.size() - 1).equals(endNode)) {
-			throw new IllegalArgumentException(" Der Endknoten ist nicht im Teilgraphen enthalten ");
+			throw new IllegalArgumentException("Es existiert kein Weg zwischen Start- und Zielknoten.");
 		} else {
 			visitedVertices.addAll(queue);
 		}

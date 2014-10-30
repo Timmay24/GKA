@@ -106,7 +106,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JLabel	 			lblZugriffe;
 	private     JLabel 				lblGesamtzeit;
 	private     JButton 			btnBFSSearch;
-	private JMenuItem mntmApplyHierarchyLayout;
+	private 	JMenuItem 			mntmApplyHierarchyLayout;
 
 	/**
 	 * Launch the application.
@@ -344,9 +344,9 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				Integer edgeWeight = (Integer) spinAEWeight.getModel().getValue();
 				
 				if (graphController.isWeighted()) {
-					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName, edgeWeight));
+					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName, edgeWeight), false);
 				} else {
-					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName));
+					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName), false);
 				}
 			}
 		});

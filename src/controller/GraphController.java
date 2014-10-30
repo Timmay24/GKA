@@ -145,9 +145,13 @@ public class GraphController implements GKAController {
 	}
 
 
+	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge, boolean verbose) {
+		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, verbose);
+	}
+	
 	@Override
 	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge) {
-		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge);
+		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, true);
 	}
 	
 	public void findShortestWay(String startVertex, String goalVertex) {
