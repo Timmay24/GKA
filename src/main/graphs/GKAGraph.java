@@ -46,7 +46,7 @@ import controller.StatsSender;
 
 public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender, SetSender {
 	
-	private			ListenableGraph<GKAVertex, GKAEdge> 	jGraph;
+	private			ListenableGraph<GKAVertex, GKAEdge> jGraph;
 	private			JGraphXAdapter<GKAVertex, GKAEdge> 	jgxAdapter;
 	private 		mxGraphComponent 					graphComponent = null;
 	private 		List<MessageListener>				msgListeners = new ArrayList<>();
@@ -684,9 +684,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			List<GKAVertex> way = BFS.findShortestWay(this, start, goal);
 			
 			sendMessage("\nKürzester Weg:");
+			String wayString = "";
 			for (GKAVertex v : way) {
-				sendMessage(v.getName());
+				wayString += v.toString();
+				wayString += " -> ";
 			}
+			sendMessage(wayString.substring(0, wayString.length() - 4));
 			sendMessage("--------------------------------");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
