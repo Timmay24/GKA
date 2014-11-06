@@ -19,27 +19,27 @@ public class BFS {
 	 * @param endNode is the endvertex
 	 * @return the sortest way from the start vertex to the end vertex
 	 */
-	public static List<Vertex> findShortestWay(GKAGraph g, Vertex startNode, Vertex endNode) throws IllegalArgumentException {
+	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 		
 		// hit-counter for graph accesses
 		Integer hitcount = 0;
 	
 		// queue for the vertices
-		List<Vertex> queue = new ArrayList<>();
+		List<GKAVertex> queue = new ArrayList<>();
 				
 		// write start node in queue
 		queue.add(startNode);
 		
 		// a list of all visited vertices
-		List<Vertex> visitedVertices = new ArrayList<>();
+		List<GKAVertex> visitedVertices = new ArrayList<>();
 		
 		// as long as the queue is not empty an the end vertex is not in the queue 
 		// add all possible vertices for the way in queue
 		while (!queue.isEmpty() && (queue.get((queue.size()) - 1) != endNode)) {
 
-			Vertex firstNode = queue.get(0);
+			GKAVertex firstNode = queue.get(0);
 
-			List<Vertex> adjacents = new ArrayList<>();
+			List<GKAVertex> adjacents = new ArrayList<>();
 			// if the vertex is in the queue
 			if (g.containsVertex(firstNode)) {
 				// get a list of all adjacent vertices of the current looking
@@ -57,7 +57,7 @@ public class BFS {
 
 			// take the next adjacent Vertex to be visited
 			for (int i = 0; i < adjacents.size(); i++) {
-				Vertex currentVertex = adjacents.get(i);
+				GKAVertex currentVertex = adjacents.get(i);
 				if ((!currentVertex.isVisited())) {
 
 					// mark it as visited
@@ -108,9 +108,9 @@ public class BFS {
 		
 			
 		//reverse list with vertices to go the queue way back
-		List<Vertex> reverseList = reverse(visitedVertices);
+		List<GKAVertex> reverseList = reverse(visitedVertices);
 		
-		List<Vertex> reverseReturnList = new ArrayList<Vertex>();
+		List<GKAVertex> reverseReturnList = new ArrayList<GKAVertex>();
 		
 		//put the first element (the endNode of the way) in the return list
 		reverseReturnList.add(reverseList.get(0));
@@ -121,8 +121,8 @@ public class BFS {
 		 *takes the current parent vertex as the new child vertex and find the parent vertex of this one...
 		 *stops when start vertex is found
 		 */
-		Vertex tmpVertex = reverseList.get(0); // dummy: first vertex of the way
-		for (Vertex v : reverseList) {
+		GKAVertex tmpVertex = reverseList.get(0); // dummy: first vertex of the way
+		for (GKAVertex v : reverseList) {
 			if ((tmpVertex.getNodeWeight() == (v.getNodeWeight() + 1)) && (tmpVertex.getParent().equals(v.getName()))) {
 				reverseReturnList.add(v);
 				tmpVertex = v;
@@ -141,7 +141,7 @@ public class BFS {
 		System.out.println("Der Weg ist: ");	
 		
 		// reverse the reverseList to get the way from the StartVertex to the EndVertex
-		List<Vertex> returnList = reverse(reverseReturnList); 
+		List<GKAVertex> returnList = reverse(reverseReturnList); 
 		
 		for(int i=0 ; i<returnList.size() ; i++){
 			String tmp2 = returnList.get(i).getName().toString();
@@ -169,12 +169,12 @@ public class BFS {
 	 * If list has one element l and returnList are the same
 	 * If list is null then NullPointerException
 	 */
-	public static List<Vertex> reverse(List<Vertex> l){
+	public static List<GKAVertex> reverse(List<GKAVertex> l){
 		if (l == null){throw new NullPointerException("the input is null");}
 		
-		List<Vertex> reverseList = new ArrayList<>();
+		List<GKAVertex> reverseList = new ArrayList<>();
 			for (int i=l.size()-1 ; i>=0 ; i--){
-				Vertex lastElem = l.get(i);
+				GKAVertex lastElem = l.get(i);
 				reverseList.add(lastElem);
 			}
 			

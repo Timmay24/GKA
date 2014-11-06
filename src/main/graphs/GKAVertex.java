@@ -1,6 +1,6 @@
 package main.graphs;
 
-public class Vertex {
+public class GKAVertex {
 
 	private		String 		name;
 	private 	String 		parent;
@@ -58,7 +58,7 @@ public class Vertex {
 	 * 
 	 * @param name Name des Knotens.
 	 */
-	private Vertex(String name) {
+	private GKAVertex(String name) {
 		this.name = name;
 //		this.color = "white";
 	}
@@ -69,8 +69,8 @@ public class Vertex {
 	 * @param name Name des Knotens
 	 * @return Gibt eine neue Instanz der Klasse zurueck.
 	 */
-	public static Vertex valueOf(String name) {
-		return new Vertex(name);
+	public static GKAVertex valueOf(String name) {
+		return new GKAVertex(name);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class Vertex {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vertex other = (Vertex) obj;
+		GKAVertex other = (GKAVertex) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

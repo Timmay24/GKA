@@ -3,7 +3,7 @@ package controller;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;
-import main.graphs.Vertex;
+import main.graphs.GKAVertex;
 
 import org.jgrapht.ListenableGraph;
 
@@ -28,7 +28,7 @@ public class GraphController implements GKAController {
 	 * @see controller.GKAController#getGraph()
 	 */
 	@Override
-	public ListenableGraph<Vertex, GKAEdge> getGraph() {
+	public ListenableGraph<GKAVertex, GKAEdge> getGraph() {
 		return getGraphWrapper().getGraph();
 	}
 	
@@ -135,7 +135,7 @@ public class GraphController implements GKAController {
 		getGraphWrapper().addVertex(vertexName);
 	}
 	
-	public void addVertex(Vertex vertex) {
+	public void addVertex(GKAVertex vertex) {
 		getGraphWrapper().addVertex(vertex);
 	}
 	

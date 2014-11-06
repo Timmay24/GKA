@@ -34,7 +34,7 @@ import javax.swing.border.TitledBorder;
 
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
-import main.graphs.Vertex;
+import main.graphs.GKAVertex;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;

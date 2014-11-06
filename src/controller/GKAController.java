@@ -3,7 +3,7 @@ package controller;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;
-import main.graphs.Vertex;
+import main.graphs.GKAVertex;
 
 import org.jgrapht.ListenableGraph;
 
@@ -15,7 +15,7 @@ public interface GKAController extends MessageSender, CellSender<mxCell>, Adapte
 	/**
 	 * @return Instanz der Graphen-Wrapperklasse.
 	 */
-	public ListenableGraph<Vertex, GKAEdge> getGraph();
+	public ListenableGraph<GKAVertex, GKAEdge> getGraph();
 	
 	
 	/**

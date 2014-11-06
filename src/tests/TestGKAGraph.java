@@ -8,7 +8,7 @@ import java.util.List;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;
-import main.graphs.Vertex;
+import main.graphs.GKAVertex;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,10 +23,10 @@ public class TestGKAGraph {
 		 /*Test 1
 	      * Undirected Graph
 	      * */
-		Vertex v1 = Vertex.valueOf("v1");
-		Vertex v2 = Vertex.valueOf("v2");
-		Vertex v3 = Vertex.valueOf("v3");
-		Vertex v4 = Vertex.valueOf("v4");
+		GKAVertex v1 = GKAVertex.valueOf("v1");
+		GKAVertex v2 = GKAVertex.valueOf("v2");
+		GKAVertex v3 = GKAVertex.valueOf("v3");
+		GKAVertex v4 = GKAVertex.valueOf("v4");
 		
 		GKAGraph g1 = GKAGraph.valueOf(GraphType.UNDIRECTED_UNWEIGHTED);
 		g1.addVertex( v1);
@@ -39,7 +39,7 @@ public class TestGKAGraph {
 	    g1.addEdge( v3, v4, GKAEdge.valueOf("test3"));
 	 
 	 
-	    List<Vertex> l = new ArrayList<>();
+	    List<GKAVertex> l = new ArrayList<>();
 	    l.add(v2);
 	    l.add(v3);
 	     
@@ -49,16 +49,16 @@ public class TestGKAGraph {
 	    /*Test 2
 	     * Undirekted Graph
 	     * */
-		Vertex a = Vertex.valueOf("A");
-		Vertex b = Vertex.valueOf("B");
-		Vertex c = Vertex.valueOf("C");
-		Vertex d = Vertex.valueOf("D");
-		Vertex e = Vertex.valueOf("E");
-		Vertex f = Vertex.valueOf("F");
-		Vertex g = Vertex.valueOf("G");
-		Vertex h = Vertex.valueOf("H");
-		Vertex k = Vertex.valueOf("K");
-		Vertex m = Vertex.valueOf("M");
+		GKAVertex a = GKAVertex.valueOf("A");
+		GKAVertex b = GKAVertex.valueOf("B");
+		GKAVertex c = GKAVertex.valueOf("C");
+		GKAVertex d = GKAVertex.valueOf("D");
+		GKAVertex e = GKAVertex.valueOf("E");
+		GKAVertex f = GKAVertex.valueOf("F");
+		GKAVertex g = GKAVertex.valueOf("G");
+		GKAVertex h = GKAVertex.valueOf("H");
+		GKAVertex k = GKAVertex.valueOf("K");
+		GKAVertex m = GKAVertex.valueOf("M");
 		
 		
 		 //creat graph
@@ -111,7 +111,7 @@ public class TestGKAGraph {
 		graph1.addEdge( e, m, GKAEdge.valueOf("e26"));
 		 
 		 
-		List<Vertex> l1 = new ArrayList<>();
+		List<GKAVertex> l1 = new ArrayList<>();
 	    l1.add(f);
 	    l1.add(b);
 	    l1.add(h);
@@ -127,18 +127,18 @@ public class TestGKAGraph {
 	     * Directed Graph
 	     * */
 	     
-	    Vertex a1 = Vertex.valueOf("1");
-	    Vertex a2 = Vertex.valueOf("2");
-	    Vertex a3 = Vertex.valueOf("3");
-	    Vertex a4 = Vertex.valueOf("4");
-	    Vertex a5 = Vertex.valueOf("5");
-	    Vertex a6 = Vertex.valueOf("6");
-	    Vertex a7 = Vertex.valueOf("7");
-	    Vertex a8 = Vertex.valueOf("8");
-	    Vertex a9 = Vertex.valueOf("9");
-	    Vertex a10 = Vertex.valueOf("10");
-	    Vertex a11 = Vertex.valueOf("11");
-	    Vertex a12 = Vertex.valueOf("12");
+	    GKAVertex a1 = GKAVertex.valueOf("1");
+	    GKAVertex a2 = GKAVertex.valueOf("2");
+	    GKAVertex a3 = GKAVertex.valueOf("3");
+	    GKAVertex a4 = GKAVertex.valueOf("4");
+	    GKAVertex a5 = GKAVertex.valueOf("5");
+	    GKAVertex a6 = GKAVertex.valueOf("6");
+	    GKAVertex a7 = GKAVertex.valueOf("7");
+	    GKAVertex a8 = GKAVertex.valueOf("8");
+	    GKAVertex a9 = GKAVertex.valueOf("9");
+	    GKAVertex a10 = GKAVertex.valueOf("10");
+	    GKAVertex a11 = GKAVertex.valueOf("11");
+	    GKAVertex a12 = GKAVertex.valueOf("12");
 	    /*
 		 * create graph
 		 * add vertices
@@ -176,10 +176,10 @@ public class TestGKAGraph {
 	    graph2.addEdge(a11, a12, GKAEdge.valueOf("e15"));
 	     
 	     
-	    List<Vertex> l2 = new ArrayList<>();
+	    List<GKAVertex> l2 = new ArrayList<>();
 	    l2.add(a4);
 	     
-	    List<Vertex> l3 = new ArrayList<>();
+	    List<GKAVertex> l3 = new ArrayList<>();
 	     
 	    //all adjacent vertices of a vertix with one outgoing edge --> return a list with one vertex(-> l2)
 	    assertEquals(l2, graph1.getAllAdjacentsOf(a2));

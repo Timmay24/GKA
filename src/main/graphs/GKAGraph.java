@@ -46,8 +46,8 @@ import controller.StatsSender;
 
 public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender, SetSender {
 	
-	private			ListenableGraph<Vertex, GKAEdge> 	jGraph;
-	private			JGraphXAdapter<Vertex, GKAEdge> 	jgxAdapter;
+	private			ListenableGraph<GKAVertex, GKAEdge> 	jGraph;
+	private			JGraphXAdapter<GKAVertex, GKAEdge> 	jgxAdapter;
 	private 		mxGraphComponent 					graphComponent = null;
 	private 		List<MessageListener>				msgListeners = new ArrayList<>();
 	private			List<CellListener<mxCell>>			cellListeners = new ArrayList<>();
@@ -106,12 +106,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			this.graphType = graphType;
 	
 			if (graphType.isDirected()) {
-				jGraph = new ListenableDirectedGraph<>( new DirectedPseudograph<Vertex, GKAEdge>(GKAEdge.class));
+				jGraph = new ListenableDirectedGraph<>( new DirectedPseudograph<GKAVertex, GKAEdge>(GKAEdge.class));
 			} else {
-				jGraph = new ListenableUndirectedGraph<>( new Pseudograph<Vertex, GKAEdge>(GKAEdge.class));
+				jGraph = new ListenableUndirectedGraph<>( new Pseudograph<GKAVertex, GKAEdge>(GKAEdge.class));
 			}
 	
-			jgxAdapter = new JGraphXAdapter<Vertex, GKAEdge>(jGraph);
+			jgxAdapter = new JGraphXAdapter<GKAVertex, GKAEdge>(jGraph);
 	
 			// Der Kantenstyle wird gesondert angepasst, sollte es sich um einen
 			// gerichteten Graphen handeln
@@ -134,7 +134,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * 
 	 * @param jgxAdapter JGraphXAdapter-Objekt
 	 */
-	private void createGraphComponent(JGraphXAdapter<Vertex, GKAEdge> jgxAdapter) {
+	private void createGraphComponent(JGraphXAdapter<GKAVertex, GKAEdge> jgxAdapter) {
 		graphComponent = new mxGraphComponent(jgxAdapter);
 		addMouseAdapter();
 		sendAdapterUpdate(getGraphComponent()); // Gibt Listenern Bescheid, dass der Adapter erneuert wurde.
@@ -238,7 +238,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * @return Gibt den in diesem Wrapper enthalten Graphen zurueck.
 	 */
-	public ListenableGraph<Vertex, GKAEdge> getGraph() {
+	public ListenableGraph<GKAVertex, GKAEdge> getGraph() {
 		return jGraph;
 	}
 	
@@ -260,7 +260,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param verbose Gibt an, ob Warnhinweise ausgegebene werden sollen.
 	 * @return true, wenn Kante hinzugefuegt.
 	 */
-	public boolean addEdge(Vertex source, Vertex target, GKAEdge newEdge, boolean verbose) {
+	public boolean addEdge(GKAVertex source, GKAVertex target, GKAEdge newEdge, boolean verbose) {
 		if (newEdge.isWeighted() != this.isWeighted()) {
 			sendMessage("FEHLER: Inkompatible Gewichtungstypen beim Hinzufügen der Kante.");
 		} else {
@@ -283,7 +283,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * Delegiert an die Basisfunktion mit festgelegter Ausgabe von Warnungen.
 	 */
-	public boolean addEdge(Vertex source, Vertex target, GKAEdge newEdge) {
+	public boolean addEdge(GKAVertex source, GKAVertex target, GKAEdge newEdge) {
 		return addEdge(source, target, newEdge, true);
 	}
 	
@@ -306,14 +306,14 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return true, wenn Kante hinzugefuegt.
 	 */
 	public boolean addEdge(String sourceName, String targetName, GKAEdge newEdge, boolean verbose) {
-		Vertex source = getVertex(sourceName);
-		Vertex target = getVertex(targetName);
+		GKAVertex source = getVertex(sourceName);
+		GKAVertex target = getVertex(targetName);
 
 		if (source == null) {
-			source = Vertex.valueOf(sourceName);
+			source = GKAVertex.valueOf(sourceName);
 		}
 		if (target == null) {
-			target = Vertex.valueOf(targetName);
+			target = GKAVertex.valueOf(targetName);
 		}
 
 		return addEdge(source, target, newEdge, verbose);
@@ -351,7 +351,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param target
 	 * @return true, wenn erfolgreich.
 	 */
-	public boolean removeEdge(Vertex source, Vertex target) {
+	public boolean removeEdge(GKAVertex source, GKAVertex target) {
 		if (source == null || target == null) {
 			return false;
 		}
@@ -389,7 +389,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param edgeName Kante 
 	 * @return Kantenobjekt zwischen Source- und Targetknoten.
 	 */
-	public GKAEdge getEdge(Vertex source, Vertex target) {
+	public GKAEdge getEdge(GKAVertex source, GKAVertex target) {
 		return getGraph().getEdge(source, target);
 	}
 
@@ -401,7 +401,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Kantenobjekt 
 	 */
 	public GKAEdge getEdge(String sourceName, String targetName) {
-		Vertex source, target;
+		GKAVertex source, target;
 		source = getVertex(sourceName);
 		target = getVertex(targetName);
 
@@ -474,7 +474,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param verbose Gibt an, ob Warnungen gemeldet werden sollen.
 	 * @return true, wenn Knoten hinzugefuegt.
 	 */
-	public boolean addVertex(Vertex vertex, boolean verbose) {
+	public boolean addVertex(GKAVertex vertex, boolean verbose) {
 		if (vertex == null) {
 			sendMessage("FEHLER: null-Knotenobjekte koennen nicht hinzugefuegt werden!");
 			return false;
@@ -502,7 +502,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param vertex
 	 * @return
 	 */
-	public boolean addVertex(Vertex vertex) {
+	public boolean addVertex(GKAVertex vertex) {
 		return addVertex(vertex, true);
 	}
 	
@@ -514,7 +514,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return
 	 */
 	public boolean addVertex(String vertexName, boolean verbose) {
-		return addVertex(Vertex.valueOf(vertexName), verbose);
+		return addVertex(GKAVertex.valueOf(vertexName), verbose);
 	}
 	
 	/**
@@ -537,7 +537,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param vertex Knotenobjekt.
 	 * @return true, wenn Knoten entfernt.
 	 */
-	public boolean removeVertex(Vertex vertex) {
+	public boolean removeVertex(GKAVertex vertex) {
 		if (vertex == null) {
 			return false;
 		}
@@ -575,8 +575,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param vertex
 	 * @return true, wenn Knoten im Graphen enthalten.
 	 */
-	public boolean containsVertex(Vertex vertex) {
-		for (Vertex v : getGraph().vertexSet()) {
+	public boolean containsVertex(GKAVertex vertex) {
+		for (GKAVertex v : getGraph().vertexSet()) {
 			System.out.println(v.toString());
 		}
 		return getGraph().vertexSet().contains(vertex);
@@ -599,8 +599,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param vertexName
 	 * @return Ermittelt das Knotenobjekt anhand seines Namens.
 	 */
-	public Vertex getVertex(String vertexName) {
-		for (Vertex v : getGraph().vertexSet()) {
+	public GKAVertex getVertex(String vertexName) {
+		for (GKAVertex v : getGraph().vertexSet()) {
 			if (v.getName().equals(vertexName)) {
 				return v;
 			}
@@ -629,8 +629,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 *        Graphen ermittelt werden soll.
 	 * @return Collection aller Adjazenten des Ausgangsknotens.
 	 */
-	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex, boolean directed) {
-		Set<Vertex> resultList = new HashSet<>();
+	public Collection<GKAVertex> getAllAdjacentsOf(GKAVertex sourceVertex, boolean directed) {
+		Set<GKAVertex> resultList = new HashSet<>();
 
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
 		
@@ -639,14 +639,14 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 				
 				if (directed) {									// Sonderregelung fuer gerichtete Graphen:
 					if (e.getSource() == sourceVertex) {       	// Nur adjazente Knoten in die Ergebnisliste stecken,
-						resultList.add((Vertex)e.getTarget());  // zu denen man vom Knoten sourceVertex aus kommen kann.
+						resultList.add((GKAVertex)e.getTarget());  // zu denen man vom Knoten sourceVertex aus kommen kann.
 																// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
 					}
 				} else {
 					if (e.getSource() == sourceVertex) {		// Ist sourceVertex Source der Kante,
-						resultList.add((Vertex)e.getTarget());	// dann ist Target der Adjazent.
+						resultList.add((GKAVertex)e.getTarget());	// dann ist Target der Adjazent.
 					} else if (e.getTarget() == sourceVertex) {	// Ist sourceVertex Target der Kante,
-						resultList.add((Vertex)e.getSource());	// dann ist Source der Adjazent.
+						resultList.add((GKAVertex)e.getSource());	// dann ist Source der Adjazent.
 					}
 				}
 			}
@@ -657,14 +657,14 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * Verkuerzte Version, bei der von einem gerichteten Graphen ausgegangen wird.
 	 */
-	public Collection<Vertex> getAllAdjacentsOf(Vertex sourceVertex) {
+	public Collection<GKAVertex> getAllAdjacentsOf(GKAVertex sourceVertex) {
 		return getAllAdjacentsOf(sourceVertex, isDirected());
 	}
 	
 	
 	public void findShortestWay(String startVertex, String goalVertex) {
-		Vertex start = getVertex(startVertex);
-		Vertex goal = getVertex(goalVertex);
+		GKAVertex start = getVertex(startVertex);
+		GKAVertex goal = getVertex(goalVertex);
 		
 		if (start != null && goal != null) {
 			findShortestWay(start, goal);
@@ -679,12 +679,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param start Startknoten.
 	 * @param goal Zielknoten.
 	 */
-	public void findShortestWay(Vertex start, Vertex goal) {
+	public void findShortestWay(GKAVertex start, GKAVertex goal) {
 		try {
-			List<Vertex> way = BFS.findShortestWay(this, start, goal);
+			List<GKAVertex> way = BFS.findShortestWay(this, start, goal);
 			
 			sendMessage("\nKürzester Weg:");
-			for (Vertex v : way) {
+			for (GKAVertex v : way) {
 				sendMessage(v.getName());
 			}
 			sendMessage("--------------------------------");
@@ -712,7 +712,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void printAllVertices() {
 		sendMessage("--Knoten--");
-		for (Vertex v : getGraph().vertexSet()) {
+		for (GKAVertex v : getGraph().vertexSet()) {
 			sendMessage(v.toString());
 		}
 	}
@@ -945,7 +945,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 //		}
 		
 		// alleinstehende Knoten danach
-		for (Vertex v : getGraph().vertexSet()) {
+		for (GKAVertex v : getGraph().vertexSet()) {
 			if (getAllAdjacentsOf(v, false).isEmpty()) {
 				resultList.add(v.getName() + ";");
 			}
@@ -1030,7 +1030,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			sendSetLine(e.getName());
 		
 		sendSetLine("Vertices-----------------");
-		for (Vertex v : getGraph().vertexSet())
+		for (GKAVertex v : getGraph().vertexSet())
 			sendSetLine(v.getName());
 		
 		sendSetLine("-------------------------");

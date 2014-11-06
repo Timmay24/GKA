@@ -8,7 +8,7 @@ import java.util.List;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;
-import main.graphs.Vertex;
+import main.graphs.GKAVertex;
 import main.graphs.BFS;
 
 import org.junit.Before;
@@ -30,16 +30,16 @@ public class TestBFS {
 		/*Test 1
 		 * Undirected Graph
 		 * */
-		Vertex a = Vertex.valueOf("A");
-		Vertex b = Vertex.valueOf("B");
-		Vertex c = Vertex.valueOf("C");
-		Vertex d = Vertex.valueOf("D");
-		Vertex e = Vertex.valueOf("E");
-		Vertex f = Vertex.valueOf("F");
-		Vertex g = Vertex.valueOf("G");
-		Vertex h = Vertex.valueOf("H");
-		Vertex k = Vertex.valueOf("K");
-		Vertex m = Vertex.valueOf("M");
+		GKAVertex a = GKAVertex.valueOf("A");
+		GKAVertex b = GKAVertex.valueOf("B");
+		GKAVertex c = GKAVertex.valueOf("C");
+		GKAVertex d = GKAVertex.valueOf("D");
+		GKAVertex e = GKAVertex.valueOf("E");
+		GKAVertex f = GKAVertex.valueOf("F");
+		GKAVertex g = GKAVertex.valueOf("G");
+		GKAVertex h = GKAVertex.valueOf("H");
+		GKAVertex k = GKAVertex.valueOf("K");
+		GKAVertex m = GKAVertex.valueOf("M");
 		/*
 		 * create graph
 		 * add vertices
@@ -75,7 +75,7 @@ public class TestBFS {
 		 /*Start vertex: A
 		  * End vertex: M
 		  */
-		 List<Vertex> shortWay1 = new ArrayList<>();
+		 List<GKAVertex> shortWay1 = new ArrayList<>();
 	     shortWay1.add(a);
 	     shortWay1.add(b);
 	     shortWay1.add(e);
@@ -88,18 +88,18 @@ public class TestBFS {
 	      * Directed Graph
 	      * */
 	     
-	     Vertex a1 = Vertex.valueOf("1");
-	     Vertex a2 = Vertex.valueOf("2");
-	     Vertex a3 = Vertex.valueOf("3");
-	     Vertex a4 = Vertex.valueOf("4");
-	     Vertex a5 = Vertex.valueOf("5");
-	     Vertex a6 = Vertex.valueOf("6");
-	     Vertex a7 = Vertex.valueOf("7");
-	     Vertex a8 = Vertex.valueOf("8");
-	     Vertex a9 = Vertex.valueOf("9");
-	     Vertex a10 = Vertex.valueOf("10");
-	     Vertex a11 = Vertex.valueOf("11");
-	     Vertex a12 = Vertex.valueOf("12");
+	     GKAVertex a1 = GKAVertex.valueOf("1");
+	     GKAVertex a2 = GKAVertex.valueOf("2");
+	     GKAVertex a3 = GKAVertex.valueOf("3");
+	     GKAVertex a4 = GKAVertex.valueOf("4");
+	     GKAVertex a5 = GKAVertex.valueOf("5");
+	     GKAVertex a6 = GKAVertex.valueOf("6");
+	     GKAVertex a7 = GKAVertex.valueOf("7");
+	     GKAVertex a8 = GKAVertex.valueOf("8");
+	     GKAVertex a9 = GKAVertex.valueOf("9");
+	     GKAVertex a10 = GKAVertex.valueOf("10");
+	     GKAVertex a11 = GKAVertex.valueOf("11");
+	     GKAVertex a12 = GKAVertex.valueOf("12");
 	     /*
 		 * create graph
 		 * add vertices
@@ -139,7 +139,7 @@ public class TestBFS {
 	     /*Start vertex: 1 (a1)
 		  * End vertex: 5 (a5)
 		  */
-	     List<Vertex> shortWay2 = new ArrayList<>();
+	     List<GKAVertex> shortWay2 = new ArrayList<>();
 	     shortWay2.add(a1);
 	     shortWay2.add(a3);
 	     shortWay2.add(a5);
@@ -151,20 +151,20 @@ public class TestBFS {
 	     /*Test 2
 	      * Directed Graph
 	      * */
-	     Vertex b1 = Vertex.valueOf("A1");
-		 Vertex b2 = Vertex.valueOf("B1");
-		 Vertex b3 = Vertex.valueOf("C1");
-		 Vertex b4 = Vertex.valueOf("D1");
-		 Vertex b5 = Vertex.valueOf("E1");
-		 Vertex b6 = Vertex.valueOf("F1");
-		 Vertex b7 = Vertex.valueOf("G1");
-		 Vertex b8 = Vertex.valueOf("H1");
-		 Vertex b9 = Vertex.valueOf("I1");
-		 Vertex b10 = Vertex.valueOf("K1");
-		 Vertex b11 = Vertex.valueOf("L1");
-		 Vertex b12 = Vertex.valueOf("M1");
-		 Vertex b13 = Vertex.valueOf("N1");
-		 Vertex b14 = Vertex.valueOf("O1");
+	     GKAVertex b1 = GKAVertex.valueOf("A1");
+		 GKAVertex b2 = GKAVertex.valueOf("B1");
+		 GKAVertex b3 = GKAVertex.valueOf("C1");
+		 GKAVertex b4 = GKAVertex.valueOf("D1");
+		 GKAVertex b5 = GKAVertex.valueOf("E1");
+		 GKAVertex b6 = GKAVertex.valueOf("F1");
+		 GKAVertex b7 = GKAVertex.valueOf("G1");
+		 GKAVertex b8 = GKAVertex.valueOf("H1");
+		 GKAVertex b9 = GKAVertex.valueOf("I1");
+		 GKAVertex b10 = GKAVertex.valueOf("K1");
+		 GKAVertex b11 = GKAVertex.valueOf("L1");
+		 GKAVertex b12 = GKAVertex.valueOf("M1");
+		 GKAVertex b13 = GKAVertex.valueOf("N1");
+		 GKAVertex b14 = GKAVertex.valueOf("O1");
 	     /*
 		  * create graph
 		  * add vertices
@@ -187,7 +187,7 @@ public class TestBFS {
 		 /*Start vertex: A1 (b1)
 		  * End vertex: M1 (b12)
 		  */
-	     List<Vertex> shortWay3 = new ArrayList<>();
+	     List<GKAVertex> shortWay3 = new ArrayList<>();
 	     shortWay3.add(b1);
 	     shortWay3.add(b3);
 	     shortWay3.add(b8);
@@ -209,19 +209,19 @@ public class TestBFS {
 		/*
 		 * Test 3: einfache Liste aus Vertices
 		 * */
-		List<Vertex> reverseList = new ArrayList<>();
-		reverseList.add(Vertex.valueOf("a"));
-		reverseList.add(Vertex.valueOf("b"));
-		reverseList.add(Vertex.valueOf("c"));
-		reverseList.add(Vertex.valueOf("d"));
-		reverseList.add(Vertex.valueOf("e"));
+		List<GKAVertex> reverseList = new ArrayList<>();
+		reverseList.add(GKAVertex.valueOf("a"));
+		reverseList.add(GKAVertex.valueOf("b"));
+		reverseList.add(GKAVertex.valueOf("c"));
+		reverseList.add(GKAVertex.valueOf("d"));
+		reverseList.add(GKAVertex.valueOf("e"));
 		
-		List<Vertex> list = new ArrayList<>();
-		list.add(Vertex.valueOf("e"));
-		list.add(Vertex.valueOf("d"));
-		list.add(Vertex.valueOf("c"));
-		list.add(Vertex.valueOf("b"));
-		list.add(Vertex.valueOf("a"));
+		List<GKAVertex> list = new ArrayList<>();
+		list.add(GKAVertex.valueOf("e"));
+		list.add(GKAVertex.valueOf("d"));
+		list.add(GKAVertex.valueOf("c"));
+		list.add(GKAVertex.valueOf("b"));
+		list.add(GKAVertex.valueOf("a"));
 		
 		assertEquals(reverseList, BFS.reverse(list));
 		
@@ -229,19 +229,19 @@ public class TestBFS {
 		/*
 		 * Test 4: Liste mit Vertices mit String Zahlen
 		 * */
-		List<Vertex> reverseList1 = new ArrayList<>();
-		reverseList1.add(Vertex.valueOf("1"));
-		reverseList1.add(Vertex.valueOf("1"));
-		reverseList1.add(Vertex.valueOf("2"));
-		reverseList1.add(Vertex.valueOf("0"));
-		reverseList1.add(Vertex.valueOf("03"));
+		List<GKAVertex> reverseList1 = new ArrayList<>();
+		reverseList1.add(GKAVertex.valueOf("1"));
+		reverseList1.add(GKAVertex.valueOf("1"));
+		reverseList1.add(GKAVertex.valueOf("2"));
+		reverseList1.add(GKAVertex.valueOf("0"));
+		reverseList1.add(GKAVertex.valueOf("03"));
 		
-		List<Vertex> list1 = new ArrayList<>();
-		list1.add(Vertex.valueOf("03"));
-		list1.add(Vertex.valueOf("0"));
-		list1.add(Vertex.valueOf("2"));
-		list1.add(Vertex.valueOf("1"));
-		list1.add(Vertex.valueOf("1"));
+		List<GKAVertex> list1 = new ArrayList<>();
+		list1.add(GKAVertex.valueOf("03"));
+		list1.add(GKAVertex.valueOf("0"));
+		list1.add(GKAVertex.valueOf("2"));
+		list1.add(GKAVertex.valueOf("1"));
+		list1.add(GKAVertex.valueOf("1"));
 		
 		assertEquals(reverseList1, BFS.reverse(list1));
 		
@@ -249,11 +249,11 @@ public class TestBFS {
 		/*
 		 * Test 5: ein Elementige Liste aus Vertices
 		 * */
-		List<Vertex> reverseList2 = new ArrayList<>();
-		reverseList1.add(Vertex.valueOf("0"));
+		List<GKAVertex> reverseList2 = new ArrayList<>();
+		reverseList1.add(GKAVertex.valueOf("0"));
 		
-		List<Vertex> list2 = new ArrayList<>();
-		list1.add(Vertex.valueOf("0"));
+		List<GKAVertex> list2 = new ArrayList<>();
+		list1.add(GKAVertex.valueOf("0"));
 		
 		assertEquals(reverseList2, BFS.reverse(list2));
 		
@@ -261,9 +261,9 @@ public class TestBFS {
 		/*
 		 * Test 6: Liste mit Vertices mit String Zahlen
 		 * */
-		List<Vertex> reverseList3 = new ArrayList<>();
+		List<GKAVertex> reverseList3 = new ArrayList<>();
 		
-		List<Vertex> list3 = new ArrayList<>();
+		List<GKAVertex> list3 = new ArrayList<>();
 		
 		assertEquals(reverseList3, BFS.reverse(list3));
 	}
@@ -288,18 +288,18 @@ public class TestBFS {
 	public void testTest(){
 	
 		
-	    Vertex b1 = Vertex.valueOf("1");
-	    Vertex b2 = Vertex.valueOf("2");
-	    Vertex b3 = Vertex.valueOf("3");
-	    Vertex b4 = Vertex.valueOf("4");
-	    Vertex b5 = Vertex.valueOf("5");
-	    Vertex b6 = Vertex.valueOf("6");
-	    Vertex b7 = Vertex.valueOf("7");
-	    Vertex b8 = Vertex.valueOf("8");
-	    Vertex b9 = Vertex.valueOf("9");
-	    Vertex b10 = Vertex.valueOf("10");
-	    Vertex b11 = Vertex.valueOf("11");
-	    Vertex b12 = Vertex.valueOf("12");
+	    GKAVertex b1 = GKAVertex.valueOf("1");
+	    GKAVertex b2 = GKAVertex.valueOf("2");
+	    GKAVertex b3 = GKAVertex.valueOf("3");
+	    GKAVertex b4 = GKAVertex.valueOf("4");
+	    GKAVertex b5 = GKAVertex.valueOf("5");
+	    GKAVertex b6 = GKAVertex.valueOf("6");
+	    GKAVertex b7 = GKAVertex.valueOf("7");
+	    GKAVertex b8 = GKAVertex.valueOf("8");
+	    GKAVertex b9 = GKAVertex.valueOf("9");
+	    GKAVertex b10 = GKAVertex.valueOf("10");
+	    GKAVertex b11 = GKAVertex.valueOf("11");
+	    GKAVertex b12 = GKAVertex.valueOf("12");
 	    /*
 		 * create graph
 		 * add vertices
