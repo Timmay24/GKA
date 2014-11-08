@@ -10,18 +10,15 @@ import main.graphs.GKAGraph;
 import main.graphs.GraphType;
 import main.graphs.GKAVertex;
 import main.graphs.BFS;
+import main.graphs.Utils;
 
 import org.junit.Before;
 import org.junit.Test;
 
-
-
 public class TestBFS {
 
 	@Before
-	public void setUp() throws Exception {
-	}
-
+	public void setUp() throws Exception {}
 
 	
 //	@Ignore
@@ -45,16 +42,16 @@ public class TestBFS {
 		 * add vertices
 		 */
 		GKAGraph graph1 = GKAGraph.valueOf(GraphType.UNDIRECTED_UNWEIGHTED);
-		 graph1.addVertex( a);
-		 graph1.addVertex( b);
-		 graph1.addVertex( c);
-		 graph1.addVertex( d);
-		 graph1.addVertex( e);
-		 graph1.addVertex( f);
-		 graph1.addVertex( g);
-		 graph1.addVertex( h);
-		 graph1.addVertex( k);
-		 graph1.addVertex( m);
+		 graph1.addVertex(a);
+		 graph1.addVertex(b);
+		 graph1.addVertex(c);
+		 graph1.addVertex(d);
+		 graph1.addVertex(e);
+		 graph1.addVertex(f);
+		 graph1.addVertex(g);
+		 graph1.addVertex(h);
+		 graph1.addVertex(k);
+		 graph1.addVertex(m);
 		 /*
 		  * add edges
 		  * */
@@ -198,10 +195,6 @@ public class TestBFS {
 	}
 	
 	
-	
-	
-	
-	
 //	@Ignore
 	@Test
 	public void testReverse(){
@@ -223,7 +216,7 @@ public class TestBFS {
 		list.add(GKAVertex.valueOf("b"));
 		list.add(GKAVertex.valueOf("a"));
 		
-		assertEquals(reverseList, BFS.reverse(list));
+		assertEquals(reverseList, Utils.reverse(list));
 		
 		
 		/*
@@ -243,7 +236,7 @@ public class TestBFS {
 		list1.add(GKAVertex.valueOf("1"));
 		list1.add(GKAVertex.valueOf("1"));
 		
-		assertEquals(reverseList1, BFS.reverse(list1));
+		assertEquals(reverseList1, Utils.reverse(list1));
 		
 		
 		/*
@@ -255,7 +248,7 @@ public class TestBFS {
 		List<GKAVertex> list2 = new ArrayList<>();
 		list1.add(GKAVertex.valueOf("0"));
 		
-		assertEquals(reverseList2, BFS.reverse(list2));
+		assertEquals(reverseList2, Utils.reverse(list2));
 		
 		
 		/*
@@ -265,7 +258,7 @@ public class TestBFS {
 		
 		List<GKAVertex> list3 = new ArrayList<>();
 		
-		assertEquals(reverseList3, BFS.reverse(list3));
+		assertEquals(reverseList3, Utils.reverse(list3));
 	}
 	
 	/*
@@ -274,10 +267,8 @@ public class TestBFS {
 //	@Ignore
 	@Test(expected = NullPointerException.class)
 	public void testReverseFail(){
-		 
-		BFS.reverse(null);
-	 }
-	
+		Utils.reverse(null);
+	}
 	
 	
 	/*Test 8
@@ -341,5 +332,4 @@ public class TestBFS {
 		 */
 	    BFS.findShortestWay(graph3, b3, b10);
 	}
-	
 }

@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.graphs.interfaces.PathFinder;
+import static main.graphs.Utils.reverse;
+
 /**
  * @author Louisa und Tim
  *
  */
-public class BFS {
+public class BFS implements PathFinder {
 	
 	/**
 	 * Finds a shortest way from given startNode to given endNode within g, if it exists. 
@@ -64,10 +67,10 @@ public class BFS {
 					currentVertex.setVisited(true);
 
 					// set current node-weight of the start Vertex one higher
-					currentVertex.setNodeWeight(firstNode.getNodeWeight() + 1);
+					currentVertex.setWeight(firstNode.getWeight() + 1);
 
 					// set the parent
-					currentVertex.setParent(firstNode.toString());
+					currentVertex.setParent(firstNode);
 
 					// add the child-vertex (current vertex) to the end of the
 					// list
@@ -123,7 +126,7 @@ public class BFS {
 		 */
 		GKAVertex tmpVertex = reverseList.get(0); // dummy: first vertex of the way
 		for (GKAVertex v : reverseList) {
-			if ((tmpVertex.getNodeWeight() == (v.getNodeWeight() + 1)) && (tmpVertex.getParent().equals(v.getName()))) {
+			if ((tmpVertex.getWeight() == (v.getWeight() + 1)) && (tmpVertex.getParent().equals(v))) {
 				reverseReturnList.add(v);
 				tmpVertex = v;
 			}
@@ -155,29 +158,5 @@ public class BFS {
 		
 		return returnList;
 		
-	}
-	
-
-	/**
-	 * Help function 
-	 * 
-	 * @param l: a list with vertices
-	 * @return the reversed list of the input list
-	 * 
-	 * Reverse input list of vertices.
-	 * If list is empty, return list is also empty.
-	 * If list has one element l and returnList are the same
-	 * If list is null then NullPointerException
-	 */
-	public static List<GKAVertex> reverse(List<GKAVertex> l){
-		if (l == null){throw new NullPointerException("the input is null");}
-		
-		List<GKAVertex> reverseList = new ArrayList<>();
-			for (int i=l.size()-1 ; i>=0 ; i--){
-				GKAVertex lastElem = l.get(i);
-				reverseList.add(lastElem);
-			}
-			
-		return reverseList;
 	}
 }
