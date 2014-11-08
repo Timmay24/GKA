@@ -1,56 +1,87 @@
 package main.graphs;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.jgrapht.graph.DefaultEdge;
 
-import static com.google.common.base.Preconditions.*;
-
-public class GKAEdge extends DefaultEdge {
+public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 
 	private static final long serialVersionUID = -6523434696944744833L;
 
-	private String  edgeName = null;
-	private Integer edgeWeight = null;
+	private String  name = null;
+	private Integer weight = null;
 
-	private GKAEdge(String edgeName, Integer edgeWeight) {
+	/**
+	 * KONSTRUKTOR
+	 * 
+	 * @param name Kantenname
+	 * @param weight Kantengewichtung
+	 */
+	private GKAEdge(String name, Integer weight) {
 		super();
-		checkNotNull(edgeName);
-		checkArgument(!edgeName.isEmpty());
-		this.edgeName = edgeName;
-		this.edgeWeight = edgeWeight;
+		checkNotNull(name);
+		checkArgument(!name.isEmpty());
+		this.name = name;
+		this.weight = weight;
 	}
 	
-	private GKAEdge(String edgeName) {
-		this(edgeName, null);
+	/**
+	 * Factory-Methode
+	 * 
+	 * @param name
+	 * @param weight
+	 * @return Kantenobjekt
+	 */
+	public static GKAEdge valueOf(String name, Integer weight) {
+		return new GKAEdge(name, weight);
 	}
 	
-	public static GKAEdge valueOf(String edgeName, Integer edgeWeight) {
-		return new GKAEdge(edgeName, edgeWeight);
-	}
-	
-	public static GKAEdge valueOf(String edgeName) {
-		return valueOf(edgeName, null);
+	/**
+	 * Konfiguration: ohne Kantengewichtung
+	 */
+	public static GKAEdge valueOf(String name) {
+		return valueOf(name, null);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jgrapht.graph.DefaultEdge#getSource()
+	 */
 	public Object getSource() {
 		return super.getSource();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.jgrapht.graph.DefaultEdge#getTarget()
+	 */
 	public Object getTarget() {
 		return super.getTarget();
 	}
 
+	/**
+	 * @return Kantengewicht.
+	 */
 	public Integer getWeight() {
-		return this.edgeWeight;
+		return this.weight;
 	}
 
+	/**
+	 * @return Kantenname
+	 */
 	public String getName() {
-		return this.edgeName;
+		return this.name;
 	}
 	
+	/**
+	 * @return true, wenn Kante gewichtet, false, wenn nicht.
+	 */
 	public boolean isWeighted() {
-		return edgeWeight != null;
+		return weight != null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.jgrapht.graph.DefaultEdge#toString()
+	 */
 	@Override
 	public String toString() {
 		String retVal;
@@ -65,6 +96,9 @@ public class GKAEdge extends DefaultEdge {
 		return retVal;
     }
     
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
 	public boolean equals(Object object) {
 		if (object == null) {
@@ -103,6 +137,9 @@ public class GKAEdge extends DefaultEdge {
 		}
     }
     
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		int retVal = 31;
@@ -119,6 +156,14 @@ public class GKAEdge extends DefaultEdge {
 			retVal += getWeight().hashCode();
 		}
 		return retVal;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	@Override
+	public int compareTo(GKAEdge other) {
+		return this.getWeight().compareTo(other.getWeight());
 	}
 
 }
