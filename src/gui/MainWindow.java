@@ -49,9 +49,12 @@ import controller.StatsListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener {
 	
-	private 	int[]				verNo = {0,7,51};
+	private 	int[]				verNo = {0,8,69};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private 	JMenuItem 			mntmInfo;
@@ -92,10 +95,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JTextField 			txtAETarget;
 	private     JTextField 			txtAEName;
 	private     JLabel 				lblName;
-	private     JTextField 			txtBFSStart;
-	private     JTextField 			txtBFSGoal;
-	private     JTextField 			txtBFSStatsHitcount;
-	private     JTextField 			txtBFSStatsTime;
+	private     JTextField 			txtSearchStart;
+	private     JTextField 			txtSearchGoal;
+	private     JTextField 			txtSearchStatsHitcount;
+	private     JTextField 			txtSearchStatsTime;
 	private     JPanel 				edgePanel;
 	private     JSpinner 			spinAEWeight;
 	private     JLabel 				lblGewicht;
@@ -106,13 +109,18 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private     JPanel 				bfsStatsPanel;
 	private     JLabel	 			lblZugriffe;
 	private     JLabel 				lblGesamtzeit;
-	private     JButton 			btnBFSSearch;
+	private     JButton 			btnSearchStart;
 	private 	JMenuItem 			mntmApplyHierarchyLayout;
+	private 	JComboBox<String> 	cmbSearchAlgo;
+	private		JLabel 				lblAlgorithmus;
 	
 	
 	
 	//TODO DEBUG UTIL
-	private JTextArea textArea;
+	private JTextArea taDebug;
+	private JScrollPane scrDebugPane;
+	
+	
 
 	/**
 	 * Launch the application.
@@ -147,6 +155,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	public MainWindow() {
 		graphController = new GraphController();
 		initialize();
+		
 		graphController.addMessageListener(this); // Fuer den Empfang von Nachrichten
 		graphController.addCellListener(this);    // und Zellen anmelden
 		graphController.addAdapterUpdateListener(this);
@@ -214,7 +223,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 410, 446, 130);
+		scrollPane.setBounds(10, 410, 476, 213);
 		mainFrame.getContentPane().add(scrollPane);
 		
 		reportTextArea = new JTextArea();
@@ -268,6 +277,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			public void actionPerformed(ActionEvent arg0) {
 				if (!txtAddVertex.getText().isEmpty()) {
 					graphController.addVertex(txtAddVertex.getText());
+					txtAddVertex.setText("");
 				}
 			}
 		});
@@ -353,44 +363,44 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		edgePanel.add(btnAddEdge);
 		
 		bfsPanel = new JPanel();
-		bfsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "BFS Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		bfsPanel.setBounds(466, 410, 318, 130);
+		bfsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
+		bfsPanel.setBounds(496, 410, 288, 213);
 		mainFrame.getContentPane().add(bfsPanel);
 		bfsPanel.setLayout(null);
 		
-		txtBFSStart = new JTextField();
-		txtBFSStart.addFocusListener(new FocusAdapter() {
+		txtSearchStart = new JTextField();
+		txtSearchStart.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtBFSStart.setText("");
+				txtSearchStart.setText("");
 			}
 		});
-		txtBFSStart.setBounds(54, 21, 51, 20);
-		bfsPanel.add(txtBFSStart);
-		txtBFSStart.setColumns(10);
+		txtSearchStart.setBounds(66, 52, 80, 20);
+		bfsPanel.add(txtSearchStart);
+		txtSearchStart.setColumns(10);
 		
-		txtBFSGoal = new JTextField();
-		txtBFSGoal.addFocusListener(new FocusAdapter() {
+		txtSearchGoal = new JTextField();
+		txtSearchGoal.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtBFSGoal.setText("");
+				txtSearchGoal.setText("");
 			}
 		});
-		txtBFSGoal.setBounds(54, 52, 51, 20);
-		bfsPanel.add(txtBFSGoal);
-		txtBFSGoal.setColumns(10);
+		txtSearchGoal.setBounds(197, 52, 80, 20);
+		bfsPanel.add(txtSearchGoal);
+		txtSearchGoal.setColumns(10);
 		
 		lblStart = new JLabel("Start:");
-		lblStart.setBounds(16, 24, 28, 14);
+		lblStart.setBounds(10, 55, 47, 14);
 		bfsPanel.add(lblStart);
 		
 		lblZiel = new JLabel("Ziel:");
-		lblZiel.setBounds(16, 55, 28, 14);
+		lblZiel.setBounds(167, 55, 20, 14);
 		bfsPanel.add(lblZiel);
 		
 		bfsStatsPanel = new JPanel();
 		bfsStatsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zugriffsstatistik", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		bfsStatsPanel.setBounds(127, 21, 181, 98);
+		bfsStatsPanel.setBounds(10, 122, 267, 80);
 		bfsPanel.add(bfsStatsPanel);
 		bfsStatsPanel.setLayout(null);
 		
@@ -403,41 +413,64 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		lblGesamtzeit.setBounds(10, 49, 57, 14);
 		bfsStatsPanel.add(lblGesamtzeit);
 		
-		txtBFSStatsHitcount = new JTextField();
-		txtBFSStatsHitcount.setEditable(false);
-		txtBFSStatsHitcount.setBounds(77, 18, 86, 20);
-		bfsStatsPanel.add(txtBFSStatsHitcount);
-		txtBFSStatsHitcount.setColumns(10);
+		txtSearchStatsHitcount = new JTextField();
+		txtSearchStatsHitcount.setEditable(false);
+		txtSearchStatsHitcount.setBounds(77, 18, 86, 20);
+		bfsStatsPanel.add(txtSearchStatsHitcount);
+		txtSearchStatsHitcount.setColumns(10);
 		
-		txtBFSStatsTime = new JTextField();
-		txtBFSStatsTime.setEnabled(false);
-		txtBFSStatsTime.setText("--later--");
-		txtBFSStatsTime.setEditable(false);
-		txtBFSStatsTime.setBounds(77, 46, 86, 20);
-		bfsStatsPanel.add(txtBFSStatsTime);
-		txtBFSStatsTime.setColumns(10);
+		txtSearchStatsTime = new JTextField();
+		txtSearchStatsTime.setEnabled(false);
+		txtSearchStatsTime.setText("--later--");
+		txtSearchStatsTime.setEditable(false);
+		txtSearchStatsTime.setBounds(77, 46, 86, 20);
+		bfsStatsPanel.add(txtSearchStatsTime);
+		txtSearchStatsTime.setColumns(10);
 		
-		btnBFSSearch = new JButton("suchen");
-		btnBFSSearch.addActionListener(new ActionListener() {
+		btnSearchStart = new JButton("suchen");
+		btnSearchStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String start = txtBFSStart.getText();
-				String goal = txtBFSGoal.getText();
+				String start = txtSearchStart.getText();
+				String goal = txtSearchGoal.getText();
 				
 				if (!(start.isEmpty() || goal.isEmpty())) {
-					graphController.findShortestWay(start, goal);
+					switch (cmbSearchAlgo.getSelectedIndex()) {
+					case 0:
+						graphController.findShortestWay(start, goal);
+						break;
+						
+					case 1:
+						//TODO unterscheidung mit prototypen implementieren (bis nach ganz unten durchreichen)
+						System.out.println("noch nicht waehlbar");
+						//graphController.findShortestWay(start, goal);
+						break;
+
+					default:
+						break;
+					}
+					
 				}
 			}
 		});
-		btnBFSSearch.setBounds(16, 83, 89, 23);
-		bfsPanel.add(btnBFSSearch);
+		btnSearchStart.setBounds(197, 83, 80, 23);
+		bfsPanel.add(btnSearchStart);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 551, 178, 289);
-		mainFrame.getContentPane().add(scrollPane_1);
+		cmbSearchAlgo = new JComboBox<>();
+		cmbSearchAlgo.setModel(new DefaultComboBoxModel<String>(new String[] {"BFS", "Dijkstra"}));
+		cmbSearchAlgo.setBounds(67, 21, 210, 20);
+		bfsPanel.add(cmbSearchAlgo);
 		
-		textArea = new JTextArea();
-		textArea.setFont(new Font("Consolas", Font.PLAIN, 11));
-		scrollPane_1.setViewportView(textArea);
+		lblAlgorithmus = new JLabel("Algorith.:");
+		lblAlgorithmus.setBounds(10, 24, 47, 14);
+		bfsPanel.add(lblAlgorithmus);
+		
+		scrDebugPane = new JScrollPane();
+		scrDebugPane.setBounds(10, 691, 178, 149);
+		mainFrame.getContentPane().add(scrDebugPane);
+		
+		taDebug = new JTextArea();
+		taDebug.setFont(new Font("Consolas", Font.PLAIN, 11));
+		scrDebugPane.setViewportView(taDebug);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
@@ -617,7 +650,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	@Override
 	public void receiveStats(Map<String, String> stats) {
 		if (stats != null) {
-			txtBFSStatsHitcount.setText(stats.get("hitcount"));
+			txtSearchStatsHitcount.setText(stats.get("hitcount"));
 		}
 	}
 
@@ -626,8 +659,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	@Override
 	public void receiveSetLine(String message) {
 		if (message == null)
-			textArea.setText("");
+			taDebug.setText("");
 		else
-			textArea.append(message + "\n");
+			taDebug.append(message + "\n");
 	}
 }
