@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 
 import main.graphs.GKAGraph;
 
@@ -24,7 +26,7 @@ public class GraphPopUp extends JPopupMenu {
 	private mxCell 		cell;
 	private Component 	component;
 //	private MouseEvent  mEvent;
-
+	
 	public GraphPopUp(GKAGraph wrapper, mxGraphComponent graphComponent, MouseEvent mEvent, mxCell cell) {
 		component = graphComponent;
 //		this.mEvent = mEvent;
@@ -64,18 +66,67 @@ public class GraphPopUp extends JPopupMenu {
 	}
 
 	private void edgeSetup() {
+		// TODO DEBUG TOOL
+		final JMenuItem item2 = new JMenuItem("Kante einf\u00E4rben");
+		item2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String newColor = JOptionPane.showInputDialog(null, "Farbcode eingeben:");
+				if (newColor != null && !newColor.isEmpty()) {
+					String name = cell.getValue().toString().replace("(", "").replace(")","");
+					if (wrapper.isWeighted()) {
+						name = name.substring(0, name.indexOf(":")).trim();
+					}
+					wrapper.colorEdge(name, newColor);
+				}
+			}
+		});
+		this.add(item2);
+		
+		final JSeparator separator = new JSeparator();
+		separator.setForeground(Color.LIGHT_GRAY);
+		this.add(separator);
+		//TODO DEBUG END
+		
 		final JMenuItem item = new JMenuItem("Kante l\u00F6schen");
 		item.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/edge_remove.png")));
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String name = cell.getValue().toString().replace("(", "").replace(")","");
+				if (wrapper.isWeighted()) {
+					name = name.substring(0, name.indexOf(":")).trim();
+				}
 				wrapper.removeEdge(name);
 			}
 		});
 		this.add(item);
+		
 	}
 	
 	private void vertexSetup() {
+		
+		// TODO DEBUG TOOL
+		final JMenuItem itemS = new JMenuItem("Als Startknoten markieren");
+		itemS.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				wrapper.setStartNode(cell.getValue().toString());
+			}
+		});
+		this.add(itemS);
+		
+		final JMenuItem itemT = new JMenuItem("Als Zielknoten markieren");
+		itemT.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				wrapper.setEndNode(cell.getValue().toString());
+			}
+		});
+		this.add(itemT);
+				
+		final JSeparator separator = new JSeparator();
+		separator.setForeground(Color.LIGHT_GRAY);
+		this.add(separator);
+		//TODO DEBUG END
+		
 		final JMenuItem item = new JMenuItem("Knoten l\u00F6schen");
 		item.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/vertex_remove.png")));
 		item.addActionListener(new ActionListener() {

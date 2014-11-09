@@ -24,6 +24,8 @@ public class BFS implements PathFinder {
 	 */
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 		
+		long startTime = System.nanoTime();
+		
 		// hit-counter for graph accesses
 		Integer hitcount = 0;
 	
@@ -151,10 +153,12 @@ public class BFS implements PathFinder {
 			System.out.println(tmp2);
 		}
 		
-		Map<String,String> stats = new HashMap<>();
-		stats.put("hitcount", hitcount.toString());
+//		Map<String,String> stats = new HashMap<>();
+//		stats.put("hitcount", hitcount.toString());
+//		stats.put("timeelapsed", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+		
 		// transmitting stats to graph wrapper for further processment
-		g.sendStats(stats);
+		g.sendStats(hitcount.toString(), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
 		
 		return returnList;
 		

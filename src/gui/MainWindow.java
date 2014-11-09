@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -32,6 +33,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
+import main.graphs.Algorithms;
+import main.graphs.BFS;
+import main.graphs.Dijkstra;
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
 import main.graphs.GKAVertex;
@@ -43,6 +47,7 @@ import controller.AdapterUpdateListener;
 import controller.CellListener;
 import controller.GraphController;
 import controller.MessageListener;
+import controller.NodeListener;
 import controller.SetListener;
 import controller.StatsListener;
 
@@ -52,7 +57,7 @@ import java.awt.event.FocusEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener {
+public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
 	private 	int[]				verNo = {0,8,69};
 	private 	GraphController		graphController;
@@ -113,8 +118,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private 	JMenuItem 			mntmApplyHierarchyLayout;
 	private 	JComboBox<String> 	cmbSearchAlgo;
 	private		JLabel 				lblAlgorithmus;
-	
-	
+	private 	JTextField 			txtSearchStatsLength;
+	private 	JLabel 				lblWeglnge;
+	private 	JSeparator 			separator_3;
+	private 	JMenuItem 			mntmFarbenReset;
 	
 	//TODO DEBUG UTIL
 	private JTextArea taDebug;
@@ -160,6 +167,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		graphController.addCellListener(this);    // und Zellen anmelden
 		graphController.addAdapterUpdateListener(this);
 		graphController.addStatsListener(this);
+		graphController.addNodeListener(this);
 		
 		graphController.getGraphWrapper().addSetListener(this); //TODO DEBUG LISTENER
 		
@@ -205,7 +213,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mainFrame.setResizable(false);
 		mainFrame.setTitle("GKA Graph Visualizer " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
-		mainFrame.setBounds(0, 0, 800, 900);
+		mainFrame.setBounds(0, 0, 800, 786);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		mainFrame.setLocation(
 				(dim.width / 2 - mainFrame.getSize().width / 2),
@@ -405,27 +413,34 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsStatsPanel.setLayout(null);
 		
 		lblZugriffe = new JLabel("Hitcount:");
-		lblZugriffe.setBounds(10, 21, 57, 14);
+		lblZugriffe.setBounds(10, 21, 49, 14);
 		bfsStatsPanel.add(lblZugriffe);
 		
 		lblGesamtzeit = new JLabel("Zeit (ms):");
-		lblGesamtzeit.setEnabled(false);
-		lblGesamtzeit.setBounds(10, 49, 57, 14);
+		lblGesamtzeit.setBounds(10, 49, 49, 14);
 		bfsStatsPanel.add(lblGesamtzeit);
 		
 		txtSearchStatsHitcount = new JTextField();
 		txtSearchStatsHitcount.setEditable(false);
-		txtSearchStatsHitcount.setBounds(77, 18, 86, 20);
+		txtSearchStatsHitcount.setBounds(69, 18, 40, 20);
 		bfsStatsPanel.add(txtSearchStatsHitcount);
 		txtSearchStatsHitcount.setColumns(10);
 		
 		txtSearchStatsTime = new JTextField();
-		txtSearchStatsTime.setEnabled(false);
-		txtSearchStatsTime.setText("--later--");
 		txtSearchStatsTime.setEditable(false);
-		txtSearchStatsTime.setBounds(77, 46, 86, 20);
+		txtSearchStatsTime.setBounds(69, 46, 65, 20);
 		bfsStatsPanel.add(txtSearchStatsTime);
 		txtSearchStatsTime.setColumns(10);
+		
+		lblWeglnge = new JLabel("Wegl\u00E4nge:");
+		lblWeglnge.setBounds(125, 21, 57, 14);
+		bfsStatsPanel.add(lblWeglnge);
+		
+		txtSearchStatsLength = new JTextField();
+		txtSearchStatsLength.setEditable(false);
+		txtSearchStatsLength.setColumns(10);
+		txtSearchStatsLength.setBounds(192, 18, 65, 20);
+		bfsStatsPanel.add(txtSearchStatsLength);
 		
 		btnSearchStart = new JButton("suchen");
 		btnSearchStart.addActionListener(new ActionListener() {
@@ -434,21 +449,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				String goal = txtSearchGoal.getText();
 				
 				if (!(start.isEmpty() || goal.isEmpty())) {
-					switch (cmbSearchAlgo.getSelectedIndex()) {
-					case 0:
-						graphController.findShortestWay(start, goal);
-						break;
-						
-					case 1:
-						//TODO unterscheidung mit prototypen implementieren (bis nach ganz unten durchreichen)
-						System.out.println("noch nicht waehlbar");
-						//graphController.findShortestWay(start, goal);
-						break;
-
-					default:
-						break;
-					}
-					
+					graphController.findShortestWay(
+							Algorithms.getAlgorithm(cmbSearchAlgo.getSelectedIndex()),
+							start,
+							goal);
 				}
 			}
 		});
@@ -465,7 +469,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsPanel.add(lblAlgorithmus);
 		
 		scrDebugPane = new JScrollPane();
-		scrDebugPane.setBounds(10, 691, 178, 149);
+		scrDebugPane.setBounds(10, 634, 178, 90);
 		mainFrame.getContentPane().add(scrDebugPane);
 		
 		taDebug = new JTextArea();
@@ -583,6 +587,18 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		mnLayout.add(mntmApplyHierarchyLayout);
 		
+		separator_3 = new JSeparator();
+		separator_3.setForeground(Color.LIGHT_GRAY);
+		mnLayout.add(separator_3);
+		
+		mntmFarbenReset = new JMenuItem("F\u00E4rbungen zur\u00FCcksetzen");
+		mnLayout.add(mntmFarbenReset);
+		mntmFarbenReset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.getGraphWrapper().resetColors();
+			}
+		});
+		
 		mnReporting = new JMenu("Reporting");
 		menuBar.add(mnReporting);
 		
@@ -648,9 +664,31 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	}
 
 	@Override
-	public void receiveStats(Map<String, String> stats) {
+	public void receiveStats(String... stats) {
 		if (stats != null) {
-			txtSearchStatsHitcount.setText(stats.get("hitcount"));
+			txtSearchStatsHitcount.setText(stats[0]);
+			txtSearchStatsTime.setText(stats[1]);
+		}
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see controller.NodeListener#receiveStartNode(java.lang.String)
+	 */
+	@Override
+	public void receiveStartNode(String nodeName) {
+		if (nodeName != null) {
+			txtSearchStart.setText(nodeName);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see controller.NodeListener#receiveEndNode(java.lang.String)
+	 */
+	@Override
+	public void receiveEndNode(String nodeName) {
+		if (nodeName != null) {
+			txtSearchGoal.setText(nodeName);
 		}
 	}
 
