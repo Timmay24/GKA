@@ -10,6 +10,13 @@ import main.graphs.interfaces.PathFinder;
 
 public class Dijkstra implements PathFinder {
 
+	/**
+	 * @param g GraphWrapper des Graphen, auf dem der Weg gesucht werden soll
+	 * @param startNode Startknoten
+	 * @param endNode Zielknoten
+	 * @return Liste des kuerzesten Weges zwischen Start- und Zielknoten
+	 * @throws IllegalArgumentException
+	 */
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 		List<GKAVertex> resultWay = new ArrayList<>();
 		
