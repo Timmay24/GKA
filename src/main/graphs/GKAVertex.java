@@ -60,6 +60,16 @@ public class GKAVertex implements Comparable<GKAVertex> {
 	}
 
 	/**
+	 * 
+	 * @param target GKAVertex
+	 * @param g GKAGraph
+	 * @return true wenn es eine Kante gibt, false wenn nicht
+	 */
+	public boolean hasEdgeTo(GKAVertex target, GKAGraph g){
+		return (g.getEdge(this, target) != null);
+	}
+	
+	/**
 	 * Konstruktor
 	 * 
 	 * @param name Name des Knotens.
@@ -88,6 +98,7 @@ public class GKAVertex implements Comparable<GKAVertex> {
 	public static GKAVertex valueOf(String name) {
 		return valueOf(name, 0);
 	}
+	
 	
 	
 
