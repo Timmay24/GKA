@@ -10,7 +10,7 @@ import org.jgrapht.ListenableGraph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
-public interface GKAController extends MessageSender, CellSender<mxCell>, AdapterUpdateSender {
+public interface GKAController extends MessageSender, CellSender<mxCell>, AdapterUpdateSender, NodeSender {
 	
 	/**
 	 * @return Instanz der Graphen-Wrapperklasse.
@@ -85,5 +85,5 @@ public interface GKAController extends MessageSender, CellSender<mxCell>, Adapte
 	 * Passt die Einstellungen fuer parallele Kanten an.
 	 */
 	public void setParallelEdgeLayout();
-	
+
 }

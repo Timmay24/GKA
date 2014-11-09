@@ -38,13 +38,15 @@ import controller.CellSender;
 import controller.FileHandler;
 import controller.MessageListener;
 import controller.MessageSender;
+import controller.NodeListener;
+import controller.NodeSender;
 import controller.SetListener;
 import controller.SetSender;
 import controller.StatsListener;
 import controller.StatsSender;
 
 
-public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender, SetSender {
+public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender, SetSender, NodeSender {
 	
 	private			ListenableGraph<GKAVertex, GKAEdge> jGraph;
 	private			JGraphXAdapter<GKAVertex, GKAEdge> 	jgxAdapter;
@@ -53,13 +55,21 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	private			List<CellListener<mxCell>>			cellListeners = new ArrayList<>();
 	private			List<AdapterUpdateListener>			adapterUpdateListeners = new ArrayList<>();
 	private 		List<StatsListener> 				statsListeners = new ArrayList<>();
+	private 		List<NodeListener>					nodeListeners = new ArrayList<>();
 	private			GraphType							graphType;
 	private final	String								UNDIRECTED_SYMBOL = "--";
-	private final	String								  DIRECTED_SYMBOL = "->";
+	private final	String								DIRECTED_SYMBOL = "->";
 	private 		String								currentFilePath = null;
+	public 	final 	String 								COLOR_NEUTRAL_EDGE 	= "6482b9";
+	public 	final 	String 								COLOR_NEUTRAL_VERTEX= "c3d9ff";
+	public 	final 	String 								COLOR_RED 			= "ff0000";
+	public 	final 	String 								COLOR_YELLOW 		= "ffff00";
+	public 	final 	String 								COLOR_GREEN			= "00ff00";
+
 	
 	//TODO DEBUG UTIL
 	private List<SetListener> setListeners = new ArrayList<>();
+	
 	
 	/**
 	 * Konstruktor mit Angabe des Graphentypen
@@ -451,21 +461,114 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	public boolean containsEdge(String edgeName) {
 		return getEdge(edgeName) != null;
 	}
-
+	
+	
+	
 	/**
-	 * Faerbt die uebergebene Kante rot ein.
+	 * BASEFUNC
+	 * Faerbt die gewaehlte Kante mit der gewaehlten Farbe ein.
 	 * 
-	 * @param edge
+	 * @param edge Einzufaerbende Kante
+	 * @param colorCode Farbcode
 	 */
-	public void colorEdge(GKAEdge edge) {
-		if (edge != null) {
+	public void colorVertex(GKAVertex vertex, String colorCode) {
+		if (vertex != null) {
 			getAdapter().getModel().setStyle(
-					jgxAdapter.getEdgeToCellMap().get(edge),
-					"strokeColor=FF0000");
+					jgxAdapter.getVertexToCellMap().get(vertex),
+					"fillColor="+colorCode);
 		}
 	}
 	
+	public void colorVertex(String vertexName, String colorCode) {
+		if (vertexName != null) {
+			colorVertex(getVertex(vertexName), colorCode);
+		}
+	}
 	
+	public void colorVertexStart(GKAVertex vertex) {
+		colorVertex(vertex, COLOR_YELLOW);
+	}
+	
+	public void colorVertexStart(String vertexName) {
+		if (vertexName != null) {
+			colorVertexStart(getVertex(vertexName));
+		}
+	}
+	
+	public void colorVertexEnd(GKAVertex vertex) {
+		colorVertex(vertex, COLOR_GREEN);
+	}
+	
+	public void colorVertexEnd(String vertexName) {
+		if (vertexName != null) {
+			colorVertexStart(getVertex(vertexName));
+		}
+	}
+	
+	/**
+	 * BASEFUNC
+	 * Faerbt die gewaehlte Kante mit der gewaehlten Farbe ein.
+	 * 
+	 * @param edge Einzufaerbende Kante
+	 * @param colorCode Farbcode
+	 */
+	public void colorEdge(GKAEdge edge, String colorCode) {
+		if (edge != null) {
+			getAdapter().getModel().setStyle(
+					jgxAdapter.getEdgeToCellMap().get(edge),
+					"strokeColor="+colorCode);
+		}
+	}
+	
+	public void colorEdge(String edgeName, String colorCode) {
+		GKAEdge edge = getEdge(edgeName);
+		
+		if (edge != null) {
+			colorEdge(edge, colorCode);
+		} else {
+			System.err.println("Kante einfaerben fehlgeschlagen.");
+			System.err.println("edge == " + edge);
+		}
+	}
+	
+	/**
+	 * Faerbt die uebergebene Kante rot ein.
+	 * 
+	 * @param edge Einzufaerbende Kante.
+	 */
+	public void colorEdgeRed(GKAEdge edge) {
+		colorEdge(edge, COLOR_RED);
+	}
+	
+	/**
+	 * Setzt die Faerbung aller Kanten zurueck.
+	 */
+	public void resetEdgeColors() {
+		for (GKAEdge e : getGraph().edgeSet()) {
+			colorEdge(e, COLOR_NEUTRAL_EDGE);
+		}
+	}
+	
+	/**
+	 * Setzt die Faerbung aller Knoten zurueck.
+	 */
+	public void resetVertexColors() {
+		for (GKAVertex v : getGraph().vertexSet()) {
+			colorVertex(v, COLOR_NEUTRAL_VERTEX);
+		}
+	}
+	
+	/**
+	 * Setzt alle Einfaerbungen zurueck.
+	 */
+	public void resetColors() {
+		resetEdgeColors();
+		resetVertexColors();
+	}
+	
+	
+	
+
 	/**
 	 * BASEFUNC
 	 * Fuegt dem Graphen den uebergebenen Knoten hinzu.
@@ -662,12 +765,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	}
 	
 	
-	public void findShortestWay(String startVertex, String goalVertex) {
+	public void findShortestWay(Object algorithm, String startVertex, String goalVertex) {
 		GKAVertex start = getVertex(startVertex);
 		GKAVertex goal = getVertex(goalVertex);
 		
 		if (start != null && goal != null) {
-			findShortestWay(start, goal);
+			findShortestWay(algorithm, start, goal);
 		} else {
 			sendMessage("FEHLER: Start- oder Zielknoten ungültig oder nicht existent.");
 		}
@@ -679,24 +782,63 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param start Startknoten.
 	 * @param goal Zielknoten.
 	 */
-	public void findShortestWay(GKAVertex start, GKAVertex goal) {
+	public void findShortestWay(Object algorithm, GKAVertex start, GKAVertex goal) {
+		List<GKAVertex> way = null;
+		resetEdgeColors();
 		try {
-			List<GKAVertex> way = BFS.findShortestWay(this, start, goal);
-			
+			switch (algorithm.toString()) {
+			case "class main.graphs.BFS":
+				way = BFS.findShortestWay(this, start, goal);
+				break;
+			case "class main.graphs.Dijkstra":
+				way = Dijkstra.findShortestWay(this, start, goal);
+				break;
+			case "class main.graphs.FloydWarshall":
+				way = FloydWarshall.findShortestWay(this, start, goal);
+				break;
+			default:
+				break;
+			}
+
 			sendMessage("\nKürzester Weg:");
 			String wayString = "";
+			GKAVertex tempNodeA = null, tempNodeB = null;
 			for (GKAVertex v : way) {
 				wayString += v.toString();
 				wayString += " -> ";
+				
+				//// Code Fragment zum 
+				// Knoten durchschieben
+				tempNodeA = tempNodeB;
+				tempNodeB = v;
+				
+				// wenn zwei Knoten angewahlt wurden
+				if (tempNodeA != null && tempNodeB != null) {
+					// inzidente Kante holen
+					GKAEdge tempEdge = getGraph().getEdge(tempNodeA, tempNodeB);
+					if (tempEdge != null) {
+						// und einfaerben
+						colorEdgeRed(tempEdge);
+					}
+				}
+				// wenn tempNodeA noch null ist, wurde gerade der erste
+				// Knoten geholt => Startknoten
+				if (tempNodeA == null) {
+					colorVertexStart(tempNodeB);
+					// diesen einfaerben
+					// ... TODO
+				}
 			}
+			// zuletzt angewaehlten Knoten einfaerben (Zielknoten)
+			// ... TODO
+			colorVertexEnd(tempNodeB);
+			
 			sendMessage(wayString.substring(0, wayString.length() - 4));
 			sendMessage("--------------------------------");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			sendMessage("FEHLER: " + e.getMessage());
 		}
-		
-		
 	}
 	
 		
@@ -996,12 +1138,39 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			statsListeners.add(statsListener);
 	}
 	
-	public void sendStats(Map<String, String> stats) {
+	public void sendStats(String... stats) {
 		for (StatsListener sl : statsListeners) {
 			sl.receiveStats(stats);
 		}
 	}
+//	public void sendStats(Map<String, String> stats) {
+//		for (StatsListener sl : statsListeners) {
+//			sl.receiveStats(stats);
+//		}
+//	}
 	
+	/**
+	 * @param vertexName
+	 */
+	public void setStartNode(String vertexName) {
+		if (containsVertex(vertexName)) {
+			for (NodeListener nl : nodeListeners) {
+				nl.receiveStartNode(vertexName);
+			}
+		}
+	}
+	
+	/**
+	 * @param vertexName
+	 */
+	public void setEndNode(String vertexName) {
+		if (containsVertex(vertexName)) {
+			for (NodeListener nl : nodeListeners) {
+				nl.receiveEndNode(vertexName);
+			}
+		}
+	}
+
 	
 	/*TODO: equals() selbst implementieren, da unbekannt ist,
 			wie das equals vom JGraph arbeitet.
@@ -1049,6 +1218,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		for (SetListener setl : setListeners) {
 			setl.receiveSetLine(message);
 		}
+	}
+
+	@Override
+	public void addNodeListener(NodeListener nodeListener) {
+		if (nodeListener != null)
+			nodeListeners.add(nodeListener);
 	}
 	
 }

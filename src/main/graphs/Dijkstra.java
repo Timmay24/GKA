@@ -1,12 +1,15 @@
 package main.graphs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import main.graphs.interfaces.PathFinder;
+
+import com.google.common.base.Preconditions;
 
 public class Dijkstra implements PathFinder {
 
@@ -18,6 +21,20 @@ public class Dijkstra implements PathFinder {
 	 * @throws IllegalArgumentException
 	 */
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
+		Long startTime = System.nanoTime();
+		
+		// Precondition TODO DOC
+		// Graph muss gewichtet sein
+		if (!g.isWeighted()) {
+			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
+		}
+		
+		if (startNode == endNode) {
+			System.out.println("Startknoten == Zielknoten.");
+			g.sendStats(("X"), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+			return Arrays.asList(startNode);
+		}
+		
 		List<GKAVertex> resultWay = new ArrayList<>();
 		
 		// Set aller zu besuchenden Knoten (wird aufgebraucht)
@@ -36,6 +53,7 @@ public class Dijkstra implements PathFinder {
 		 * Distanz vom Startknoten auf 0 setzen
 		 * Startknoten als besucht markieren
 		 */
+		startNode.setWeight(0);
 		startNode.setParent(startNode);
 		
 		// Aktueller Knoten - am Anfang der Startknoten
@@ -47,6 +65,7 @@ public class Dijkstra implements PathFinder {
 			// bzw. aus dem Set nodes entfernen
 			currentNode = minNode(nodes);
 			nodes.remove(currentNode);
+			System.out.println(currentNode + " besucht und aus nodes entfernt.");
 			
 			
 			// Set bilden, in dem alle, ausser den bereits besuchten, Nachbarknoten enthalten sind
@@ -57,24 +76,40 @@ public class Dijkstra implements PathFinder {
 			for (GKAVertex adj : unvisitedAdjacents) {
 				
 				// eigene Distanz und Kantengewicht, der Kante zwischen aktuellem Knoten und Nachbarn, addieren
-				Integer distSum = currentNode.getWeight() + g.getEdge(currentNode, adj).getWeight();
+				GKAEdge adjEdge = g.getEdge(currentNode, adj);
+				Integer distSum;
+				if (adjEdge != null) {
+					distSum = currentNode.getWeight() + adjEdge.getWeight();
+					System.out.println("Distanz von " + currentNode + " ("+currentNode.getWeight()+") + Kantengewicht ("+ adjEdge.getName() +") == " + distSum);
+				} else {
+					throw new NullPointerException("Kante wurde nicht gefunden.\n ==> " + currentNode + " -- " + adj);
+				}
 				
 				// Falls Distanz-Summe niedriger ist, als die aktuelle Distanz des Nachbarn
 				if (adj.getWeight() > distSum) {
+					System.out.println("Nachbars ("+adj+") Distanz ist größer (" + adj.getWeight() +  " > " + distSum + ") => " + distSum + " ist die neue Distanz für "+adj+".");
 					// Distanz des Nachbarn aktualisieren
 					adj.setWeight(distSum);
 					// und aktuellen Knoten als Vorgaenger des Nachbarn setzen
 					adj.setParent(currentNode);
-					
-//					System.out.println(currentNode + " <--parent-- " + adj);
+					System.out.println("Setze " + currentNode + " als Vorgänger von " + adj + ".\n");
+				} else {
+					System.out.println("Nachbars Distanz ist kleiner oder gleich. (" + adj.getWeight() +  " < " + distSum + ")\n");
 				}
 			}
 			
+			// wtf it work.s
+			if (currentNode == endNode) {
+				nodes.clear();
+			}
+			
 		} while (!nodes.isEmpty()); // solange es noch unbesuchte Knoten gibt
+		System.out.println("Alle Knoten besucht (nodes geleert)\n");
 		
-		// Weg ueber Vorgaenger rekonstruieren
+		// Weg ueber alle Vorgaenger rekonstruieren
 		while (currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
+			System.out.println(currentNode + " zum Weg hinzugefügt");
 			currentNode = currentNode.getParent();
 		}
 		// die Schleife wird verlassen, sobald man am Startknoten
@@ -82,6 +117,10 @@ public class Dijkstra implements PathFinder {
 		// dann muss abschliessend der Startknoten manuell der Wegliste hinzugefuegt werden,
 		// da dies, durch die Abbruchbedingung in der Schleife, nicht mehr geschieht.
 		resultWay.add(currentNode);
+		System.out.println(currentNode + " zum Weg hinzugefügt");
+		
+		// Stats an die GUI melden
+		g.sendStats(("X"), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
 		
 		// da der Weg ueber die Vorgaenger rekonstruiert wurde,
 		// entspricht die Liste resultWay dem umgekehrten Weg

@@ -128,7 +128,14 @@ public class GraphController implements GKAController {
 	public void addAdapterUpdateListener(AdapterUpdateListener adapterUpdateListener) {
 		getGraphWrapper().addAdapterUpdateListener(adapterUpdateListener);
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see controller.NodeSender#addNodeListener(controller.NodeListener)
+	 */
+	@Override
+	public void addNodeListener(NodeListener NodeListener) {
+		getGraphWrapper().addNodeListener(NodeListener);
+	}
 
 	@Override
 	public void addVertex(String vertexName) {
@@ -154,9 +161,12 @@ public class GraphController implements GKAController {
 		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, true);
 	}
 	
-	public void findShortestWay(String startVertex, String goalVertex) {
-		getGraphWrapper().findShortestWay(startVertex, goalVertex);
+	public void findShortestWay(Object algorithm, String startVertex, String goalVertex) {
+		getGraphWrapper().findShortestWay(algorithm, startVertex, goalVertex);
 	}
+//	public void findShortestWay(String startVertex, String goalVertex) {
+//		getGraphWrapper().findShortestWay(startVertex, goalVertex);
+//	}
 	
 	public boolean isWeighted() {
 		return getGraphWrapper().isWeighted();
