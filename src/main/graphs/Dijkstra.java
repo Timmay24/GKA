@@ -44,41 +44,58 @@ public class Dijkstra implements PathFinder {
 		// Hauptschleife
 		do {
 			// Unbesuchten Knoten mit der aktuell geringsten Distanz holen und auf besucht setzen
-			// bzw. aus nodes entfernen
+			// bzw. aus dem Set nodes entfernen
 			currentNode = minNode(nodes);
 			nodes.remove(currentNode);
 			
-			// Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
-			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode));
-			unvisitedAdjacents.retainAll(nodes);
 			
+			// Set bilden, in dem alle, ausser den bereits besuchten, Nachbarknoten enthalten sind
+			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode));
+			unvisitedAdjacents.retainAll(nodes); // nur adjazente Knoten behalten, die noch im Set nodes enthalten sind
+			
+			// Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
 			for (GKAVertex adj : unvisitedAdjacents) {
+				
 				// eigene Distanz und Kantengewicht, der Kante zwischen aktuellem Knoten und Nachbarn, addieren
 				Integer distSum = currentNode.getWeight() + g.getEdge(currentNode, adj).getWeight();
 				
-				// Falls Distanz-Summe niedriger ist, als die Distanz des Nachbarns
+				// Falls Distanz-Summe niedriger ist, als die aktuelle Distanz des Nachbarn
 				if (adj.getWeight() > distSum) {
 					// Distanz des Nachbarn aktualisieren
 					adj.setWeight(distSum);
-					// und aktuellen als Vorgaenger des Nachbarns setzen
+					// und aktuellen Knoten als Vorgaenger des Nachbarn setzen
 					adj.setParent(currentNode);
-					System.out.println(currentNode + " <--parent-- " + adj);
+					
+//					System.out.println(currentNode + " <--parent-- " + adj);
 				}
-				
-				
 			}
 			
-		} while (!nodes.isEmpty());
+		} while (!nodes.isEmpty()); // solange es noch unbesuchte Knoten gibt
 		
+		// Weg ueber Vorgaenger rekonstruieren
 		while (currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
 			currentNode = currentNode.getParent();
 		}
+		// die Schleife wird verlassen, sobald man am Startknoten
+		// angekommen ist (wenn ein Knoten sein eigener Vorgaenger ist).
+		// dann muss abschliessend der Startknoten manuell der Wegliste hinzugefuegt werden,
+		// da dies, durch die Abbruchbedingung in der Schleife, nicht mehr geschieht.
 		resultWay.add(currentNode);
 		
+		// da der Weg ueber die Vorgaenger rekonstruiert wurde,
+		// entspricht die Liste resultWay dem umgekehrten Weg
+		// und muss gedreht zurueckgegeben werden.
 		return Utils.reverse(resultWay);
 	}
 	
+	/**
+	 * Ermittelt den Knoten mit der kleinsten Gewichtung aus der
+	 * gegebenen Collection.
+	 * 
+	 * @param vertices Collection von Knoten
+	 * @return Knoten mit der kleinsten Gewichtung
+	 */
 	public static GKAVertex minNode(Collection<GKAVertex> vertices) {
 		GKAVertex minNode = null;
 		
@@ -91,7 +108,6 @@ public class Dijkstra implements PathFinder {
 				}
 			}
 		}
-		
 		return minNode;
 	}
 }
