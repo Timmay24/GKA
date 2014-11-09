@@ -4,6 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TestBFS.class, TestGKAEdge.class, TestGKAGraph.class})
+@Suite.SuiteClasses({TestMatrix.class, TestGKAVertex.class, TestGKAEdge.class, TestGKAGraph.class, TestUtils.class, TestBFS.class, TestDijkstra.class})
 
 public class TestSuite {}
