@@ -56,6 +56,7 @@ import java.awt.event.FocusEvent;
 
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingConstants;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
@@ -213,7 +214,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mainFrame.setResizable(false);
 		mainFrame.setTitle("GKA Graph Visualizer " + verNo[0] + "." + verNo[1] + "." + verNo[2]);
 		// Größe und Position des Fensters festlegen
-		mainFrame.setBounds(0, 0, 800, 786);
+		mainFrame.setBounds(0, 0, 800, 741);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		mainFrame.setLocation(
 				(dim.width / 2 - mainFrame.getSize().width / 2),
@@ -231,7 +232,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		graphPanel.setLayout(new BorderLayout(0, 0));
 		
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 410, 476, 213);
+		scrollPane.setBounds(10, 410, 476, 175);
 		mainFrame.getContentPane().add(scrollPane);
 		
 		reportTextArea = new JTextArea();
@@ -372,7 +373,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		
 		bfsPanel = new JPanel();
 		bfsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		bfsPanel.setBounds(496, 410, 288, 213);
+		bfsPanel.setBounds(496, 410, 288, 175);
 		mainFrame.getContentPane().add(bfsPanel);
 		bfsPanel.setLayout(null);
 		
@@ -383,7 +384,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				txtSearchStart.setText("");
 			}
 		});
-		txtSearchStart.setBounds(66, 52, 80, 20);
+		txtSearchStart.setBounds(66, 22, 80, 20);
 		bfsPanel.add(txtSearchStart);
 		txtSearchStart.setColumns(10);
 		
@@ -394,21 +395,21 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				txtSearchGoal.setText("");
 			}
 		});
-		txtSearchGoal.setBounds(197, 52, 80, 20);
+		txtSearchGoal.setBounds(197, 22, 80, 20);
 		bfsPanel.add(txtSearchGoal);
 		txtSearchGoal.setColumns(10);
 		
 		lblStart = new JLabel("Start:");
-		lblStart.setBounds(10, 55, 47, 14);
+		lblStart.setBounds(10, 25, 47, 14);
 		bfsPanel.add(lblStart);
 		
 		lblZiel = new JLabel("Ziel:");
-		lblZiel.setBounds(167, 55, 20, 14);
+		lblZiel.setBounds(167, 25, 20, 14);
 		bfsPanel.add(lblZiel);
 		
 		bfsStatsPanel = new JPanel();
 		bfsStatsPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Zugriffsstatistik", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		bfsStatsPanel.setBounds(10, 122, 267, 80);
+		bfsStatsPanel.setBounds(10, 87, 267, 80);
 		bfsPanel.add(bfsStatsPanel);
 		bfsStatsPanel.setLayout(null);
 		
@@ -456,20 +457,20 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				}
 			}
 		});
-		btnSearchStart.setBounds(197, 83, 80, 23);
+		btnSearchStart.setBounds(197, 53, 80, 23);
 		bfsPanel.add(btnSearchStart);
 		
 		cmbSearchAlgo = new JComboBox<>();
 		cmbSearchAlgo.setModel(new DefaultComboBoxModel<String>(new String[] {"BFS", "Dijkstra"}));
-		cmbSearchAlgo.setBounds(67, 21, 210, 20);
+		cmbSearchAlgo.setBounds(67, 53, 120, 20);
 		bfsPanel.add(cmbSearchAlgo);
 		
 		lblAlgorithmus = new JLabel("Algorith.:");
-		lblAlgorithmus.setBounds(10, 24, 47, 14);
+		lblAlgorithmus.setBounds(10, 56, 47, 14);
 		bfsPanel.add(lblAlgorithmus);
 		
 		scrDebugPane = new JScrollPane();
-		scrDebugPane.setBounds(10, 634, 178, 90);
+		scrDebugPane.setBounds(10, 596, 178, 90);
 		mainFrame.getContentPane().add(scrDebugPane);
 		
 		taDebug = new JTextArea();
@@ -572,6 +573,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		menuBar.add(mnLayout);
 		
 		mntmApplyCircleLayout = new JMenuItem("Kreis");
+		mntmApplyCircleLayout.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/circle-empty.png")));
 		mntmApplyCircleLayout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				graphController.setCircleLayout();
@@ -580,6 +582,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mnLayout.add(mntmApplyCircleLayout);
 		
 		mntmApplyHierarchyLayout = new JMenuItem("Hierarchisch");
+		mntmApplyHierarchyLayout.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/crown2.png")));
 		mntmApplyHierarchyLayout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				graphController.getGraphWrapper().setHierarchyLayout();
@@ -592,6 +595,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mnLayout.add(separator_3);
 		
 		mntmFarbenReset = new JMenuItem("F\u00E4rbungen zur\u00FCcksetzen");
+		mntmFarbenReset.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/icon_reset.png")));
 		mnLayout.add(mntmFarbenReset);
 		mntmFarbenReset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
