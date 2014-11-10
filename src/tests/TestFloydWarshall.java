@@ -59,9 +59,9 @@ public class TestFloydWarshall {
 			graph.addEdge(d, f, vDF);
 			graph.addEdge(e, f, vEF);
 			
-			shortestWays.add(a);
-			shortestWays.add(e);
-			shortestWays.add(f);
+//			shortestWays.add(a);
+//			shortestWays.add(e);
+//			shortestWays.add(f);
 			
 		
 			
@@ -85,9 +85,9 @@ public class TestFloydWarshall {
 			graph1.addEdge(b2, d4, vB2D4);
 			graph1.addEdge(c3, d4, vC3D4);
 			
-			shortestWays1.add(a1);
-			shortestWays1.add(b2);
-			shortestWays1.add(c3);
+//			shortestWays1.add(a1);
+//			shortestWays1.add(b2);
+//			shortestWays1.add(c3);
 			
 		}
 
