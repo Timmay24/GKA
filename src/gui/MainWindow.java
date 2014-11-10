@@ -460,7 +460,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		bfsPanel.add(btnSearchStart);
 		
 		cmbSearchAlgo = new JComboBox<>();
-		cmbSearchAlgo.setModel(new DefaultComboBoxModel<String>(new String[] {"BFS", "Dijkstra"}));
+		cmbSearchAlgo.setModel(new DefaultComboBoxModel<String>(new String[] {"BFS", "Dijkstra", "Floyd-Warshall"}));
 		cmbSearchAlgo.setBounds(67, 21, 210, 20);
 		bfsPanel.add(cmbSearchAlgo);
 		
