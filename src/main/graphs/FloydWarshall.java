@@ -1,5 +1,7 @@
 package main.graphs;
 
+import static main.graphs.Utils.reverse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,8 @@ public class FloydWarshall implements PathFinder {
 	
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 
+		long startTime = System.nanoTime();
+		
 		List<GKAVertex> returnList = new ArrayList<>();
 		
 		//Matrix für den kürzesten Abstand zwischen Knoten
@@ -48,7 +52,7 @@ public class FloydWarshall implements PathFinder {
 				}
 			}
 		}
-//TODO sequenceTable modifizieren also mit ändern!
+
 		for(int k=0; k<list.size(); k++){
 			for(int i=0; i<list.size(); i++){
 				for(int j=0; j<list.size(); j++){
@@ -56,16 +60,48 @@ public class FloydWarshall implements PathFinder {
 					GKAVertex jvertx = list.get(j);
 					GKAVertex kvertx = list.get(k);
 					if(i!=j && i!=k && j!=k){
+						//if dij > (dik +dkj)
 						if(distanceTable.getValueAt(ivertx, jvertx) > 
 								(distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx))){
 							distanceTable.setValueAt(ivertx, jvertx, (distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx)));
+							//Matrix für den kürzesten Weg modifizieren
+							sequenceTable.setValueAt(ivertx, jvertx, kvertx);
 						}
 					}
 				}
 			}
 		}
 		
-		return returnList;
+		//damit startNode und endNode nicht geändert werden können
+		GKAVertex firstNode = startNode;
+		GKAVertex lastNode = endNode;
+		
+		List<GKAVertex> reverseReturnList = new ArrayList<>();
+		//erster Knoten des Weges wird hinzugefügt -> firstNode == startNode
+		reverseReturnList.add(firstNode);
+		
+		GKAVertex oneVertexInWay;
+		
+		//solange der "Spaltenname"(lastNode) ungleich dem "Zeilen-Spalten-Inhalt"(oneVertexInWay) ist, füge diesen zur Rückgabeliste hinzu
+		while((oneVertexInWay = sequenceTable.getValueAt(firstNode, lastNode)) != lastNode){
+			reverseReturnList.add(oneVertexInWay);
+			lastNode = oneVertexInWay;
+		}
+		
+		//füge den Zielknoten zur Rückgabeliste hinzu
+		reverseReturnList.add(endNode);
+		
+		// Number of edges in shortest way	
+		int tmp = (reverseReturnList.size() - 1);
+		Integer anzahlInInt = new Integer(tmp); 
+		String anzahl = anzahlInInt.toString();
+		System.out.println("Der Weg hat " + anzahl + " Kanten");
+		
+		g.sendStats("42", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+//		returnList = reverse(reverseReturnList); 
+		return reverseReturnList;
+//		return returnList;
+				
 	}
 
 }

@@ -20,46 +20,50 @@ public class TestFloydWarshall {
 		GKAGraph graph;
 		GKAVertex a,b,c,d,e,f;
 		GKAEdge vAB, vAC, vAE, vBC, vCD, vCE, vDF, vEF;
-		List<List<GKAVertex>> shortestWays;
+		List<GKAVertex> shortestWays;
 		
 		GKAGraph graph1;
 		GKAVertex a1,b2,c3,d4;
 		GKAEdge vA1B2, vA1C3, vB2C3, vB2D4, vC3D4;
-		List<List<GKAVertex>> shortestWays1;
+		List<GKAVertex> shortestWays1;
 		
 		@Before
 		public void setUp() throws Exception {
 			
-//			graph = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
-//			
-//			shortestWays = new ArrayList<>();
-//			
-//			a = GKAVertex.valueOf("a");
-//			b = GKAVertex.valueOf("b");
-//			c = GKAVertex.valueOf("c");
-//			d = GKAVertex.valueOf("d");
-//			e = GKAVertex.valueOf("e");
-//			f = GKAVertex.valueOf("f");
-//			
-//			vAB = GKAEdge.valueOf("vAB", 4);
-//			vAC = GKAEdge.valueOf("vAC", 2);
-//			vAE = GKAEdge.valueOf("vAE", 4);
-//			vBC = GKAEdge.valueOf("vBC", 1);
-//			vCD = GKAEdge.valueOf("vCD", 3);
-//			vCE = GKAEdge.valueOf("vCE", 5);
-//			vDF = GKAEdge.valueOf("vDF", 2);
-//			vEF = GKAEdge.valueOf("vEF", 1);
-//			
-//			graph.addEdge(a, b, vAB);
-//			graph.addEdge(a, c, vAC);
-//			graph.addEdge(a, e, vAE);
-//			graph.addEdge(b, c, vBC);
-//			graph.addEdge(c, d, vCD);
-//			graph.addEdge(c, e, vCE);
-//			graph.addEdge(d, f, vDF);
-//			graph.addEdge(e, f, vEF);
-//			
-//			shortestWays.add(Arrays.asList(a,e,f));
+			graph = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
+			
+			shortestWays = new ArrayList<>();
+			
+			a = GKAVertex.valueOf("a");
+			b = GKAVertex.valueOf("b");
+			c = GKAVertex.valueOf("c");
+			d = GKAVertex.valueOf("d");
+			e = GKAVertex.valueOf("e");
+			f = GKAVertex.valueOf("f");
+			
+			vAB = GKAEdge.valueOf("vAB", 4);
+			vAC = GKAEdge.valueOf("vAC", 2);
+			vAE = GKAEdge.valueOf("vAE", 4);
+			vBC = GKAEdge.valueOf("vBC", 1);
+			vCD = GKAEdge.valueOf("vCD", 3);
+			vCE = GKAEdge.valueOf("vCE", 5);
+			vDF = GKAEdge.valueOf("vDF", 2);
+			vEF = GKAEdge.valueOf("vEF", 1);
+			
+			graph.addEdge(a, b, vAB);
+			graph.addEdge(a, c, vAC);
+			graph.addEdge(a, e, vAE);
+			graph.addEdge(b, c, vBC);
+			graph.addEdge(c, d, vCD);
+			graph.addEdge(c, e, vCE);
+			graph.addEdge(d, f, vDF);
+			graph.addEdge(e, f, vEF);
+			
+//			shortestWays.add(a);
+//			shortestWays.add(e);
+//			shortestWays.add(f);
+			
+		
 			
 			graph1 = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 
@@ -81,19 +85,17 @@ public class TestFloydWarshall {
 			graph1.addEdge(b2, d4, vB2D4);
 			graph1.addEdge(c3, d4, vC3D4);
 			
-			shortestWays1.add(Arrays.asList(a1,b2,c3));
+//			shortestWays1.add(a1);
+//			shortestWays1.add(b2);
+//			shortestWays1.add(c3);
 			
 		}
 
 		@Test
 		public void testFindShortestWay() {
-//			GKAVertex startNode = a;
-//			GKAVertex endNode = f;
-//			
-//			List<GKAVertex> shortestWay = Arrays.asList(a,e,f);
 			
-//			assertTrue(shortestWays.contains(FloydWarshall.findShortestWay(graph, startNode, endNode)));
-			assertEquals(shortestWays1, FloydWarshall.findShortestWay(graph1, a1, c3));
+			assertEquals(3, (FloydWarshall.findShortestWay(graph, a, f)).size());
+			assertEquals(3, (FloydWarshall.findShortestWay(graph1, a1, c3)).size());
 		}
 		
 		
