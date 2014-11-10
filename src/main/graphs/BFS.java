@@ -26,6 +26,12 @@ public class BFS implements PathFinder {
 		
 		long startTime = System.nanoTime();
 		
+		// reset relevant attributes of each vertex and edge of the graph
+		for (GKAVertex v : g.getGraph().vertexSet()) {
+			v.setParent(null);
+			v.setVisited(false);
+		}
+		
 		// hit-counter for graph accesses
 		Integer hitcount = 0;
 	
