@@ -111,6 +111,7 @@ public class FileHandler {
 	 * @throws IOException
 	 */
 	public static boolean writeToFile(Collection<String> coll, File outFile) throws IOException {
+		
 		// exisitiert die Datei?
 		if (!outFile.exists()) { 
 			// Falls nicht --> erstellen

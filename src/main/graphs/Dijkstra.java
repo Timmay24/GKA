@@ -21,30 +21,32 @@ public class Dijkstra implements PathFinder {
 	 * @throws IllegalArgumentException
 	 */
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
+		long hitcount = 0;
+		
 		Long startTime = System.nanoTime();
 		
 		// Precondition TODO DOC
 		// Graph muss gewichtet sein
-		if (!g.isWeighted()) {
+		if (!g.isWeighted()) { hitcount++;
 			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
 		}
 		
 		if (startNode == endNode) {
 			System.out.println("Startknoten == Zielknoten.");
-			g.sendStats(("X"), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+			g.sendStats(("X"), String.valueOf((System.nanoTime() - startTime) / 1E6D));
 			return Arrays.asList(startNode);
 		}
 		
 		List<GKAVertex> resultWay = new ArrayList<>();
 		
 		// Set aller zu besuchenden Knoten (wird aufgebraucht)
-		Set<GKAVertex> nodes = new HashSet<>(g.getGraph().vertexSet());
+		Set<GKAVertex> nodes = new HashSet<>(g.getGraph().vertexSet()); hitcount++;
 		
 		/* Vorarbeiten 1
 		 * Jede Distanz auf unendlich bzw. Integer.max setzen
 		 * (Alle Knoten unbesucht setzen und alle Vorgaenger null setzen => durch GKAVertex impl. bereits erfolgt)
 		 */
-		for (GKAVertex v : g.getGraph().vertexSet()) {
+		hitcount++; for (GKAVertex v : g.getGraph().vertexSet()) {
 			v.setWeight(Integer.MAX_VALUE);
 		}
 		
@@ -69,14 +71,15 @@ public class Dijkstra implements PathFinder {
 			
 			
 			// Set bilden, in dem alle, ausser den bereits besuchten, Nachbarknoten enthalten sind
-			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode));
+			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode)); hitcount++;
 			unvisitedAdjacents.retainAll(nodes); // nur adjazente Knoten behalten, die noch im Set nodes enthalten sind
+			//TODO alle unechten Adjazenten rausschmeißen?
 			
 			// Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
 			for (GKAVertex adj : unvisitedAdjacents) {
 				
 				// eigene Distanz und Kantengewicht, der Kante zwischen aktuellem Knoten und Nachbarn, addieren
-				GKAEdge adjEdge = g.getEdge(currentNode, adj);
+				GKAEdge adjEdge = g.getEdge(currentNode, adj); hitcount++;
 				Integer distSum;
 				if (adjEdge != null) {
 					distSum = currentNode.getWeight() + adjEdge.getWeight();
@@ -106,6 +109,11 @@ public class Dijkstra implements PathFinder {
 		} while (!nodes.isEmpty()); // solange es noch unbesuchte Knoten gibt
 		System.out.println("Alle Knoten besucht (nodes geleert)\n");
 		
+//		if (endNode.getParent() == null) {
+//			throw new IllegalArgumentException("nix weg");
+//		}
+		
+		
 		// Weg ueber alle Vorgaenger rekonstruieren
 		while (currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
@@ -120,7 +128,7 @@ public class Dijkstra implements PathFinder {
 		System.out.println(currentNode + " zum Weg hinzugefügt");
 		
 		// Stats an die GUI melden
-		g.sendStats(("X"), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+		g.sendStats("Dijkstra", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(resultWay.size() - 1), String.valueOf(hitcount));
 		
 		// da der Weg ueber die Vorgaenger rekonstruiert wurde,
 		// entspricht die Liste resultWay dem umgekehrten Weg

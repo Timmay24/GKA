@@ -1,4 +1,4 @@
-package gui;
+package gui.menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +21,13 @@ public class JMenuOpen extends JMenuItem {
 		this.setText("\u00D6ffnen ...");
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.openGraph();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						controller.openGraph();
+					}
+				}
+				).start();
 			}
 		});
 	}

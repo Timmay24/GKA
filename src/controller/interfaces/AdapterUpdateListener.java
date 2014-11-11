@@ -1,4 +1,4 @@
-package controller;
+package controller.interfaces;
 
 import com.mxgraph.swing.mxGraphComponent;
 

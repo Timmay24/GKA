@@ -14,6 +14,8 @@ public class FloydWarshall implements PathFinder {
 	
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 
+		long hitcount = 0;
+		
 		long startTime = System.nanoTime();
 		
 		List<GKAVertex> returnList = new ArrayList<>();
@@ -29,6 +31,7 @@ public class FloydWarshall implements PathFinder {
 		list.add(startNode);
 		for(int i = 0; i < list.size(); i++){
 			for(GKAVertex v : g.getAllAdjacentsOf(list.get(i))){
+				hitcount++;
 				if(!list.contains(v)){
 					list.add(v);
 				}
@@ -41,7 +44,9 @@ public class FloydWarshall implements PathFinder {
 				
 				if(firstVertex != secondVertex){
 					if(firstVertex.hasEdgeTo(secondVertex, g)){
+						hitcount++;
 						distanceTable.setValueAt(firstVertex, secondVertex, (g.getEdge(firstVertex, secondVertex).getWeight()));
+						hitcount++;
 					}else{
 						distanceTable.setValueAt(firstVertex, secondVertex, INFINITY);
 					}
@@ -97,7 +102,7 @@ public class FloydWarshall implements PathFinder {
 		String anzahl = anzahlInInt.toString();
 		System.out.println("Der Weg hat " + anzahl + " Kanten");
 		
-		g.sendStats("42", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+		g.sendStats("Floyd-Wars.", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(reverseReturnList.size() - 1), String.valueOf(hitcount));
 //		returnList = reverse(reverseReturnList); 
 		return reverseReturnList;
 //		return returnList;

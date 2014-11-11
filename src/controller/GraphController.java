@@ -10,6 +10,12 @@ import org.jgrapht.ListenableGraph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
+import controller.interfaces.AdapterUpdateListener;
+import controller.interfaces.CellListener;
+import controller.interfaces.MessageListener;
+import controller.interfaces.NodeListener;
+import controller.interfaces.StatsListener;
+
 public class GraphController implements GKAController {
 
 	private		GKAGraph	gkaGraph;

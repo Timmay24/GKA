@@ -1,4 +1,4 @@
-package gui;
+package gui.menus;
 
 
 import java.awt.event.ActionEvent;
@@ -22,9 +22,14 @@ public class JMenuSave extends JMenuItem {
 	public JMenuSave(final GKAController controller) {
 		this.setText("Speichern");
 		this.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent arg0) {
-				controller.saveGraph();
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						controller.saveGraph();
+					}
+				}
+				).start();
 			}
 		});
 	}

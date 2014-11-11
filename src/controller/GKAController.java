@@ -10,6 +10,11 @@ import org.jgrapht.ListenableGraph;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 
+import controller.interfaces.AdapterUpdateSender;
+import controller.interfaces.CellSender;
+import controller.interfaces.MessageSender;
+import controller.interfaces.NodeSender;
+
 public interface GKAController extends MessageSender, CellSender<mxCell>, AdapterUpdateSender, NodeSender {
 	
 	/**
