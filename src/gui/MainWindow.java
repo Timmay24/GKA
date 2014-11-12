@@ -608,7 +608,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mainFrame.dispose();
+				System.exit(0);
 			}
 		});
 		mnFile.add(mntmQuit);
