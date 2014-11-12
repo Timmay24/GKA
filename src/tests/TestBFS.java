@@ -11,6 +11,7 @@ import main.graphs.GraphType;
 import main.graphs.GKAVertex;
 import main.graphs.BFS;
 import main.graphs.Utils;
+import main.graphs.exceptions.NoWayException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,7 @@ public class TestBFS {
 	
 //	@Ignore
 	@Test
-	public void testFindShortestWay() {
+	public void testFindShortestWay() throws NoWayException {
 		/*Test 1
 		 * Undirected Graph
 		 * */
@@ -275,8 +276,8 @@ public class TestBFS {
 	 * Directed Graph
 	 * */
 //	@Ignore
-	@Test(expected = IllegalArgumentException.class)
-	public void testTest(){
+	@Test(expected = NoWayException.class)
+	public void testTest() throws NoWayException{
 	
 		
 	    GKAVertex b1 = GKAVertex.valueOf("1");

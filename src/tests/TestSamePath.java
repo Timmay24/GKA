@@ -11,13 +11,14 @@ import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.GraphGenerator;
 import main.graphs.GraphType;
+import main.graphs.exceptions.NoWayException;
 
 import org.junit.Test;
 
 public class TestSamePath {
 	
 	@Test
-	public void testSamePath() {
+	public void testSamePath() throws IllegalArgumentException, NoWayException {
 		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
 		new GraphGenerator(g, g.getGraphType(), 100, 6000).run();

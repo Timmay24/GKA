@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import main.graphs.exceptions.NoWayException;
 import main.graphs.interfaces.PathFinder;
 
 import com.google.common.base.Preconditions;
@@ -20,7 +21,7 @@ public class Dijkstra implements PathFinder {
 	 * @return Liste des kuerzesten Weges zwischen Start- und Zielknoten
 	 * @throws IllegalArgumentException
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
+	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException, NoWayException {
 		long hitcount = 0;
 		
 		Long startTime = System.nanoTime();
@@ -100,17 +101,25 @@ public class Dijkstra implements PathFinder {
 		
 		
 		// Weg ueber alle Vorgaenger rekonstruieren
-		while (currentNode.getParent() != currentNode) {
+		while (currentNode != null && currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
 			currentNode = currentNode.getParent();
 		}
 		// die Schleife wird verlassen, sobald man am Startknoten
 		// angekommen ist (currentNode == currentNode.getParent())
 		
+		if (currentNode == null) // Existiert kein Weg, wird irgendwann der Parent 'null' auftreten und currentNode 'null' gesetzt.
+			throw new NoWayException(startNode, endNode);
 		
 		resultWay.add(currentNode);
 		// dann muss abschliessend der Startknoten manuell der Wegliste hinzugefuegt werden,
 		// da dies, durch die Abbruchbedingung in der Schleife, nicht mehr geschieht.
+		
+//		if (!(resultWay.contains(startNode) || resultWay.contains(endNode)) || resultWay.size() == 0) { 	// Falls kein Weg existiert
+//			throw new NoWayException(startNode, endNode);						// Fehler werfen.
+//		}
+		
+		
 		
 		
 		// Stats an die GUI melden

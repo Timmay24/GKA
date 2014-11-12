@@ -15,6 +15,7 @@ import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.GraphType;
+import main.graphs.exceptions.NoWayException;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -31,7 +32,7 @@ public class TestDijkstra {
 
 	@Ignore
 	@Test
-	public void testFindShortestWay() {
+	public void testFindShortestWay() throws IllegalArgumentException, NoWayException {
 		GKAGraph graph = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
 		GKAVertex a = GKAVertex.valueOf("a");
@@ -68,7 +69,7 @@ public class TestDijkstra {
 	}
 	
 	@Test
-	public void testFindShortestWay2() {
+	public void testFindShortestWay2() throws IllegalArgumentException, NoWayException {
 		GKAGraph graph = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
 		GKAVertex q = GKAVertex.valueOf("q");

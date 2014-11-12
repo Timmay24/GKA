@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import main.graphs.exceptions.NoWayException;
 import main.graphs.interfaces.PathFinder;
 import static main.graphs.Utils.reverse;
 
@@ -22,8 +23,9 @@ public class BFS implements PathFinder {
 	 * @param startNode is the startvertex
 	 * @param endNode is the endvertex
 	 * @return the sortest way from the start vertex to the end vertex
+	 * @throws NoWayException 
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
+	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws NoWayException {
 		
 		long startTime = System.nanoTime();
 		
@@ -105,7 +107,7 @@ public class BFS implements PathFinder {
 		
 		
 		if (queue.isEmpty() && !visitedVertices.get(visitedVertices.size() - 1).equals(endNode)) {
-			throw new IllegalArgumentException("Es existiert kein Weg zwischen Start- und Zielknoten.");
+			throw new NoWayException(startNode, endNode);
 		} else {
 			visitedVertices.addAll(queue);
 		}

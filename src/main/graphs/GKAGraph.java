@@ -4,9 +4,7 @@ import gui.GraphPopUp;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
+
+import main.graphs.exceptions.NoWayException;
 
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphXAdapter;
@@ -886,7 +886,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			
 			sendMessage(wayString.substring(0, wayString.length() - 4));
 			sendMessage("\n");
-		} catch (IllegalArgumentException e) {
+		} catch (NoWayException e) {
 			e.printStackTrace();
 			sendMessage("FEHLER: " + e.getMessage());
 		}
