@@ -24,14 +24,21 @@ public class TestFloydWarshall {
 		
 		GKAGraph graph1;
 		GKAGraph graph2;
+		GKAGraph graph3;
 		GKAVertex a1,b2,c3,d4, e5, f6, g7, h8;
-		GKAEdge vA1B2, vA1C3, vB2C3, vB2D4, vC3D4, vE5C3, vF6E5, vD4F6, vB2G7, vG7H8,  vA1B2a, vA1C3a, vB2C3a, vB2D4a, vC3D4a;
+		GKAEdge vA1B2, vA1C3, vB2C3, vB2D4, vC3D4, vE5C3, vF6E5, vD4F6, vB2G7, vG7H8,  
+			vA1B2a, vA1C3a, vB2C3a, vB2D4a, vC3D4a, vA1B2b, vA1C3b, vB2D4b, vC3D4b;
 
-		List<GKAVertex> shortestWays1, shortestWays2;
+
+		List<GKAVertex> shortestWays1, shortestWays2, shortestWays3, shortestWays4;
 		
 		@Before
 		public void setUp() throws Exception {
 			
+			/**
+			 * Test 1 
+			 * Ungerichteter Graph
+			 */
 			graph = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 			shortestWays = new ArrayList<>();
 			a = GKAVertex.valueOf("a");
@@ -61,7 +68,10 @@ public class TestFloydWarshall {
 			
 
 		
-			
+			/**
+			 * Test 2
+			 * Ungerichteter Graph
+			 */
 			graph1 = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 			shortestWays1 = new ArrayList<>();
 			a1 = GKAVertex.valueOf("1");
@@ -82,7 +92,10 @@ public class TestFloydWarshall {
 			graph1.addEdge(c3, d4, vC3D4);
 			
 			
-			
+			/**
+			 * Test3
+			 * Gerichteter Graph
+			 */
 			graph2 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
 			e5 = GKAVertex.valueOf("e5");
 			f6 = GKAVertex.valueOf("f6");
@@ -112,6 +125,31 @@ public class TestFloydWarshall {
 			graph2.addEdge(b2, g7, vB2G7);
 			graph2.addEdge(g7, h8, vG7H8);
 			
+			/**
+			 * Test4
+			 * Gerichteter Graph
+			 * gleiche Kantengewichtung
+			 */
+			graph3 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+			shortestWays3 = new ArrayList<>();
+			shortestWays4 = new ArrayList<>();
+			vA1B2b = GKAEdge.valueOf("12",1);
+			vA1C3b = GKAEdge.valueOf("13",1);
+			vB2D4b = GKAEdge.valueOf("24",1);
+			vC3D4b = GKAEdge.valueOf("34",1);
+			
+			graph3.addEdge(a1, b2, vA1B2b);
+			graph3.addEdge(a1, c3, vA1C3b);
+			graph3.addEdge(b2, d4, vB2D4b);
+			graph3.addEdge(c3, d4, vC3D4b);
+			
+			shortestWays3.add(a1);
+			shortestWays3.add(b2);
+			shortestWays3.add(d4);
+			
+//			shortestWays4.add(a1);
+//			shortestWays4.add(c3);
+//			shortestWays4.add(d4);
 			
 		}
 
@@ -125,6 +163,10 @@ public class TestFloydWarshall {
 			assertEquals(3, (FloydWarshall.findShortestWay(graph2, a1, d4)).size());
 			assertEquals(4, (FloydWarshall.findShortestWay(graph2, d4, c3)).size());
 			assertEquals(4, (FloydWarshall.findShortestWay(graph2, a1, h8)).size());
+			
+			assertEquals(3, (FloydWarshall.findShortestWay(graph3, a1, d4)).size());
+			assertEquals(shortestWays3, (FloydWarshall.findShortestWay(graph3, a1, d4)));
+//			assertEquals(shortestWays4, (FloydWarshall.findShortestWay(graph3, a1, d4)));
 		}
 		
 		
