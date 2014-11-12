@@ -10,7 +10,7 @@ import main.graphs.interfaces.PathFinder;
 public class FloydWarshall implements PathFinder {
 	
 	//Konstante für Unendlich
-	private static final int INFINITY = 99999999;
+	private static final int INFINITY = Integer.MAX_VALUE/2;
 	
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 
@@ -24,7 +24,12 @@ public class FloydWarshall implements PathFinder {
 		//Matrix für den kürzesten Weg
 		Matrix<GKAVertex, GKAVertex, GKAVertex> sequenceTable = new Matrix<>();
 		
-		//
+		/**
+		 * Aufbau der Matritzen:
+		 * Alle Knoten im Graphen werden in eine Liste geschrieben. 
+		 * Dabei wird ein Knoten nur eingefügt, wenn er noch 
+		 * nicht in der Liste vohanden ist
+		 */
 		List<GKAVertex> list = new ArrayList<>();
 		list.add(startNode);
 		for(int i = 0; i < list.size(); i++){
@@ -34,6 +39,16 @@ public class FloydWarshall implements PathFinder {
 				}
 			}
 		}
+		/**
+		 * Aufbau der Matritzen:
+		 * Die Knotennamen sind Spalten und Zeilennamen. 
+		 * Matix Elemente: Integerwerte(Kantengewichtung), Null und Integerwert für unendlich
+		 * Ist Spalten und zeilenname eines Feldes in der Matrix identisch so wird in dieses Feld Null hereingeschrieben,
+		 * weil man es für den weiteren Algorithmus nicht verwenden muss. 
+		 * Gibt es keine Verbindung zwischen Knoten des Spaltennamens und Knoten des Zeilennamens so wir in das Feld
+		 * eine Zahl die Unendlich repräsentiert eigefügt.
+		 * Ansonstens wird die Kantengewicht eingefügt.
+		 */
 		for(int rowIndex=0; rowIndex<list.size(); rowIndex++){
 			for(int columnIndex=0; columnIndex<list.size(); columnIndex++){
 				GKAVertex firstVertex = list.get(rowIndex);
@@ -52,7 +67,17 @@ public class FloydWarshall implements PathFinder {
 				}
 			}
 		}
-
+		/**
+		 * Änderung der Matritzen:
+		 * i = Zeilenname
+		 * j = Spaltenname
+		 * k = Iterationsdurchgang
+		 * distanceTable = Matrix für den kürzeste Strecke
+		 * sequenceTable = Matrix für den Weg 
+		 * Zeilenname, Spaltenname und Iterationsdurchgang (name) dürfen nicht identische sein.
+		 * Ist der Wert des Feldes von i und j größer als der Wert des Feldes von i und k 
+		 * plus der Wert von k und j (dij > (dik +dkj)), so werden die Matritzen modifiziert und der Wert des Feldes verändert.  
+		 */
 		for(int k=0; k<list.size(); k++){
 			for(int i=0; i<list.size(); i++){
 				for(int j=0; j<list.size(); j++){
@@ -60,7 +85,6 @@ public class FloydWarshall implements PathFinder {
 					GKAVertex jvertx = list.get(j);
 					GKAVertex kvertx = list.get(k);
 					if(i!=j && i!=k && j!=k){
-						//if dij > (dik +dkj)
 						if(distanceTable.getValueAt(ivertx, jvertx) > 
 								(distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx))){
 							distanceTable.setValueAt(ivertx, jvertx, (distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx)));
@@ -78,7 +102,7 @@ public class FloydWarshall implements PathFinder {
 		
 		List<GKAVertex> reverseReturnList = new ArrayList<>();
 		//erster Knoten des Weges wird hinzugefügt -> firstNode == startNode
-		reverseReturnList.add(firstNode);
+		reverseReturnList.add(endNode);
 		
 		GKAVertex oneVertexInWay;
 		
@@ -89,18 +113,18 @@ public class FloydWarshall implements PathFinder {
 		}
 		
 		//füge den Zielknoten zur Rückgabeliste hinzu
-		reverseReturnList.add(endNode);
+		reverseReturnList.add(startNode);
+		returnList = reverse(reverseReturnList);
 		
-		// Number of edges in shortest way	
-		int tmp = (reverseReturnList.size() - 1);
+		//Anzahl der Kanten im kürzesten Weg	
+		int tmp = (returnList.size() - 1);
 		Integer anzahlInInt = new Integer(tmp); 
 		String anzahl = anzahlInInt.toString();
 		System.out.println("Der Weg hat " + anzahl + " Kanten");
 		
 		g.sendStats("42", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
-//		returnList = reverse(reverseReturnList); 
-		return reverseReturnList;
-//		return returnList;
+
+		return returnList;
 				
 	}
 
