@@ -73,9 +73,7 @@ public class Dijkstra implements PathFinder {
 			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode)); hitcount++; // zuerst alle Adjazenten speichern
 			unvisitedAdjacents.retainAll(nodes); // danach bereits besuchte Adjazenten rausschmeissen (es bleiben die, die noch in nodes ent
 			
-			//TODO alle unechten Adjazenten rausschmeiﬂen?
-			
-			
+
 			for (GKAVertex adj : unvisitedAdjacents) { // Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
 				
 				// eigene Distanz + Kantengewicht der inzidenten Kante (currentNode <--> Nachbarn) addieren
@@ -94,7 +92,7 @@ public class Dijkstra implements PathFinder {
 			}
 			
 			if (currentNode == endNode) {   // Zu currentNode wurden zu diesem Zeitpunkt alle inzidenten Kanten untersucht
-				nodes.clear();				// 
+				nodes.clear();				// Ist currentNode gleichzeitig das Ziel, kann abgebrochen werden
 			}
 			
 		} while (!nodes.isEmpty()); // Solange es noch unbesuchte Knoten gibt
