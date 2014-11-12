@@ -60,6 +60,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	private 		List<StatsListener> 				statsListeners = new ArrayList<>();
 	private 		List<NodeListener>					nodeListeners = new ArrayList<>();
 	private			GraphType							graphType;
+
 	private final	String								UNDIRECTED_SYMBOL = "--";
 	private final	String								DIRECTED_SYMBOL = "->";
 	private 		String								currentFilePath = null;
@@ -833,7 +834,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	public void findShortestWay(Object algorithm, GKAVertex start, GKAVertex goal) {
 		List<GKAVertex> way = null;
 		resetColors();
-		
+
 		try {
 			switch (algorithm.toString()) {
 			case "class main.graphs.BFS":
@@ -848,6 +849,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			default:
 				break;
 			}
+
 
 			sendMessage("\nKürzester Weg:");
 			String wayString = "";
@@ -883,7 +885,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			colorVertexEnd(tempNodeB);
 			
 			sendMessage(wayString.substring(0, wayString.length() - 4));
-			sendMessage("--------------------------------");
+			sendMessage("\n");
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 			sendMessage("FEHLER: " + e.getMessage());
@@ -1121,6 +1123,13 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		}
 		sendMessage("ERFOLG: Benoetigte Zeit: " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden");
 		return true;
+	}
+	
+	/**
+	 * @return Typen des Graphen.
+	 */
+	public GraphType getGraphType() {
+		return graphType;
 	}
 	
 	/**

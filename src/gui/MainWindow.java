@@ -61,10 +61,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+import javax.swing.JToggleButton;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
-	private 	int[]				verNo = {0,8,88};
+	private 	int[]				verNo = {0,8,0106};
 	private 	GraphController		graphController;
 	private 	JFrame 				mainFrame;
 	private		StatsWindow			statsWindow;
@@ -227,7 +228,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		
 		lblProcessing = new JLabel("Verarbeitung...");
 		lblProcessing.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/bling.png")));
-		lblProcessing.setBounds(10, 130, 102, 20);
+		lblProcessing.setBounds(10, 130, 190, 20);
 		lblProcessing.setVisible(false);
 		mainFrame.getContentPane().add(lblProcessing);
 		mainFrame.getContentPane().add(progressBar);
@@ -400,7 +401,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				}
 			}
 		});
-		spinAEWeight.setModel(new SpinnerNumberModel(new Integer(1), new Integer(0), null, new Integer(1)));
+		spinAEWeight.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
 		spinAEWeight.setBounds(390, 20, 51, 20);
 		edgePanel.add(spinAEWeight);
 		
@@ -793,5 +794,4 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		else
 			taDebug.append(message + "\n");
 	}
-	
 }

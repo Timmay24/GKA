@@ -136,7 +136,7 @@ public class GKAVertex implements Comparable<GKAVertex> {
 		if (name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name)) //TODO pruefen, ob Abgleich mit dem Namen korrekt ist
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}

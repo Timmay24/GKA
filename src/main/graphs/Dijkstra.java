@@ -31,9 +31,9 @@ public class Dijkstra implements PathFinder {
 			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
 		}
 		
-		if (startNode == endNode) {
+		if (startNode == endNode) { // Falls Start- und Zielknoten identisch sind, kann abgebrochen werden.
 			System.out.println("Startknoten == Zielknoten.");
-			g.sendStats(("X"), String.valueOf((System.nanoTime() - startTime) / 1E6D));
+			g.sendStats(("Dijkstra"), String.valueOf((System.nanoTime() - startTime) / 1E6D),"X", String.valueOf(hitcount));
 			return Arrays.asList(startNode);
 		}
 		
@@ -58,8 +58,7 @@ public class Dijkstra implements PathFinder {
 		startNode.setWeight(0);
 		startNode.setParent(startNode);
 		
-		// Aktueller Knoten - am Anfang der Startknoten
-		GKAVertex currentNode = startNode;
+		GKAVertex currentNode = startNode; // Aktuellen Knoten setzen - am Anfang der Startknoten
 
 		// Hauptschleife
 		do {
@@ -67,70 +66,57 @@ public class Dijkstra implements PathFinder {
 			// bzw. aus dem Set nodes entfernen
 			currentNode = minNode(nodes);
 			nodes.remove(currentNode);
-			System.out.println(currentNode + " besucht und aus nodes entfernt.");
 			
 			
 			// Set bilden, in dem alle, ausser den bereits besuchten, Nachbarknoten enthalten sind
-			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode)); hitcount++;
-			unvisitedAdjacents.retainAll(nodes); // nur adjazente Knoten behalten, die noch im Set nodes enthalten sind
+			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode)); hitcount++; // zuerst alle Adjazenten speichern
+			unvisitedAdjacents.retainAll(nodes); // danach bereits besuchte Adjazenten rausschmeissen (es bleiben die, die noch in nodes ent
+			
 			//TODO alle unechten Adjazenten rausschmeißen?
 			
-			// Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
-			for (GKAVertex adj : unvisitedAdjacents) {
+			
+			for (GKAVertex adj : unvisitedAdjacents) { // Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
 				
-				// eigene Distanz und Kantengewicht, der Kante zwischen aktuellem Knoten und Nachbarn, addieren
+				// eigene Distanz + Kantengewicht der inzidenten Kante (currentNode <--> Nachbarn) addieren
 				GKAEdge adjEdge = g.getEdge(currentNode, adj); hitcount++;
 				Integer distSum;
 				if (adjEdge != null) {
 					distSum = currentNode.getWeight() + adjEdge.getWeight();
-					System.out.println("Distanz von " + currentNode + " ("+currentNode.getWeight()+") + Kantengewicht ("+ adjEdge.getName() +") == " + distSum);
 				} else {
 					throw new NullPointerException("Kante wurde nicht gefunden.\n ==> " + currentNode + " -- " + adj);
 				}
 				
-				// Falls Distanz-Summe niedriger ist, als die aktuelle Distanz des Nachbarn
-				if (adj.getWeight() > distSum) {
-					System.out.println("Nachbars ("+adj+") Distanz ist größer (" + adj.getWeight() +  " > " + distSum + ") => " + distSum + " ist die neue Distanz für "+adj+".");
-					// Distanz des Nachbarn aktualisieren
-					adj.setWeight(distSum);
-					// und aktuellen Knoten als Vorgaenger des Nachbarn setzen
-					adj.setParent(currentNode);
-					System.out.println("Setze " + currentNode + " als Vorgänger von " + adj + ".\n");
-				} else {
-					System.out.println("Nachbars Distanz ist kleiner oder gleich. (" + adj.getWeight() +  " < " + distSum + ")\n");
+				if (adj.getWeight() > distSum) { // Falls Distanz-Summe niedriger, als die aktuelle Distanz des Nachbarn
+					adj.setWeight(distSum); 	 // Distanz des Nachbarn aktualisieren
+					adj.setParent(currentNode);  // und aktuellen Knoten als Vorgaenger des Nachbarn setzen
 				}
 			}
 			
-			// wtf it work.s
-			if (currentNode == endNode) {
-				nodes.clear();
+			if (currentNode == endNode) {   // Zu currentNode wurden zu diesem Zeitpunkt alle inzidenten Kanten untersucht
+				nodes.clear();				// 
 			}
 			
-		} while (!nodes.isEmpty()); // solange es noch unbesuchte Knoten gibt
-		System.out.println("Alle Knoten besucht (nodes geleert)\n");
-		
-//		if (endNode.getParent() == null) {
-//			throw new IllegalArgumentException("nix weg");
-//		}
+		} while (!nodes.isEmpty()); // Solange es noch unbesuchte Knoten gibt
 		
 		
 		// Weg ueber alle Vorgaenger rekonstruieren
 		while (currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
-			System.out.println(currentNode + " zum Weg hinzugefügt");
 			currentNode = currentNode.getParent();
 		}
 		// die Schleife wird verlassen, sobald man am Startknoten
-		// angekommen ist (wenn ein Knoten sein eigener Vorgaenger ist).
+		// angekommen ist (currentNode == currentNode.getParent())
+		
+		
+		resultWay.add(currentNode);
 		// dann muss abschliessend der Startknoten manuell der Wegliste hinzugefuegt werden,
 		// da dies, durch die Abbruchbedingung in der Schleife, nicht mehr geschieht.
-		resultWay.add(currentNode);
-		System.out.println(currentNode + " zum Weg hinzugefügt");
+		
 		
 		// Stats an die GUI melden
 		g.sendStats("Dijkstra", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(resultWay.size() - 1), String.valueOf(hitcount));
 		
-		// da der Weg ueber die Vorgaenger rekonstruiert wurde,
+		// Da der Weg ueber die Vorgaenger rekonstruiert wurde,
 		// entspricht die Liste resultWay dem umgekehrten Weg
 		// und muss gedreht zurueckgegeben werden.
 		return Utils.reverse(resultWay);
@@ -150,9 +136,8 @@ public class Dijkstra implements PathFinder {
 			if (minNode == null) {
 				minNode = v;
 			} else {
-				if (minNode.getWeight() > v.getWeight()) {
+				if (minNode.getWeight() > v.getWeight())
 					minNode = v;
-				}
 			}
 		}
 		return minNode;
