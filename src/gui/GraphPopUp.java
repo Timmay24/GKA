@@ -107,6 +107,7 @@ public class GraphPopUp extends JPopupMenu {
 		
 		// TODO DEBUG TOOL
 		final JMenuItem itemS = new JMenuItem("Als Startknoten markieren");
+		itemS.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/start.png")));
 		itemS.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				wrapper.setStartNode(cell.getValue().toString());
@@ -115,6 +116,7 @@ public class GraphPopUp extends JPopupMenu {
 		this.add(itemS);
 		
 		final JMenuItem itemT = new JMenuItem("Als Zielknoten markieren");
+		itemT.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/finish_flag1.png")));
 		itemT.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				wrapper.setEndNode(cell.getValue().toString());

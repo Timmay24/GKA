@@ -4,16 +4,19 @@ import gui.GraphPopUp;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JOptionPane;
 
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphXAdapter;
@@ -31,19 +34,19 @@ import com.mxgraph.swing.mxGraphComponent.mxGraphControl;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 
-import controller.AdapterUpdateListener;
-import controller.AdapterUpdateSender;
-import controller.CellListener;
-import controller.CellSender;
 import controller.FileHandler;
-import controller.MessageListener;
-import controller.MessageSender;
-import controller.NodeListener;
-import controller.NodeSender;
-import controller.SetListener;
-import controller.SetSender;
-import controller.StatsListener;
-import controller.StatsSender;
+import controller.interfaces.AdapterUpdateListener;
+import controller.interfaces.AdapterUpdateSender;
+import controller.interfaces.CellListener;
+import controller.interfaces.CellSender;
+import controller.interfaces.MessageListener;
+import controller.interfaces.MessageSender;
+import controller.interfaces.NodeListener;
+import controller.interfaces.NodeSender;
+import controller.interfaces.SetListener;
+import controller.interfaces.SetSender;
+import controller.interfaces.StatsListener;
+import controller.interfaces.StatsSender;
 
 
 public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdateSender, StatsSender, SetSender, NodeSender {
@@ -132,11 +135,44 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			createGraphComponent(jgxAdapter);
 			setGraphConfig();
 			
-			for (String key : getAdapter().getStylesheet().getDefaultEdgeStyle().keySet()) {
-				System.out.println(key + " => " + getAdapter().getStylesheet().getDefaultEdgeStyle().get(key));
-			}
+			// just to know...
+//			for (String key : getAdapter().getStylesheet().getDefaultEdgeStyle().keySet()) {
+//				System.out.println(key + " => " + getAdapter().getStylesheet().getDefaultEdgeStyle().get(key));
+//			}
 		}
 	}
+	
+	/**
+	 * BASEFUNC
+	 * Generiert einen zufaelligen Graphen, mit variabler Anzahl
+	 * von Knoten und Kanten.
+	 * 
+	 * @param desiredVertexCount Gewuenschte Knotenanzahl.
+	 * @param desiredEdgeCount Gewuenschte Kantenanzahl.
+	 */
+	public void createRandomGraph(int desiredVertexCount, int desiredEdgeCount) {
+		String dvc = (String) JOptionPane.showInputDialog(null, "Anzahl zu generierender Knoten:", "Zufallsgraph", JOptionPane.PLAIN_MESSAGE, null, null, desiredVertexCount);
+		if (!dvc.matches("\\d+")) {
+			return;
+		}
+		
+		String dec = JOptionPane.showInputDialog("Anzahl zu generierender Kanten:", desiredEdgeCount);
+		if (!dec.matches("\\d+")) {
+			return;
+		}
+		
+		GraphGenerator generator = new GraphGenerator(this, graphType, Integer.parseInt(dvc), Integer.parseInt(dec));
+		new Thread(generator).start();
+	}
+	
+	
+	/**
+	 * Standartkonfiguration fuer den Zufallsgraphen.
+	 */
+	public void createRandomGraph() {
+		createRandomGraph(100, 6000);
+	}
+	
 	
 	/**
 	 * Erzeugt eine GraphComponente die spaeter in der GUI eingebunden werden 
@@ -195,6 +231,13 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		getGraphComponent().setSize(774, 326);
 		getGraphComponent().setConnectable(false);
 		getGraphComponent().setDragEnabled(false);
+	}
+	
+	/**
+	 * @param locked
+	 */
+	private void setElementsLocked(boolean locked) {
+		getAdapter().setCellsLocked(locked);
 	}
 
 	/**
@@ -271,6 +314,11 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return true, wenn Kante hinzugefuegt.
 	 */
 	public boolean addEdge(GKAVertex source, GKAVertex target, GKAEdge newEdge, boolean verbose) {
+		if (containsEdge(newEdge)) {
+			sendMessage("FEHLER: Gleichnamige Kante bereits vorhanden. Bitte anderen Namen waehlen.");
+			return false;
+		}
+		
 		if (newEdge.isWeighted() != this.isWeighted()) {
 			sendMessage("FEHLER: Inkompatible Gewichtungstypen beim Hinzufügen der Kante.");
 		} else {
@@ -280,7 +328,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			if (getGraph().addEdge(source, target, newEdge)) {
 				sendMessage("ERFOLG: Kante erstellt: " + source + " : " + target);
 				
-				reportVsAndEs(); //TODO DEBUG UTIL
+//				reportVsAndEs(); //TODO DEBUG UTIL
 				
 				return true;
 			} else {
@@ -343,7 +391,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		if (getGraph().removeEdge(edge)) {
 			sendMessage("ERFOLG: Kante " + edge + " entfernt (" + edge.getSource() + " : " + edge.getTarget() + ").");
 			
-			reportVsAndEs(); //TODO DEBUG UTIL
+//			reportVsAndEs(); //TODO DEBUG UTIL
 			
 			return true;
 
@@ -370,7 +418,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		if (getGraph().removeEdge(getGraph().getEdge(source, target))) {
 			sendMessage("ERFOLG: Kante entfernt (" + source + " : " + target + ").");
 			
-			reportVsAndEs(); //TODO DEBUG UTIL
+//			reportVsAndEs(); //TODO DEBUG UTIL
 			
 			return true;
 		} else {
@@ -590,7 +638,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			if (getGraph().addVertex(vertex)) {
 				sendMessage("ERFOLG: Knoten " + vertex + " hinzugefuegt.");
 				
-				reportVsAndEs(); //TODO DEBUG UTIL
+//				reportVsAndEs(); //TODO DEBUG UTIL
 				
 				return true;
 			}
@@ -651,7 +699,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		if (getGraph().removeVertex(vertex)) {
 			sendMessage("ERFOLG: Knoten " + vertex + " entfernt.");
 			
-			reportVsAndEs(); //TODO DEBUG UTIL
+//			reportVsAndEs(); //TODO DEBUG UTIL
 			
 			return true;
 		} else {
@@ -738,17 +786,17 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
 		
 		for (GKAEdge e : incidentEdges) {
-			if (e.getSource() != e.getTarget()) {          		// Schlaufen ausschliessen Source != Target
+			if (e.getSource() != e.getTarget()) {          			// Schlaufen ausschliessen Source != Target
 				
-				if (directed) {									// Sonderregelung fuer gerichtete Graphen:
-					if (e.getSource() == sourceVertex) {       	// Nur adjazente Knoten in die Ergebnisliste stecken,
-						resultList.add((GKAVertex)e.getTarget());  // zu denen man vom Knoten sourceVertex aus kommen kann.
-																// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
+				if (directed) {										// Sonderregelung fuer gerichtete Graphen:
+					if (e.getSource() == sourceVertex) {       		// Nur adjazente Knoten in die Ergebnisliste stecken,
+						resultList.add((GKAVertex)e.getTarget());  	// zu denen man vom Knoten sourceVertex aus kommen kann.
+																	// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
 					}
 				} else {
-					if (e.getSource() == sourceVertex) {		// Ist sourceVertex Source der Kante,
+					if (e.getSource() == sourceVertex) {			// Ist sourceVertex Source der Kante,
 						resultList.add((GKAVertex)e.getTarget());	// dann ist Target der Adjazent.
-					} else if (e.getTarget() == sourceVertex) {	// Ist sourceVertex Target der Kante,
+					} else if (e.getTarget() == sourceVertex) {		// Ist sourceVertex Target der Kante,
 						resultList.add((GKAVertex)e.getSource());	// dann ist Source der Adjazent.
 					}
 				}
@@ -784,7 +832,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void findShortestWay(Object algorithm, GKAVertex start, GKAVertex goal) {
 		List<GKAVertex> way = null;
-		resetEdgeColors();
+		resetColors();
+		
 		try {
 			switch (algorithm.toString()) {
 			case "class main.graphs.BFS":
@@ -823,11 +872,11 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 				}
 				// wenn tempNodeA noch null ist, wurde gerade der erste
 				// Knoten geholt => Startknoten
-				if (tempNodeA == null) {
+//				if (tempNodeA == null) {
 					colorVertexStart(tempNodeB);
-					// diesen einfaerben
-					// ... TODO
-				}
+//					// diesen einfaerben
+//					// ... TODO
+//				}
 			}
 			// zuletzt angewaehlten Knoten einfaerben (Zielknoten)
 			// ... TODO
@@ -892,7 +941,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * 
 	 * @param message Abzusetzende Nachricht
 	 */
-	private void sendMessage(String message) {
+	public void sendMessage(String message) {
 		for (MessageListener ml : msgListeners) {
 			ml.receiveMessage(message);
 		}
@@ -913,8 +962,6 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 				if (e.getButton() == 3) {
 					new GraphPopUp(wrapper, getGraphComponent(), e, (mxCell)cell);
 					if (cell != null && cell instanceof mxCell) {
-						
-//						sendMessage("Clicked: " + ((mxCell) cell).getValue()); // debug
 						sendCell((mxCell) cell, e);		// Weiterleiten der Zelle an alle angemeldeten CellListeners
 					}
 				}
@@ -935,7 +982,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	public boolean isWeighted() {
 		return graphType.isWeighted();
 	}
-
+	
 	/**
 	 * Laedt einen Graphen aus einer GKA-Datei.
 	 */
@@ -955,18 +1002,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			sendMessage("FEHLER: " + e.getMessage());
 			sendMessage("FEHLER: Graph öffnen fehlgeschlagen.");
 		}
+		sendMessage("/pbe");
+		sendMessage("/gps");
 	}
 	
 	/**
-	 * Abkuerzung, bei der ein aktueller Graph direkt gespeichert werden kann,
-	 * ohne den Dateipfad waehlen zu muessen, sofern der aktuelle Graph bereits
-	 * zuvor gespeichert wurde und ein Dateipfad (currentFilePath) hinterlegt ist.
-	 */
-	public void saveGraph() {
-		saveGraph(currentFilePath);
-	}
-	
-	/**
+	 * BASEFUNC
 	 * Speichert den aktuellen Graphen in einer Datei.
 	 * 
 	 * @param filePath Zielpfad der Datei.
@@ -992,7 +1033,18 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			sendMessage("FEHLER: " + e.getMessage());
 			sendMessage("FEHLER: Graph konnte nicht gespeichert werden.");
 		};
+		sendMessage("/pbe");
 	}
+	
+	/**
+	 * Abkuerzung, bei der ein aktueller Graph direkt gespeichert werden kann,
+	 * ohne den Dateipfad waehlen zu muessen, sofern der aktuelle Graph bereits
+	 * zuvor gespeichert wurde und ein Dateipfad (currentFilePath) hinterlegt ist.
+	 */
+	public void saveGraph() {
+		saveGraph(currentFilePath);
+	}
+	
 	
 	/**
 	 * Parst alle Zeilen der Input-Liste und generiert daraus einen Graphen.
@@ -1006,6 +1058,12 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		Matcher m;
 		GraphType graphType = null;
 		Integer tempEdgeNo = 0;
+		
+		long startTime = System.nanoTime();
+		int lineCount = 0;
+		
+		sendMessage("/gph");
+		sendMessage("/pbi " + input.size());
 		
 		for (String line : input) {
 			m = p.matcher(line);
@@ -1059,7 +1117,9 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 					addEdge(source, target, GKAEdge.valueOf( edgeName, parsedEdgeWeight ), false);
 				}
 			}
+			sendMessage("/pbu " + ++lineCount);
 		}
+		sendMessage("ERFOLG: Benoetigte Zeit: " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden");
 		return true;
 	}
 	
@@ -1070,32 +1130,38 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		List<String> resultList = new ArrayList<>();
 		String edgeSym = (isDirected())?(DIRECTED_SYMBOL):(UNDIRECTED_SYMBOL);
 		String outLine = null;
+		Set<GKAVertex> singleVertices = new HashSet<>(getGraph().vertexSet());
 		
-//		if (isWeighted()) {
-//			// Kanten und zugehoerige Knoten zuerst
-//			for (GKAEdge e : getGraph().edgeSet()) {
-//				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + " : " + e.getWeight() + ";";
-//				resultList.add(outLine);
-//				
-//			}
-//		} else {
-//			// dito
-			for (GKAEdge e : getGraph().edgeSet()) {
-//				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ";";
-				
-				outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ((e.getName()==null)?(" "):(" " + e.getName())) + ((isWeighted())?(" : " + e.getWeight()):("")) + ";";
-				
-				resultList.add(outLine);
-			}
-//		}
+		long startTime = System.nanoTime();
+		int elemsProcessed = 0;
+		sendMessage("/pbi " + getGraph().edgeSet().size());
 		
-		// alleinstehende Knoten danach
-		for (GKAVertex v : getGraph().vertexSet()) {
-			if (getAllAdjacentsOf(v, false).isEmpty()) {
-				resultList.add(v.getName() + ";");
-			}
+		// zuerst Kanten
+		for (GKAEdge e : getGraph().edgeSet()) {
+			outLine = e.getSource() + " " + edgeSym + " " + e.getTarget() + ((e.getName()==null)?(" "):(" " + e.getName())) + ((isWeighted())?(" : " + e.getWeight()):("")) + ";";
+			resultList.add(outLine);
+			singleVertices.remove(e.getSource());
+			singleVertices.remove(e.getTarget());
+			sendMessage("/pbu " + ++elemsProcessed);
 		}
 		
+//		// danach alleinstehende Knoten
+//		for (GKAVertex v : getGraph().vertexSet()) {
+//			if (getAllAdjacentsOf(v, false).isEmpty()) {
+//				resultList.add(v.getName() + ";");
+//				sendMessage("/pbu " + ++elemsProcessed);
+//			}
+//		}
+		elemsProcessed = 0;
+		sendMessage("/pbi " + singleVertices.size());
+		
+		// danach alleinstehende Knoten
+		for (GKAVertex v : singleVertices) {
+			resultList.add(v.getName() + ";");
+				sendMessage("/pbu " + ++elemsProcessed);
+		}
+		
+		sendMessage("ERFOLG: Benoetigte Zeit: " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden");
 		return resultList;
 	}
 	

@@ -1,5 +1,6 @@
 package main.graphs;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +27,14 @@ public class BFS implements PathFinder {
 		
 		long startTime = System.nanoTime();
 		
-		// hit-counter for graph accesses
-		Integer hitcount = 0;
-	
+		long hitcount = 0;
+		
+		// reset relevant attributes of each vertex and edge of the graph
+		hitcount++; for (GKAVertex v : g.getGraph().vertexSet()) {
+			v.setParent(null);
+			v.setVisited(false);
+		}
+		
 		// queue for the vertices
 		List<GKAVertex> queue = new ArrayList<>();
 				
@@ -46,11 +52,10 @@ public class BFS implements PathFinder {
 
 			List<GKAVertex> adjacents = new ArrayList<>();
 			// if the vertex is in the queue
-			if (g.containsVertex(firstNode)) {
+			if (g.containsVertex(firstNode)) { hitcount++;
 				// get a list of all adjacent vertices of the current looking
 				// Vertex
-				adjacents.addAll(g.getAllAdjacentsOf(firstNode));
-				hitcount += adjacents.size();
+				adjacents.addAll(g.getAllAdjacentsOf(firstNode)); hitcount++;
 			} else {
 				System.out.println("Es existiert kein Weg zum Zielknoten.");
 			}
@@ -142,7 +147,7 @@ public class BFS implements PathFinder {
 		
 		// Number of edges in the way
 		System.out.println("Der Weg hat " + anzahl + " Kanten");
-		System.out.println("Es wurde " + hitcount.toString() + " Mal auf den Graphen zugegriffen");
+		System.out.println("Es wurde " + hitcount + " Mal auf den Graphen zugegriffen");
 		System.out.println("Der Weg ist: ");	
 		
 		// reverse the reverseList to get the way from the StartVertex to the EndVertex
@@ -156,9 +161,8 @@ public class BFS implements PathFinder {
 //		Map<String,String> stats = new HashMap<>();
 //		stats.put("hitcount", hitcount.toString());
 //		stats.put("timeelapsed", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
-		
 		// transmitting stats to graph wrapper for further processment
-		g.sendStats(hitcount.toString(), Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
+		g.sendStats("BFS", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
 		
 		return returnList;
 		

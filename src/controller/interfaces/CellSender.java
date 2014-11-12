@@ -1,4 +1,4 @@
-package controller;
+package controller.interfaces;
 
 public interface CellSender<E> {
 

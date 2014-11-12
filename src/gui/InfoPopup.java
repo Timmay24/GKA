@@ -76,7 +76,7 @@ public class InfoPopup {
 		}
 		
 		infoPopup = new JFrame();
-		infoPopup.setTitle("BFS Tool -- GKA WS 14/15 (Okt. 2014)");
+		infoPopup.setTitle("GKA Graph Visualizer -- GKA WS 14/15");
 		infoPopup.setResizable(false);
 		infoPopup.setType(Type.UTILITY);
 		infoPopup.setBounds(100, 100, 418, 300);

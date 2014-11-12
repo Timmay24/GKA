@@ -1,4 +1,4 @@
-package gui;
+package gui.menus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +24,13 @@ public class JMenuSaveAs extends JMenuItem {
 		this.setText("Speichern unter ...");
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.saveGraph(null);
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						controller.saveGraph(null);
+					}
+				}
+				).start();
 			}
 		});
 	}
