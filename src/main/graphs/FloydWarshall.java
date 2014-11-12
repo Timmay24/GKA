@@ -15,8 +15,13 @@ public class FloydWarshall implements PathFinder {
 	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
 
 		long hitcount = 0;
-		
 		long startTime = System.nanoTime();
+		
+		// Precondition TODO DOC
+		// Graph muss gewichtet sein
+		if (!g.isWeighted()) { hitcount++;
+			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
+		}
 		
 		List<GKAVertex> returnList = new ArrayList<>();
 		
