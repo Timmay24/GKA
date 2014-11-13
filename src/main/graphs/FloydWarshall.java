@@ -7,29 +7,47 @@ import java.util.List;
 
 import main.graphs.interfaces.PathFinder;
 
+/**
+ * @author Louisa
+ *
+ */
 public class FloydWarshall implements PathFinder {
 	
-	//Konstante fuer Unendlich
+	// Konstante fuer Unendlich
 	private static final int INFINITY = Integer.MAX_VALUE/2;
 	
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException {
-
-		long hitcount = 0;
+	/**
+	 * @param g
+	 * @param startNode
+	 * @param endNode
+	 * @return
+	 * @throws IllegalStateException
+	 */
+	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException {
 		long startTime = System.nanoTime();
+		long hitcount = 0;
+		List<GKAVertex> returnList = new ArrayList<>();
+		
 		
 		// Precondition TODO DOC
 		// Graph muss gewichtet sein
-		if (!g.isWeighted()) { hitcount++;
-			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
+		if (!g.isWeighted()) {
+			hitcount++;
+			throw new IllegalStateException("Der Graph muss gewichtet sein.\n"
+					+ "g.isWeighted() returned false");
 		}
 		
-		List<GKAVertex> returnList = new ArrayList<>();
+		
 		
 		//Matrix fuer den kuerzesten Abstand zwischen Knoten
 		Matrix<GKAVertex, GKAVertex, Integer> distanceTable = new Matrix<>();
 		
 		//Matrix fuer den kuerzesten Weg
 		Matrix<GKAVertex, GKAVertex, GKAVertex> sequenceTable = new Matrix<>();
+		
+		
+		
+		
 		
 		/**
 		 * Aufbau der Matritzen:
@@ -39,14 +57,20 @@ public class FloydWarshall implements PathFinder {
 		 */
 		List<GKAVertex> list = new ArrayList<>();
 		list.add(startNode);
-		for(int i = 0; i < list.size(); i++){
-			for(GKAVertex v : g.getAllAdjacentsOf(list.get(i))){
+		for (int i = 0; i < list.size(); i++) {
+			for (GKAVertex v : g.getAllAdjacentsOf(list.get(i))) {
 				hitcount++;
-				if(!list.contains(v)){
+				if (!list.contains(v)) {
 					list.add(v);
 				}
 			}
 		}
+		
+		
+		
+		
+		
+		
 		/**
 		 * Aufbau der Matritzen:
 		 * Die Knotennamen sind Spalten und Zeilennamen. 
@@ -57,28 +81,33 @@ public class FloydWarshall implements PathFinder {
 		 * eine Zahl die 'unendlich' repraesentiert eigefuegt.
 		 * Ansonstens wird die Kantengewicht eingefuegt.
 		 */
-		for(int rowIndex=0; rowIndex<list.size(); rowIndex++){
-			for(int columnIndex=0; columnIndex<list.size(); columnIndex++){
+		for (int rowIndex = 0; rowIndex < list.size(); rowIndex++) {
+			for (int columnIndex = 0; columnIndex < list.size(); columnIndex++) {
 				GKAVertex firstVertex = list.get(rowIndex);
 				GKAVertex secondVertex = list.get(columnIndex);
 				
-				if(firstVertex != secondVertex){
-					if(firstVertex.hasEdgeTo(secondVertex, g)){
+				if (firstVertex != secondVertex) {
+					if (firstVertex.hasEdgeTo(secondVertex, g)) {
 						hitcount++;
 						distanceTable.setValueAt(firstVertex, secondVertex, (g.getEdge(firstVertex, secondVertex).getWeight()));
 						hitcount++;
-					}else{
+					} else {
 						distanceTable.setValueAt(firstVertex, secondVertex, INFINITY);
 					}
 					sequenceTable.setValueAt(firstVertex, secondVertex, secondVertex);
-				}else if(firstVertex == secondVertex){
+				} else if (firstVertex == secondVertex) {
 					distanceTable.setValueAt(firstVertex, secondVertex, null);
 					sequenceTable.setValueAt(firstVertex, secondVertex, null);
 				}
 			}
 		}
+		
+		
+		
+		
+		
 		/**
-		 * aenderung der Matritzen:
+		 * Aenderung der Matritzen:
 		 * i = Zeilenname
 		 * j = Spaltenname
 		 * k = Iterationsdurchgang
@@ -88,14 +117,14 @@ public class FloydWarshall implements PathFinder {
 		 * Ist der Wert des Feldes von i und j groeßer als der Wert des Feldes von i und k 
 		 * plus der Wert von k und j (dij > (dik +dkj)), so werden die Matritzen modifiziert und der Wert des Feldes veraendert.  
 		 */
-		for(int k=0; k<list.size(); k++){
-			for(int i=0; i<list.size(); i++){
-				for(int j=0; j<list.size(); j++){
+		for (int k = 0; k < list.size(); k++) {
+			for (int i = 0; i < list.size(); i++) {
+				for (int j = 0; j < list.size(); j++) {
 					GKAVertex ivertx = list.get(i);
 					GKAVertex jvertx = list.get(j);
 					GKAVertex kvertx = list.get(k);
-					if(i!=j && i!=k && j!=k){
-						if(distanceTable.getValueAt(ivertx, jvertx) > 
+					if (i != j && i != k && j != k) {
+						if (distanceTable.getValueAt(ivertx, jvertx) >
 								(distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx))){
 							distanceTable.setValueAt(ivertx, jvertx, (distanceTable.getValueAt(ivertx, kvertx) + distanceTable.getValueAt(kvertx, jvertx)));
 							//Matrix fuer den kuerzesten Weg modifizieren
@@ -106,13 +135,20 @@ public class FloydWarshall implements PathFinder {
 			}
 		}
 		
+		
+		
+		
 		//damit startNode und endNode nicht geaendert werden koennen
 		GKAVertex firstNode = startNode;
 		GKAVertex lastNode = endNode;
 		
+		
 		List<GKAVertex> reverseReturnList = new ArrayList<>();
 		//erster Knoten des Weges wird hinzugefuegt -> firstNode == startNode
 		reverseReturnList.add(endNode);
+		
+		
+		
 		
 		GKAVertex oneVertexInWay;
 		
@@ -122,23 +158,18 @@ public class FloydWarshall implements PathFinder {
 			lastNode = oneVertexInWay;
 		}
 		
+		
+		
 		//fuege den Zielknoten zur Rueckgabeliste hinzu
 		reverseReturnList.add(startNode);
 		returnList = reverse(reverseReturnList);
 		
-		//Anzahl der Kanten im kuerzesten Weg	
-		int tmp = (returnList.size() - 1);
-		Integer anzahlInInt = new Integer(tmp); 
-		String anzahl = anzahlInInt.toString();
-		System.out.println("Der Weg hat " + anzahl + " Kanten");
 		
+		// Stats uebermitteln
+		g.sendStats("Floyd-Wars.", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
 
-		g.sendStats("Floyd-Wars.", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(reverseReturnList.size() - 1), String.valueOf(hitcount));
-
+		
 		return returnList;
-
-
-				
 	}
 
 }

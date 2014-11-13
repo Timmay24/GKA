@@ -19,29 +19,37 @@ public class Dijkstra implements PathFinder {
 	 * @param startNode Startknoten
 	 * @param endNode Zielknoten
 	 * @return Liste des kuerzesten Weges zwischen Start- und Zielknoten
-	 * @throws IllegalArgumentException
+	 * @throws IllegalStateException
+	 * @throws NoWayException
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalArgumentException, NoWayException {
+	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException, NoWayException {
+		Long startTime = System.nanoTime();
+		List<GKAVertex> resultWay = new ArrayList<>();
 		long hitcount = 0;
 		
-		Long startTime = System.nanoTime();
 		
 		// Precondition TODO DOC
 		// Graph muss gewichtet sein
 		if (!g.isWeighted()) { hitcount++;
-			throw new IllegalArgumentException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
+			throw new IllegalStateException("Der Graph muss gewichtet sein.\n" + "g.isWeighted() returned false");
 		}
+		
+		
+		
 		
 		if (startNode == endNode) { // Falls Start- und Zielknoten identisch sind, kann abgebrochen werden.
 			System.out.println("Startknoten == Zielknoten.");
-			g.sendStats(("Dijkstra"), String.valueOf((System.nanoTime() - startTime) / 1E6D),"X", String.valueOf(hitcount));
+			g.sendStats(("Dijkstra"), String.valueOf((System.nanoTime() - startTime) / 1E6D),"s==t", String.valueOf(hitcount));
 			return Arrays.asList(startNode);
 		}
 		
-		List<GKAVertex> resultWay = new ArrayList<>();
+		
+
 		
 		// Set aller zu besuchenden Knoten (wird aufgebraucht)
 		Set<GKAVertex> nodes = new HashSet<>(g.getGraph().vertexSet()); hitcount++;
+		
+		
 		
 		/* Vorarbeiten 1
 		 * Jede Distanz auf unendlich bzw. Integer.max setzen
@@ -51,16 +59,23 @@ public class Dijkstra implements PathFinder {
 			v.setWeight(Integer.MAX_VALUE);
 		}
 		
+		
+		
+		
 		/* Vorarbeiten 2
 		 * Vorgaenger vom Startknoten auf sich selbst setzen
 		 * Distanz vom Startknoten auf 0 setzen
-		 * Startknoten als besucht markieren
+		 * Startknoten als besucht markieren (technisch gesehen, erst @Zeile )
 		 */
 		startNode.setWeight(0);
 		startNode.setParent(startNode);
 		
+		
+		
 		GKAVertex currentNode = startNode; // Aktuellen Knoten setzen - am Anfang der Startknoten
 
+		
+		
 		// Hauptschleife
 		do {
 			// Unbesuchten Knoten mit der aktuell geringsten Distanz holen und auf besucht setzen
@@ -69,11 +84,15 @@ public class Dijkstra implements PathFinder {
 			nodes.remove(currentNode);
 			
 			
+			
+			
 			// Set bilden, in dem alle, ausser den bereits besuchten, Nachbarknoten enthalten sind
 			Set<GKAVertex> unvisitedAdjacents = new HashSet<>(g.getAllAdjacentsOf(currentNode)); hitcount++; // zuerst alle Adjazenten speichern
 			unvisitedAdjacents.retainAll(nodes); // danach bereits besuchte Adjazenten rausschmeissen (es bleiben die, die noch in nodes ent
 			
 
+			
+			
 			for (GKAVertex adj : unvisitedAdjacents) { // Fuer alle unbesuchten Nachbarn des aktuellen Knotens:
 				
 				// eigene Distanz + Kantengewicht der inzidenten Kante (currentNode <--> Nachbarn) addieren
@@ -85,17 +104,23 @@ public class Dijkstra implements PathFinder {
 					throw new NullPointerException("Kante wurde nicht gefunden.\n ==> " + currentNode + " -- " + adj);
 				}
 				
+				
+				
 				if (adj.getWeight() > distSum) { // Falls Distanz-Summe niedriger, als die aktuelle Distanz des Nachbarn
 					adj.setWeight(distSum); 	 // Distanz des Nachbarn aktualisieren
 					adj.setParent(currentNode);  // und aktuellen Knoten als Vorgaenger des Nachbarn setzen
 				}
 			}
 			
+			
+			
 			if (currentNode == endNode) {   // Zu currentNode wurden zu diesem Zeitpunkt alle inzidenten Kanten untersucht
 				nodes.clear();				// Ist currentNode gleichzeitig das Ziel, kann abgebrochen werden
 			}
 			
+			
 		} while (!nodes.isEmpty()); // Solange es noch unbesuchte Knoten gibt
+		
 		
 		
 		// Weg ueber alle Vorgaenger rekonstruieren
@@ -106,16 +131,15 @@ public class Dijkstra implements PathFinder {
 		// die Schleife wird verlassen, sobald man am Startknoten
 		// angekommen ist (currentNode == currentNode.getParent())
 		
+		
+		
+		
 		if (currentNode == null) // Existiert kein Weg, wird irgendwann der Parent 'null' auftreten und currentNode 'null' gesetzt.
 			throw new NoWayException(startNode, endNode);
 		
 		resultWay.add(currentNode);
 		// dann muss abschliessend der Startknoten manuell der Wegliste hinzugefuegt werden,
 		// da dies, durch die Abbruchbedingung in der Schleife, nicht mehr geschieht.
-		
-//		if (!(resultWay.contains(startNode) || resultWay.contains(endNode)) || resultWay.size() == 0) { 	// Falls kein Weg existiert
-//			throw new NoWayException(startNode, endNode);						// Fehler werfen.
-//		}
 		
 		
 		
