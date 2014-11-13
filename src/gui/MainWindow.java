@@ -336,7 +336,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		txtAESource.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtAESource.setText("");
+				txtAESource.setText(txtAETarget.getText());
+				txtAESource.selectAll();
 			}
 		});
 		txtAESource.setColumns(10);
@@ -373,6 +374,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 					} else {
 						btnAddEdge.doClick();
 						txtAESource.requestFocus();
+						txtAETarget.setText("");
+						txtAEName.setText("");
 					}
 				}
 			}
@@ -380,7 +383,11 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		txtAEName.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtAEName.setText("");
+				txtAEName.setText(
+						txtAESource.getText()
+					+	txtAETarget.getText()
+						);
+				txtAEName.selectAll();
 			}
 		});
 		txtAEName.setBounds(273, 20, 51, 20);
