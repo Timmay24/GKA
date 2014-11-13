@@ -1,0 +1,8 @@
+a -- c ac : 1;
+c -- d cd : 5;
+d -- e de : 4;
+a -- b ab : 2;
+b -- f bf : 10;
+b -- d bd : 3;
+b -- e be : 2;
+b -- c bc : 10;

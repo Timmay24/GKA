@@ -985,12 +985,17 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		return graphType.isWeighted();
 	}
 	
-	/**
+    /**
 	 * Laedt einen Graphen aus einer GKA-Datei.
 	 */
-	public void openGraph() {
+	public void openGraph(String filePath) {
 		try {
-			File inFile = FileHandler.getInFile();				// Dateiobjekt holen
+			File inFile = null;
+			if (filePath == null) {
+				inFile = FileHandler.getInFile();				// Dateiobjekt holen
+			} else {
+				inFile = new File(filePath);
+			}
 			List<String> input = FileHandler.readFile(inFile);	// Datei auslesen
 			if (parseFile(input)) {								// Ergebnisliste parsen
 				currentFilePath = inFile.getAbsolutePath();		// bei Erfolg: Dateipfad merken
@@ -1006,6 +1011,13 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		}
 		sendMessage("/pbe");
 		sendMessage("/gps");
+	}
+
+    /**
+	 * Konfiguration: FileChooser oeffnen.
+	 */
+	public void openGraph() {
+		openGraph(null);
 	}
 	
 	/**

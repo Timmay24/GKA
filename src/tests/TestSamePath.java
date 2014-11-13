@@ -1,12 +1,12 @@
 package tests;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import main.graphs.Dijkstra;
+import main.graphs.FloydWarshall;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.GraphGenerator;
@@ -41,6 +41,25 @@ public class TestSamePath {
 		
 		double timeElapsed = (System.nanoTime() - time) / 1E9D;
 		System.err.println("Vergangene Zeit: " + timeElapsed + " Sekunden.");
+	}
+	
+	@Test
+	public void testDeqFW() throws IllegalStateException, NoWayException {
+		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
+		
+		g.openGraph(".\\src\\ressources\\d.gka".replace("\\", "/"));
+		
+		List<GKAVertex> dijWay = new ArrayList<>();
+		List<GKAVertex> floWay = new ArrayList<>();
+		long time = System.nanoTime();
+		
+		dijWay = Dijkstra.findShortestWay(g, g.getVertex("a"), g.getVertex("e"));
+		floWay = FloydWarshall.findShortestWay(g, g.getVertex("a"), g.getVertex("e"));
+		
+		assertEquals(dijWay, floWay);
+		
+		double timeElapsed = (System.nanoTime() - time) / 1E6D;
+		System.err.println("Vergangene Zeit: " + timeElapsed + " Millisekunden.");
 	}
 
 }
