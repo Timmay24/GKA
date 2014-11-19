@@ -26,6 +26,7 @@ public class Dijkstra implements PathFinder {
 		Long startTime = System.nanoTime();
 		List<GKAVertex> resultWay = new ArrayList<>();
 		long hitcount = 0;
+		boolean searchSuccessful = false;
 		
 		
 		// Precondition TODO DOC
@@ -116,6 +117,7 @@ public class Dijkstra implements PathFinder {
 			
 			if (currentNode == endNode) {   // Zu currentNode wurden zu diesem Zeitpunkt alle inzidenten Kanten untersucht
 				nodes.clear();				// Ist currentNode gleichzeitig das Ziel, kann abgebrochen werden
+				searchSuccessful = true;	// Flag setzen, dass Suche erfolgreich war
 			}
 			
 			
@@ -124,7 +126,7 @@ public class Dijkstra implements PathFinder {
 		
 		
 		// Weg ueber alle Vorgaenger rekonstruieren
-		while (currentNode != null && currentNode.getParent() != currentNode) {
+		while (searchSuccessful && currentNode != null && currentNode.getParent() != currentNode) {
 			resultWay.add(currentNode);
 			currentNode = currentNode.getParent();
 		}
