@@ -15,7 +15,6 @@ import org.junit.Test;
 
 public class TestGKAGraph {
 
-	@Ignore
 	@Test
 	public void testGetAllAdjacentsOf() {
 		
@@ -43,7 +42,7 @@ public class TestGKAGraph {
 	    l.add(v2);
 	    l.add(v3);
 	     
-	    assertEquals(l, g1.getAllAdjacentsOf(v1));
+	    assertTrue(g1.getAllAdjacentsOf(v1).containsAll(l));
 	
 		
 	    /*Test 2
@@ -116,10 +115,8 @@ public class TestGKAGraph {
 	    l1.add(b);
 	    l1.add(h);
 	     
-	    assertEquals(l1, graph1.getAllAdjacentsOf(a));
+	    assertTrue(graph1.getAllAdjacentsOf(a).containsAll(l1));
 	 
-	     
-	     
 	     
 	     
 
@@ -181,14 +178,47 @@ public class TestGKAGraph {
 	     
 	    List<GKAVertex> l3 = new ArrayList<>();
 	     
-	    //all adjacent vertices of a vertix with one outgoing edge --> return a list with one vertex(-> l2)
-	    assertEquals(l2, graph1.getAllAdjacentsOf(a2));
+	    //all adjacent vertices of a vertex with one outgoing edge --> return a list with one vertex(-> l2)
+	    assertTrue(graph2.getAllAdjacentsOf(a2).containsAll(l2));
 	     
-	    //all adjacent vertices of a vertix without any edges --> return empty list (-> l3)
-	    assertEquals(l3, graph1.getAllAdjacentsOf(a10));
+	    //all adjacent vertices of a vertex without any edges --> return empty list (-> l3)
+	    assertEquals(graph2.getAllAdjacentsOf(a10).size(), l3.size());
+	    assertTrue(graph2.getAllAdjacentsOf(a10).containsAll(l3));
 	     
 	     
 	}
+	
+	@Test
+	public void testEquals() {
+		
+		GKAGraph g1 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+		GKAGraph g2 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+		GKAGraph g3 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+		GKAGraph g4 = GKAGraph.valueOf(GraphType.UNDIRECTED_UNWEIGHTED);
+		
+		g1.addEdge("v1", "v2", GKAEdge.valueOf("e1", 1));
+		g1.addEdge("v3", "v4", GKAEdge.valueOf("e2", 1));
+		g1.addEdge("v4", "v5", GKAEdge.valueOf("e3", 1));
+		g1.addVertex("v6");
+		g1.addVertex("v7");
+		
+		g2.addEdge("v1", "v2", GKAEdge.valueOf("e1", 1));
+		g2.addEdge("v3", "v4", GKAEdge.valueOf("e2", 1));
+		g2.addEdge("v4", "v5", GKAEdge.valueOf("e3", 1));
+		g2.addVertex("v6");
+		g2.addVertex("v7");
+		
+		g3.addEdge("v1", "v2", GKAEdge.valueOf("e1", 1));
+		g3.addEdge("v4", "v3", GKAEdge.valueOf("e2", 1));
+		g3.addEdge("v4", "v5", GKAEdge.valueOf("e3", 1));
+		g3.addVertex("v6");
+		g3.addVertex("v7");
+		
+		assertEquals(g1, g2);
+		assertNotEquals(g1, g3);
+		assertNotEquals(g2, g4);
+	}
+	
 	
 
 }

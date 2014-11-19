@@ -886,7 +886,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			
 			sendMessage(wayString.substring(0, wayString.length() - 4));
 			sendMessage("\n");
-		} catch (NoWayException e) {
+		} catch (IllegalStateException | NoWayException e) {
 			e.printStackTrace();
 			sendMessage("FEHLER: " + e.getMessage());
 		}
@@ -1259,19 +1259,34 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	}
 
 	
-	/*TODO: equals() selbst implementieren, da unbekannt ist,
-			wie das equals vom JGraph arbeitet.
-	*/
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
 	public boolean equals(Object other) {
 		if (this == other)
 			return true;
 		if (other == null || !(other instanceof GKAGraph))
 			return false;
 		
-		// temporaer delegiert
-		return (this.getGraph().equals(
-				((GKAGraph) other).getGraph()
-				));
+		GKAGraph graph = (GKAGraph) other;
+		
+		if (this.getGraphType() != graph.getGraphType())
+			return false;
+		
+		if (this.getGraph().edgeSet().size() != graph.getGraph().edgeSet().size())
+			return false;
+		
+		if (this.getGraph().vertexSet().size() != graph.getGraph().vertexSet().size())
+			return false;
+		
+		if (!this.getGraph().edgeSet().containsAll(graph.getGraph().edgeSet()))
+			return false;
+		
+		if (!this.getGraph().vertexSet().containsAll(graph.getGraph().vertexSet()))
+			return false;
+		
+		return true;
 	}
 	
 	
