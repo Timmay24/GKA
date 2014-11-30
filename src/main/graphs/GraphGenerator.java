@@ -58,13 +58,13 @@ public class GraphGenerator implements Runnable {
 		
 		// 1. Weg (beginnend mit v0)
 		for (int i = 0; i < (desiredVertexCount / 2) - 1; i++) {
-			g.addEdge(PREFIX_VERTEX + String.valueOf(i), PREFIX_VERTEX + String.valueOf(i + 1), GKAEdge.valueOf(PREFIX_EDGE + String.valueOf(i), minWeight), false);
+			g.addEdge(PREFIX_VERTEX + String.valueOf(i), PREFIX_VERTEX + String.valueOf(i + 1), PREFIX_EDGE + String.valueOf(i), minWeight, false);
 			edgeIndex++;
 		}
 		
 		// 2. Weg (beginnend mit v(desiredVertexCount / 2))
 		for (int i = (desiredVertexCount / 2); i < desiredVertexCount; i++) {
-			g.addEdge(PREFIX_VERTEX + String.valueOf(i), PREFIX_VERTEX + String.valueOf(i + 1), GKAEdge.valueOf(PREFIX_EDGE + String.valueOf(i), minWeight), false);
+			g.addEdge(PREFIX_VERTEX + String.valueOf(i), PREFIX_VERTEX + String.valueOf(i + 1), PREFIX_EDGE + String.valueOf(i), minWeight, false);
 			edgeIndex++;
 		}
 		
@@ -73,7 +73,7 @@ public class GraphGenerator implements Runnable {
 			int target = (int) (Math.random() * (desiredVertexCount - 1));
 			int source = (int) (Math.random() * (desiredVertexCount - 1));
 			double weight = ((Math.random() * desiredEdgeCount) + ((desiredVertexCount / 2) + 1) * minWeight);
-			g.addEdge( PREFIX_VERTEX + String.valueOf(source), PREFIX_VERTEX + String.valueOf(target), GKAEdge.valueOf(PREFIX_EDGE + String.valueOf(++edgeIndex), (int) weight), false );
+			g.addEdge(PREFIX_VERTEX + String.valueOf(source), PREFIX_VERTEX + String.valueOf(target), PREFIX_EDGE + String.valueOf(++edgeIndex), (int) weight, false );
 			g.sendMessage("/pbu " + i);
 		}
 		

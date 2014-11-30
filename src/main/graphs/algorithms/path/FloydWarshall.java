@@ -1,11 +1,16 @@
-package main.graphs;
+package main.graphs.algorithms.path;
 
 import static main.graphs.Utils.reverse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.graphs.interfaces.PathFinder;
+import com.google.common.base.Preconditions;
+
+import main.graphs.GKAGraph;
+import main.graphs.GKAVertex;
+import main.graphs.Matrix;
+import main.graphs.algorithms.interfaces.PathFinder;
 
 /**
  * @author Louisa
@@ -22,8 +27,15 @@ public class FloydWarshall implements PathFinder {
 	 * @param endNode
 	 * @return
 	 * @throws IllegalStateException
+	 * //TODO update doc tag 
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException {
+	@Override
+	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException {
+		
+		Preconditions.checkNotNull(g);
+		Preconditions.checkNotNull(startNode);
+		Preconditions.checkNotNull(endNode);
+		
 		long startTime = System.nanoTime();
 		long hitcount = 0;
 		List<GKAVertex> returnList = new ArrayList<>();
@@ -172,4 +184,8 @@ public class FloydWarshall implements PathFinder {
 		return returnList;
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
 }

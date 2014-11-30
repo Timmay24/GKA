@@ -1,4 +1,4 @@
-package main.graphs;
+package main.graphs.algorithms.path;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,10 +7,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import main.graphs.GKAEdge;
+import main.graphs.GKAGraph;
+import main.graphs.GKAVertex;
+import main.graphs.Utils;
+import main.graphs.algorithms.interfaces.PathFinder;
 import main.graphs.exceptions.NoWayException;
-import main.graphs.interfaces.PathFinder;
-
-import com.google.common.base.Preconditions;
+import static com.google.common.base.Preconditions.*;
 
 public class Dijkstra implements PathFinder {
 
@@ -21,12 +24,18 @@ public class Dijkstra implements PathFinder {
 	 * @return Liste des kuerzesten Weges zwischen Start- und Zielknoten
 	 * @throws IllegalStateException
 	 * @throws NoWayException
+	 * //TODO update doc tag
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException, NoWayException {
+	@Override
+	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException, NoWayException {
 		Long startTime = System.nanoTime();
 		List<GKAVertex> resultWay = new ArrayList<>();
 		long hitcount = 0;
 		boolean searchSuccessful = false;
+		
+		checkNotNull(g);
+		checkNotNull(startNode);
+		checkNotNull(endNode);
 		
 		
 		// Precondition TODO DOC
@@ -49,7 +58,8 @@ public class Dijkstra implements PathFinder {
 		
 		// Set aller zu besuchenden Knoten (wird aufgebraucht)
 		Set<GKAVertex> nodes = new HashSet<>(g.getGraph().vertexSet()); hitcount++;
-		
+		if (nodes.isEmpty()) // unnatuerlicher Abbruch, zu dem es nur dann kommt, wenn noch keine Knoten im Graphen existieren
+			return resultWay;
 		
 		
 		/* Vorarbeiten 1
@@ -174,5 +184,10 @@ public class Dijkstra implements PathFinder {
 			}
 		}
 		return minNode;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
 	}
 }

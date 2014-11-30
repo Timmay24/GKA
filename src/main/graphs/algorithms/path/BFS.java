@@ -1,12 +1,14 @@
-package main.graphs;
+package main.graphs.algorithms.path;
 
 import static main.graphs.Utils.reverse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import main.graphs.GKAGraph;
+import main.graphs.GKAVertex;
+import main.graphs.algorithms.interfaces.PathFinder;
 import main.graphs.exceptions.NoWayException;
-import main.graphs.interfaces.PathFinder;
 
 /**
  * @author Louisa und Tim
@@ -21,9 +23,11 @@ public class BFS implements PathFinder {
 	 * @param startNode is the startvertex
 	 * @param endNode is the endvertex
 	 * @return the sortest way from the start vertex to the end vertex
-	 * @throws NoWayException 
+	 * @throws NoWayException
+	 * //TODO update doc tag
 	 */
-	public static List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws NoWayException {
+	@Override
+	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws NoWayException {
 		
 		long startTime = System.nanoTime();
 		
@@ -166,5 +170,10 @@ public class BFS implements PathFinder {
 		
 		return returnList;
 		
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
 	}
 }

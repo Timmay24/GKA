@@ -4,6 +4,8 @@ import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GraphType;
 import main.graphs.GKAVertex;
+import main.graphs.algorithms.interfaces.FlowCalculator;
+import main.graphs.algorithms.interfaces.PathFinder;
 
 import org.jgrapht.ListenableGraph;
 
@@ -158,21 +160,27 @@ public class GraphController implements GKAController {
 	}
 
 
-	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge, boolean verbose) {
-		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, verbose);
-	}
+//	private void addEdge(String sourceVertex, String targetVertex, GKAEdge edge, boolean verbose) {
+//		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, verbose);
+//	}
+//	
+//	@Override
+//	private void addEdge(String sourceVertex, String targetVertex, GKAEdge edge) {
+//		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, true);
+//	}
 	
 	@Override
-	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge) {
-		getGraphWrapper().addEdge(sourceVertex, targetVertex, edge, true);
+	public void addEdge(String sourceVertex, String targetVertex, String newEdgeName) {
+		getGraphWrapper().addEdge(sourceVertex, targetVertex, newEdgeName, true);
 	}
 	
-	public void findShortestWay(Object algorithm, String startVertex, String goalVertex) {
+	public void findShortestWay(PathFinder algorithm, String startVertex, String goalVertex) {
 		getGraphWrapper().findShortestWay(algorithm, startVertex, goalVertex);
 	}
-//	public void findShortestWay(String startVertex, String goalVertex) {
-//		getGraphWrapper().findShortestWay(startVertex, goalVertex);
-//	}
+	
+	public Integer calculateMaxFlow(FlowCalculator algorithm, String sourceVertex, String sinkVertex) {
+		return getGraphWrapper().calculateMaxFlow(algorithm, sourceVertex, sinkVertex);
+	}
 	
 	public boolean isWeighted() {
 		return getGraphWrapper().isWeighted();
@@ -181,5 +189,4 @@ public class GraphController implements GKAController {
 	public boolean isDirected() {
 		return getGraphWrapper().isDirected();
 	}
-	
 }

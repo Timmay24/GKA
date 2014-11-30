@@ -70,14 +70,16 @@ public interface GKAController extends MessageSender, CellSender<mxCell>, Adapte
 	 */
 	public void addVertex(String vertexName);
 	
-	/**
-	 * Fuegt Kanten hinzu.
-	 * 
-	 * @param sourceVertex
-	 * @param targetVertex
-	 * @param edge
-	 */
-	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge);
+//	/**
+//	 * Fuegt Kanten hinzu.
+//	 * 
+//	 * @param sourceVertex
+//	 * @param targetVertex
+//	 * @param edge
+//	 */
+//	public void addEdge(String sourceVertex, String targetVertex, GKAEdge edge);
+	
+	public void addEdge(String sourceVertex, String targetVertex, String newEdgeName);
 	
 	
 	/**

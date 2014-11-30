@@ -2,7 +2,7 @@ package main.graphs.exceptions;
 
 import main.graphs.GKAVertex;
 
-public class NoWayException extends Exception {
+public class NoWayException extends RuntimeException {
 
 	private static final long serialVersionUID = -8468728089378970529L;
 

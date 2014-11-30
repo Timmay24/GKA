@@ -146,6 +146,7 @@ public class GKAVertex implements Comparable<GKAVertex> {
 	 */
 	@Override
 	public int compareTo(GKAVertex other) {
+		// Inkonsistente Beziehung zwischen equals und compareTo in Kauf genommen
 		return this.getWeight().compareTo(other.getWeight());
 	}
 

@@ -1,8 +1,10 @@
 package gui;
 
-import gui.menus.JMenuOpen;
-import gui.menus.JMenuSave;
-import gui.menus.JMenuSaveAs;
+import gui.menu.JMenuOpen;
+import gui.menu.JMenuSave;
+import gui.menu.JMenuSaveAs;
+import gui.panel.FlowCalculatorPanel;
+import gui.panel.PathFinderPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,15 +20,20 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.DefaultComboBoxModel;
+
+
+
+
+//import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+//import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
@@ -36,15 +43,20 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
+//import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
-import main.graphs.Algorithms;
+
+
+
+
+//import main.graphs.Algorithms;
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
+import main.graphs.algorithms.interfaces.FlowCalculator;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -60,26 +72,34 @@ import controller.interfaces.StatsListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import org.eclipse.wb.swing.FocusTraversalOnArray;
+//import org.eclipse.wb.swing.FocusTraversalOnArray;
+
+
+
+
+
+import javax.swing.JTabbedPane;
+
+import static com.google.common.base.Preconditions.*;
 
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
 	private GraphController graphController;
-	private int[] verNo = {0,8,112};
+	private int[] verNo = {0,8,123};
 	private JButton btnAddEdge;
-	private JButton btnAddVertex;
-	private JButton btnSearchStart;
-	private JComboBox<String> cmbSearchAlgo;
+//	private JButton btnAddVertex;
+//	private JButton btnSearchStart;
+//	private JComboBox<String> cmbSearchAlgo;
 	private JFrame mainFrame;
 	private JLabel label;
 	private JLabel label_1;
-	private JLabel lblAlgorithmus;
+//	private JLabel lblAlgorithmus;
 	private JLabel lblGewicht;
 	private JLabel lblName;
-	private JLabel lblNewLabel;
+//	private JLabel lblNewLabel;
 	private JLabel lblProcessing;
-	private JLabel lblStart;
-	private JLabel lblZiel;
+//	private JLabel lblStart;
+//	private JLabel lblZiel;
 	private JMenu mnFile;
 	private JMenu mnGerichtet;
 	private JMenu mnLayout;
@@ -88,12 +108,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenu mnStatistik;
 	private JMenu mnUngerichtet;
 	private JMenuBar menuBar;
-	private JMenuItem mntmAnzeigen;
+	private JMenuItem mntmPathFinderStats;
 	private JMenuItem mntmApplyCircleLayout;
 	private JMenuItem mntmApplyHierarchyLayout;
 	private JMenuItem mntmBeispiel;
 	private JMenuItem mntmClearReport;
-	private JMenuItem mntmFarbenReset;
+	private JMenuItem mntmResetColors;
 	private JMenuItem mntmGerichtetGewichtet;
 	private JMenuItem mntmGerichtetUngewichtet;
 	private JMenuItem mntmInfo;
@@ -106,8 +126,9 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenuItem mntmZufallsgraph;
 	private JPanel edgePanel;
 	private JPanel graphPanel;
-	private JPanel pathPanel;
-	private JPanel vertexPanel;
+	private PathFinderPanel pathFinderPanel;
+	private FlowCalculatorPanel flowCalculatorPanel;
+//	private JPanel vertexPanel;
 	private JPopupMenu pmRClickReport;
 	private JProgressBar progressBar;
 	private JScrollPane reportPane;
@@ -117,18 +138,22 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JSeparator separator_3;
 	private JSpinner spinAEWeight;
 	private JTextArea reportTextArea;
-	private JTextField txtAddVertex;
+//	private JTextField txtAddVertex;
 	private JTextField txtAEName;
 	private JTextField txtAESource;
 	private JTextField txtAETarget;
 	private JTextField txtSearchGoal;
-	private JTextField txtSearchStart;
-	private StatsWindow statsWindow;
+//	private JTextField txtSearchStart;
+	private PathFinderStatsWindow statsWindow;
+	private int			addVertexCounter = 0;
 
 	
 	//TODO DEBUG UTIL
 	private JTextArea taDebug;
 	private JScrollPane scrDebugPane;
+	private JTabbedPane tabsAnalysing;
+	private JMenuItem mntmAddVertex;
+	private JMenu mnKnoten;
 
 	
 
@@ -161,7 +186,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	public MainWindow() {
 		graphController = new GraphController();
-		statsWindow = new StatsWindow();
+		statsWindow = new PathFinderStatsWindow();
 		initialize();
 		
 		graphController.addMessageListener(this); // Fuer den Empfang von Nachrichten
@@ -181,6 +206,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 * @param graphType
 	 */
 	private void newGraph(GraphType graphType) {
+		checkNotNull(graphType);
 		graphController.newGraph(graphType);
 	}
 	
@@ -189,6 +215,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveAdapterUpdate(mxGraphComponent graphComponent) {
+		checkNotNull(graphComponent);
 		graphPanel.removeAll();
 		graphPanel.add(graphComponent);
 		mainFrame.repaint();
@@ -275,50 +302,50 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		pmRClickReport.add(mntmClearReport);
 		
-		vertexPanel = new JPanel();
-		vertexPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Knoten hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		vertexPanel.setBounds(10, 343, 156, 56);
-		mainFrame.getContentPane().add(vertexPanel);
-		vertexPanel.setLayout(null);
-		
-		lblNewLabel = new JLabel("Name:");
-		lblNewLabel.setBounds(10, 23, 37, 14);
-		vertexPanel.add(lblNewLabel);
-		
-		txtAddVertex = new JTextField();
-		txtAddVertex.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnAddVertex.doClick();
-				
-			}
-		});
-		txtAddVertex.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				txtAddVertex.setText("");
-			}
-		});
-		txtAddVertex.setBounds(46, 20, 51, 20);
-		vertexPanel.add(txtAddVertex);
-		txtAddVertex.setColumns(10);
-		
-		btnAddVertex = new JButton("");
-		btnAddVertex.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/add.png")));
-		btnAddVertex.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!txtAddVertex.getText().isEmpty()) {
-					graphController.addVertex(txtAddVertex.getText());
-					txtAddVertex.setText("");
-				}
-			}
-		});
-		btnAddVertex.setBounds(107, 19, 37, 23);
-		vertexPanel.add(btnAddVertex);
-		vertexPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblNewLabel, txtAddVertex, btnAddVertex}));
+//		vertexPanel = new JPanel();
+//		vertexPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Knoten hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
+//		vertexPanel.setBounds(10, 343, 156, 56);
+//		mainFrame.getContentPane().add(vertexPanel);
+//		vertexPanel.setLayout(null);
+//		
+//		lblNewLabel = new JLabel("Name:");
+//		lblNewLabel.setBounds(10, 23, 37, 14);
+//		vertexPanel.add(lblNewLabel);
+//		
+//		txtAddVertex = new JTextField();
+//		txtAddVertex.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				btnAddVertex.doClick();
+//				
+//			}
+//		});
+//		txtAddVertex.addFocusListener(new FocusAdapter() {
+//			@Override
+//			public void focusGained(FocusEvent arg0) {
+//				txtAddVertex.setText("");
+//			}
+//		});
+//		txtAddVertex.setBounds(46, 20, 51, 20);
+//		vertexPanel.add(txtAddVertex);
+//		txtAddVertex.setColumns(10);
+//		
+//		btnAddVertex = new JButton("");
+//		btnAddVertex.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/add.png")));
+//		btnAddVertex.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				if (!txtAddVertex.getText().isEmpty()) {
+//					graphController.addVertex(txtAddVertex.getText());
+//					txtAddVertex.setText("");
+//				}
+//			}
+//		});
+//		btnAddVertex.setBounds(107, 19, 37, 23);
+//		vertexPanel.add(btnAddVertex);
+//		vertexPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{lblNewLabel, txtAddVertex, btnAddVertex}));
 		
 		edgePanel = new JPanel();
 		edgePanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Kanten hinzuf\u00FCgen", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		edgePanel.setBounds(176, 343, 498, 56);
+		edgePanel.setBounds(10, 348, 476, 56);
 		mainFrame.getContentPane().add(edgePanel);
 		edgePanel.setLayout(null);
 		
@@ -328,24 +355,26 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		
 		txtAESource = new JTextField();
 		txtAESource.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)
+			{
 				if (!txtAESource.getText().isEmpty())
 					txtAETarget.requestFocus();
 			}
 		});
 		txtAESource.addFocusListener(new FocusAdapter() {
 			@Override
-			public void focusGained(FocusEvent arg0) {
+			public void focusGained(FocusEvent arg0)
+			{
 				txtAESource.setText(txtAETarget.getText());
 				txtAESource.selectAll();
 			}
 		});
 		txtAESource.setColumns(10);
-		txtAESource.setBounds(57, 20, 51, 20);
+		txtAESource.setBounds(57, 20, 37, 20);
 		edgePanel.add(txtAESource);
 		
 		label_1 = new JLabel("Target:");
-		label_1.setBounds(118, 23, 37, 14);
+		label_1.setBounds(104, 23, 37, 14);
 		edgePanel.add(label_1);
 		
 		txtAETarget = new JTextField();
@@ -362,7 +391,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			}
 		});
 		txtAETarget.setColumns(10);
-		txtAETarget.setBounds(165, 20, 51, 20);
+		txtAETarget.setBounds(151, 20, 37, 20);
 		edgePanel.add(txtAETarget);
 		
 		txtAEName = new JTextField();
@@ -390,12 +419,12 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				txtAEName.selectAll();
 			}
 		});
-		txtAEName.setBounds(273, 20, 51, 20);
+		txtAEName.setBounds(236, 20, 62, 20);
 		edgePanel.add(txtAEName);
 		txtAEName.setColumns(10);
 		
 		lblName = new JLabel("Name:");
-		lblName.setBounds(230, 23, 37, 14);
+		lblName.setBounds(198, 23, 37, 14);
 		edgePanel.add(lblName);
 		
 		spinAEWeight = new JSpinner();
@@ -409,11 +438,11 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			}
 		});
 		spinAEWeight.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
-		spinAEWeight.setBounds(390, 20, 51, 20);
+		spinAEWeight.setBounds(364, 20, 46, 20);
 		edgePanel.add(spinAEWeight);
 		
 		lblGewicht = new JLabel("Gewicht:");
-		lblGewicht.setBounds(334, 23, 46, 14);
+		lblGewicht.setBounds(308, 23, 46, 14);
 		edgePanel.add(lblGewicht);
 		
 		btnAddEdge = new JButton("");
@@ -426,91 +455,14 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				Integer edgeWeight = (Integer) spinAEWeight.getModel().getValue();
 				
 				if (graphController.isWeighted()) {
-					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName, edgeWeight), false);
+					graphController.getGraphWrapper().addEdge(source, target, edgeName, edgeWeight, false);
 				} else {
-					graphController.addEdge(source, target, GKAEdge.valueOf(edgeName), false);
+					graphController.getGraphWrapper().addEdge(source, target, edgeName, false);
 				}
 			}
 		});
-		btnAddEdge.setBounds(451, 19, 37, 23);
+		btnAddEdge.setBounds(420, 19, 46, 23);
 		edgePanel.add(btnAddEdge);
-		
-		pathPanel = new JPanel();
-		pathPanel.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Wegfindung (k\u00FCrzester Weg)", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(64, 64, 64)));
-		pathPanel.setBounds(496, 410, 288, 125);
-		mainFrame.getContentPane().add(pathPanel);
-		pathPanel.setLayout(null);
-		
-		txtSearchStart = new JTextField();
-		txtSearchStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (!txtSearchStart.getText().isEmpty()) {
-					txtSearchGoal.requestFocus();
-				}
-			}
-		});
-		txtSearchStart.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				txtSearchStart.setText("");
-			}
-		});
-		txtSearchStart.setBounds(88, 53, 68, 20);
-		pathPanel.add(txtSearchStart);
-		txtSearchStart.setColumns(10);
-		
-		txtSearchGoal = new JTextField();
-		txtSearchGoal.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				btnSearchStart.doClick();
-			}
-		});
-		txtSearchGoal.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				txtSearchGoal.setText("");
-			}
-		});
-		txtSearchGoal.setBounds(209, 53, 68, 20);
-		pathPanel.add(txtSearchGoal);
-		txtSearchGoal.setColumns(10);
-		
-		lblStart = new JLabel("Start:");
-		lblStart.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblStart.setBounds(10, 56, 68, 14);
-		pathPanel.add(lblStart);
-		
-		lblZiel = new JLabel("Ziel:");
-		lblZiel.setBounds(179, 56, 20, 14);
-		pathPanel.add(lblZiel);
-		
-		btnSearchStart = new JButton("suchen");
-		btnSearchStart.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/binocular.png")));
-		btnSearchStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String start = txtSearchStart.getText();
-				String goal = txtSearchGoal.getText();
-				
-				if (!(start.isEmpty() || goal.isEmpty())) {
-					graphController.findShortestWay(
-							Algorithms.getAlgorithm(cmbSearchAlgo.getSelectedIndex()),
-							start,
-							goal);
-				}
-			}
-		});
-		btnSearchStart.setBounds(88, 84, 189, 23);
-		pathPanel.add(btnSearchStart);
-		
-		cmbSearchAlgo = new JComboBox<>();
-		cmbSearchAlgo.setModel(new DefaultComboBoxModel<String>(new String[] {"BFS", "Dijkstra", "Floyd-Warshall"}));
-		cmbSearchAlgo.setBounds(88, 22, 189, 20);
-		pathPanel.add(cmbSearchAlgo);
-		
-		lblAlgorithmus = new JLabel("Algorithmus:");
-		lblAlgorithmus.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblAlgorithmus.setBounds(10, 24, 68, 14);
-		pathPanel.add(lblAlgorithmus);
 		
 		scrDebugPane = new JScrollPane();
 		scrDebugPane.setBounds(10, 596, 178, 90);
@@ -519,6 +471,16 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		taDebug = new JTextArea();
 		taDebug.setFont(new Font("Consolas", Font.PLAIN, 11));
 		scrDebugPane.setViewportView(taDebug);
+		
+		// Tabs der Algorithmen
+		pathFinderPanel = new PathFinderPanel(graphController, reportTextArea);
+		flowCalculatorPanel = new FlowCalculatorPanel(graphController, reportTextArea);
+		
+		tabsAnalysing = new JTabbedPane(JTabbedPane.TOP);
+		tabsAnalysing.setBounds(496, 348, 288, 187);
+		tabsAnalysing.addTab("Wegfindung", pathFinderPanel);
+		tabsAnalysing.addTab("Flussberechnung", flowCalculatorPanel);
+		mainFrame.getContentPane().add(tabsAnalysing);
 		
 		menuBar = new JMenuBar();
 		mainFrame.setJMenuBar(menuBar);
@@ -658,10 +620,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		separator_3.setForeground(Color.LIGHT_GRAY);
 		mnLayout.add(separator_3);
 		
-		mntmFarbenReset = new JMenuItem("F\u00E4rbungen zur\u00FCcksetzen");
-		mntmFarbenReset.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/icon_reset.png")));
-		mnLayout.add(mntmFarbenReset);
-		mntmFarbenReset.addActionListener(new ActionListener() {
+		mntmResetColors = new JMenuItem("F\u00E4rbungen zur\u00FCcksetzen");
+		mntmResetColors.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/icon_reset.png")));
+		mnLayout.add(mntmResetColors);
+		mntmResetColors.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
 					@Override
@@ -673,17 +635,33 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			}
 		});
 		
+		mnKnoten = new JMenu("Knoten");
+		menuBar.add(mnKnoten);
+		
+		mntmAddVertex = new JMenuItem("hinzuf\u00FCgen");
+		mntmAddVertex.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String vertexName = (String) JOptionPane.showInputDialog(null, "Knotenname:", "Knoten hinzuf\u00FCgen", JOptionPane.PLAIN_MESSAGE, null, null, "v" + addVertexCounter);
+				if (vertexName != null && !vertexName.isEmpty()) {
+					graphController.addVertex(vertexName);
+					addVertexCounter++;
+				}
+			}
+		});
+		mntmAddVertex.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/add.png")));
+		mnKnoten.add(mntmAddVertex);
+		
 		mnStatistik = new JMenu("Statistik");
 		menuBar.add(mnStatistik);
 		
-		mntmAnzeigen = new JMenuItem("Anzeigen");
-		mntmAnzeigen.addActionListener(new ActionListener() {
+		mntmPathFinderStats = new JMenuItem("Wegfindung");
+		mntmPathFinderStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				statsWindow.show();
 			}
 		});
-		mntmAnzeigen.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/stats.png")));
-		mnStatistik.add(mntmAnzeigen);
+		mntmPathFinderStats.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/stats.png")));
+		mnStatistik.add(mntmPathFinderStats);
 		
 		mnQuestionmark = new JMenu("");
 		mnQuestionmark.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/question_blue.png")));
@@ -730,10 +708,13 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	}
 	
 	private void report(String message) {
+		checkNotNull(message);
 		reportTextArea.append(message + "\n");
 	}
 	
 	private static void addPopup(Component component, final JPopupMenu popup) {
+		checkNotNull(component);
+		checkNotNull(popup);
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
@@ -757,7 +738,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	@Override
 	public void receiveCell(mxCell cell, MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)
@@ -765,10 +745,9 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveStats(String... stats) {
-		if (stats != null) {
-			statsWindow.receiveStats(stats);
-			statsWindow.show();
-		}
+		checkNotNull(stats);
+		statsWindow.receiveStats(stats);
+		statsWindow.show();
 	}
 	
 	
@@ -777,9 +756,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveStartNode(String nodeName) {
-		if (nodeName != null) {
-			txtSearchStart.setText(nodeName);
-		}
+		if (nodeName == null)
+			pathFinderPanel.setStart("");
+		else
+			pathFinderPanel.setStart(nodeName);
 	}
 
 	/* (non-Javadoc)
@@ -787,9 +767,10 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveEndNode(String nodeName) {
-		if (nodeName != null) {
-			txtSearchGoal.setText(nodeName);
-		}
+		if (nodeName == null)
+			pathFinderPanel.setGoal("");
+		else
+			pathFinderPanel.setGoal(nodeName);
 	}
 
 	

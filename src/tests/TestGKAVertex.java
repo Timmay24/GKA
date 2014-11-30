@@ -50,11 +50,22 @@ public class TestGKAVertex {
 	@Test
 	public void testHasEdgeTo(){
 		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_UNWEIGHTED);
-		GKAEdge eV1V3 = GKAEdge.valueOf("V1V3");
-		g.addVertex(v1);
-		g.addVertex(v3);
-		g.addVertex(v4);
-		g.addEdge(v1, v3, eV1V3);
+//		g.addVertex(v1);
+//		g.addVertex(v3);
+//		g.addVertex(v4);
+//		g.addEdge(v1, v3, "eV1V3");
+		
+		g.addVertex("v1"); 
+		g.addVertex("v3"); 
+		g.addVertex("v4");
+		
+		g.addEdge("v1", "v3", "eV1V3");
+		
+		v1 = g.getVertex("v1");
+		v3 = g.getVertex("v3");
+		v4 = g.getVertex("v4");
+		
+		GKAEdge eV1V3 = g.getEdge("eV1V3");
 		
 		assertEquals(true, v1.hasEdgeTo(v3, g));
 		assertEquals(false, v1.hasEdgeTo(v4, g));

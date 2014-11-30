@@ -9,13 +9,13 @@ public class TestGKAEdge {
 
 	@Test
 	public void testEquals() {
-		GKAEdge e1 = GKAEdge.valueOf("test");
-		GKAEdge e2 = GKAEdge.valueOf("test");
-		GKAEdge e3 = GKAEdge.valueOf("test2");
-		GKAEdge e4 = GKAEdge.valueOf("test3", 2);
-		GKAEdge e5 = GKAEdge.valueOf("test3", 2);
-		GKAEdge e6 = GKAEdge.valueOf("test3", null);
-		GKAEdge e7 = GKAEdge.valueOf("test3", 3);
+		GKAEdge e1 = GKAEdge.valueOf("test", 1);
+		GKAEdge e2 = GKAEdge.valueOf("test", 1);
+		GKAEdge e3 = GKAEdge.valueOf("test2", 2, 1);
+		GKAEdge e4 = GKAEdge.valueOf("test3", 2, 2);
+		GKAEdge e5 = GKAEdge.valueOf("test3", 2, 2);
+		GKAEdge e6 = GKAEdge.valueOf("test3", null, 2);
+		GKAEdge e7 = GKAEdge.valueOf("test3", 3, 2);
 		
 		assertEquals(e1,e2);
 		assertEquals(e4,e5);

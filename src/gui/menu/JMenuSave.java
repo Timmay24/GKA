@@ -1,33 +1,32 @@
-package gui.menus;
+package gui.menu;
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JMenuItem;
 
+import main.graphs.GKAGraph;
 import controller.FileHandler;
 import controller.GKAController;
 
-
-
-public class JMenuSaveAs extends JMenuItem {
+public class JMenuSave extends JMenuItem {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 514649601828588358L;
 
-	public JMenuSaveAs(final GKAController controller) {
-		this.setText("Speichern unter ...");
+	public JMenuSave(final GKAController controller) {
+		this.setText("Speichern");
 		this.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						controller.saveGraph(null);
+						controller.saveGraph();
 					}
 				}
 				).start();
@@ -35,27 +34,27 @@ public class JMenuSaveAs extends JMenuItem {
 		});
 	}
 
-	public JMenuSaveAs(Icon arg0) {
+	public JMenuSave(Icon arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JMenuSaveAs(String arg0) {
+	public JMenuSave(String arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JMenuSaveAs(Action arg0) {
+	public JMenuSave(Action arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JMenuSaveAs(String arg0, Icon arg1) {
+	public JMenuSave(String arg0, Icon arg1) {
 		super(arg0, arg1);
 		// TODO Auto-generated constructor stub
 	}
 
-	public JMenuSaveAs(String arg0, int arg1) {
+	public JMenuSave(String arg0, int arg1) {
 		super(arg0, arg1);
 		// TODO Auto-generated constructor stub
 	}

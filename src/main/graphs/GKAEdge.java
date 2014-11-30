@@ -5,12 +5,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.jgrapht.graph.DefaultEdge;
 
-public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
+public class GKAEdge extends DefaultEdge {
 
 	private static final long serialVersionUID = -6523434696944744833L;
 
-	private String  name = null;
-	private Integer weight = null;
+	private final String  name;
+	private final Integer weight;
+	private	final long    uniqueId;
 
 	/**
 	 * KONSTRUKTOR
@@ -18,12 +19,14 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 	 * @param name Kantenname
 	 * @param weight Kantengewichtung
 	 */
-	private GKAEdge(String name, Integer weight) {
+	private GKAEdge(String name, Integer weight, long uniqueId) {
 		super();
 		checkNotNull(name);
 		checkArgument(!name.isEmpty());
+		
 		this.name = name;
 		this.weight = weight;
+		this.uniqueId = uniqueId;
 	}
 	
 	/**
@@ -33,15 +36,15 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 	 * @param weight
 	 * @return Kantenobjekt
 	 */
-	public static GKAEdge valueOf(String name, Integer weight) {
-		return new GKAEdge(name, weight);
+	public static GKAEdge valueOf(String name, Integer weight, long uniqueId) {
+		return new GKAEdge(name, weight, uniqueId);
 	}
 	
 	/**
 	 * Konfiguration: ohne Kantengewichtung
 	 */
-	public static GKAEdge valueOf(String name) {
-		return valueOf(name, null);
+	public static GKAEdge valueOf(String name, long uniqueId) {
+		return valueOf(name, null, uniqueId);
 	}
 
 	/* (non-Javadoc)
@@ -59,13 +62,6 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 	}
 
 	/**
-	 * @return Kantengewicht.
-	 */
-	public Integer getWeight() {
-		return this.weight;
-	}
-
-	/**
 	 * @return Kantenname
 	 */
 	public String getName() {
@@ -73,7 +69,21 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 	}
 	
 	/**
-	 * @return true, wenn Kante gewichtet, false, wenn nicht.
+	 * @return Kantengewicht
+	 */
+	public Integer getWeight() {
+		return this.weight;
+	}
+
+	/**
+	 * @return Eindeutige Identifikationsnummer im Graphen (vergeben vom Graphen bei der Erzeugung der Kante)
+	 */
+	public long getUniqueId() {
+		return this.uniqueId;
+	}
+	
+	/**
+	 * @return true, wenn Kante gewichtet ist, false, wenn nicht.
 	 */
 	public boolean isWeighted() {
 		return weight != null;
@@ -100,40 +110,60 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-	public boolean equals(Object object) {
-		if (object == null) {
+	public boolean equals(Object other) {
+		if (other == null)
+		{
 			return false;
-		} else if (object == this) {
+		}
+		else if (other == this)
+		{
 			return true;
-		} else if (!(object instanceof GKAEdge)) {
+		}
+		else if (!(other instanceof GKAEdge))
+		{
 			return false;
-		} else {
-			GKAEdge edge = (GKAEdge) object;
+		}
+		else
+		{
+			GKAEdge edge = (GKAEdge) other;
 			boolean retval = true;
-			if (getSource() == null) {
+			if (getSource() == null)
+			{
 				retval = retval && edge.getSource() == null;
-			} else {
+			}
+			else
+			{
 				retval = retval && getSource().equals(edge.getSource());
 			}
 
-			if (getTarget() == null) {
+			if (getTarget() == null)
+			{
 				retval = retval && edge.getTarget() == null;
-			} else {
+			}
+			else
+			{
 				retval = retval && getTarget().equals(edge.getTarget());
 			}
 
-			if (getName() == null) {
+			if (getName() == null) 
+			{
 				retval = retval && edge.getName() == null;
-			} else {
+			}
+			else
+			{
 				retval = retval && getName().equals(edge.getName());
 			}
 
-			if (getWeight() == null) {
+			if (getWeight() == null)
+			{
 				retval = retval && edge.getWeight() == null;
-			} else {
+			}
+			else
+			{
 				retval = retval && getWeight().equals(edge.getWeight());
 			}
-			return retval;
+			
+			return retval && getUniqueId() == edge.getUniqueId();
 		}
     }
     
@@ -157,13 +187,7 @@ public class GKAEdge extends DefaultEdge implements Comparable<GKAEdge> {
 		}
 		return retVal;
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	@Override
-	public int compareTo(GKAEdge other) {
-		return this.getWeight().compareTo(other.getWeight());
-	}
+	
+	
 
 }

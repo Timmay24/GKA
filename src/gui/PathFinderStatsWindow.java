@@ -35,7 +35,7 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import controller.interfaces.StatsListener;
 
-public class StatsWindow implements StatsListener {
+public class PathFinderStatsWindow implements StatsListener {
 
 	private 		JFrame 					frmStatistiken;
 	private 		JTextField 				txtTime;
@@ -52,7 +52,7 @@ public class StatsWindow implements StatsListener {
 	/**
 	 * KONSTRUKTOR
 	 */
-	public StatsWindow() {
+	public PathFinderStatsWindow() {
 		initialize();
 		history = new Vector<>();
 	}
