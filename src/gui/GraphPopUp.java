@@ -54,7 +54,7 @@ public class GraphPopUp extends JPopupMenu {
 		item.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/vertex_add.png")));
 		item.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
-			String newVertexName = JOptionPane.showInputDialog(null, "Namen des Knoten angeben:");
+			String newVertexName = (String) JOptionPane.showInputDialog(null, "Name des Knotens:", "Knoten hinzuf\u00FCgen", JOptionPane.PLAIN_MESSAGE, null, null, "v");
 			if (newVertexName != null && !newVertexName.isEmpty()) {
 				wrapper.addVertex(newVertexName);
 			}

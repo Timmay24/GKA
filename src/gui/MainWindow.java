@@ -85,21 +85,14 @@ import static com.google.common.base.Preconditions.*;
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
 	private GraphController graphController;
-	private int[] verNo = {0,8,123};
+	private int[] verNo = {0,8,125};
 	private JButton btnAddEdge;
-//	private JButton btnAddVertex;
-//	private JButton btnSearchStart;
-//	private JComboBox<String> cmbSearchAlgo;
 	private JFrame mainFrame;
 	private JLabel label;
 	private JLabel label_1;
-//	private JLabel lblAlgorithmus;
 	private JLabel lblGewicht;
 	private JLabel lblName;
-//	private JLabel lblNewLabel;
 	private JLabel lblProcessing;
-//	private JLabel lblStart;
-//	private JLabel lblZiel;
 	private JMenu mnFile;
 	private JMenu mnGerichtet;
 	private JMenu mnLayout;
@@ -142,10 +135,9 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JTextField txtAEName;
 	private JTextField txtAESource;
 	private JTextField txtAETarget;
-	private JTextField txtSearchGoal;
 //	private JTextField txtSearchStart;
 	private PathFinderStatsWindow statsWindow;
-	private int			addVertexCounter = 0;
+	private int	addVertexCounter = 0;
 
 	
 	//TODO DEBUG UTIL
@@ -387,7 +379,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		txtAETarget.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				txtAETarget.setText("");
+				txtAETarget.selectAll();
 			}
 		});
 		txtAETarget.setColumns(10);
@@ -403,8 +395,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 					} else {
 						btnAddEdge.doClick();
 						txtAESource.requestFocus();
-						txtAETarget.setText("");
-						txtAEName.setText("");
 					}
 				}
 			}
@@ -641,7 +631,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mntmAddVertex = new JMenuItem("hinzuf\u00FCgen");
 		mntmAddVertex.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String vertexName = (String) JOptionPane.showInputDialog(null, "Knotenname:", "Knoten hinzuf\u00FCgen", JOptionPane.PLAIN_MESSAGE, null, null, "v" + addVertexCounter);
+				String vertexName = (String) JOptionPane.showInputDialog(null, "Name des Knotens:", "Knoten hinzuf\u00FCgen", JOptionPane.PLAIN_MESSAGE, null, null, "v" + addVertexCounter);
 				if (vertexName != null && !vertexName.isEmpty()) {
 					graphController.addVertex(vertexName);
 					addVertexCounter++;
