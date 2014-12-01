@@ -1,6 +1,9 @@
 package main.graphs;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +16,7 @@ import java.util.Set;
  */
 public class Matrix <RK,CK,V> {
 
-	Map<RK, Map<CK,V> > matrix;
+	Map< RK, Map<CK,V> > matrix;
 	
 	/**
 	 * KONSTRUKTOR
@@ -23,19 +26,30 @@ public class Matrix <RK,CK,V> {
 	}
 	
 	
+	public Matrix(Collection<RK> rows, Collection<CK> columns, V initValue) {
+		this();
+		for (RK row : rows) {
+			for (CK column : columns) {
+				setValueAt(row, column, initValue);
+			}
+		}
+	}
+	
+	public Matrix(Collection<RK> rows, Collection<CK> columns) {
+		this(rows, columns, null);
+	}
+	
 	/**
 	 * @param row Zeilenschluessel
 	 * @param column Spaltenschluessel
 	 * @return Wert, der hinter der Kombination (row,column) hinterlegt ist.
 	 */
 	public V getValueAt(RK row, CK column) {
-		if (!matrix.containsKey(row)) {
+		if (!matrix.containsKey(row))
 			return null;
-		}
 		
-		if (!matrix.get(row).containsKey(column)) {
+		if (!matrix.get(row).containsKey(column))
 			return null;
-		}
 		
 		return matrix.get(row).get(column);
 	}
@@ -61,5 +75,59 @@ public class Matrix <RK,CK,V> {
 			// wird value in ihr zu column eingetragen.
 			columnMap.put(column, value);
 		}
+	}
+	
+	/**
+	 * @return Gibt alle Zeilenschluessel der Matrix zurueck
+	 */
+	public Set<RK> getRowKeys() {
+		return Collections.unmodifiableSet(matrix.keySet());
+	}
+	
+	
+	/**
+	 * @return Gibt alle Spaltenschluessel der Matrix zurueck
+	 */
+	public Set<CK> getColumnKeys() {
+		Set<CK> result = new HashSet<>();
+		
+		for (RK row : getRowKeys())
+			result.addAll( matrix.get(row).keySet() );
+		
+		return Collections.unmodifiableSet(result);
+	}
+	
+	/**
+	 * @param row Zeile, dessen Spaltenschluessel zurueckgegeben werden sollen
+	 * @return Gibt alle Spaltenschluessel einer bestimmten Zeile zurueck
+	 */
+	public Set<CK> getColumnKeys(RK row) {
+		if (!matrix.containsKey(row))
+			return Collections.unmodifiableSet(new HashSet<>());
+		
+		return Collections.unmodifiableSet(matrix.get(row).keySet());
+	}
+	
+	public String toString() {
+		String result = "[R]:[";
+		
+		for (CK column : getColumnKeys())
+			result += " " + column + ",";
+		
+		result += "]\n";
+		
+		int len = result.length() - 1;
+		for (int i = 0; i < len; i++)
+			result += "-";
+		
+		for (RK row : getRowKeys()) {
+			result += "\n[" + row + "]:[";
+			
+			for (CK column : getColumnKeys()) {
+				result += " " + getValueAt(row, column) + ",";
+			}
+			result += "]";
+		}
+		return result;
 	}
 }
