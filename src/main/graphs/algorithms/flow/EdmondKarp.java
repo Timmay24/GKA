@@ -1,18 +1,31 @@
 package main.graphs.algorithms.flow;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
-import main.graphs.algorithms.interfaces.FlowCalculator;
 
-public class EdmondKarp implements FlowCalculator {
+public class EdmondKarp extends FlowCalculatorBase {
 
+	/**
+	 * Standart-Konstruktor
+	 */
+	public EdmondKarp() {
+		super();
+	}
+	
+	/* (non-Javadoc)
+	 * @see main.graphs.algorithms.flow.FlowCalculatorBase#getMaxFlow_(main.graphs.GKAGraph, main.graphs.GKAVertex, main.graphs.GKAVertex)
+	 */
 	@Override
-	public Integer getMaxFlow(GKAGraph graph, GKAVertex sourceNode, GKAVertex sinkNode) throws RuntimeException {
-		return new Integer(0);
+	protected Integer getMaxFlow_(GKAGraph graph, GKAVertex sourceNode, GKAVertex sinkNode) throws RuntimeException {
+		// Preconditions checked in super class
+		
+		Queue<GKAVertex> nodesToProcess = new LinkedList<GKAVertex>();
+		
+		
+		return new Integer(maxFlow);
 	}
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
 }
