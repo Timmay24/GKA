@@ -1,6 +1,6 @@
 package main.graphs;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.*;
 import gui.GraphPopUp;
 
 import java.awt.event.MouseAdapter;
@@ -397,6 +397,10 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return
 	 */
 	public boolean addEdge(String sourceName, String targetName, String newEdgeName, Integer newEdgeWeight, boolean verbose) {
+		// Hinzufuegen einer gewichteten Kante nur in einem gewichteten Graphen zulaessig
+		if (newEdgeWeight != null)
+			checkState(this.isWeighted());
+		
 		return addEdge(sourceName, targetName, GKAEdge.valueOf(newEdgeName, newEdgeWeight, edgeIdCounter++), verbose);
 	}
 	
@@ -554,25 +558,50 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Kantenobjekt
 	 */
 	public GKAEdge getEdge(String edgeName) {
-		for (GKAEdge e : getGraph().edgeSet())
+		for (GKAEdge edge : getGraph().edgeSet())
 		{
-			if (e.getName().equals(edgeName))
+			if (edge.getName().equals(edgeName))
 			{
-				return e;
+				return edge;
 			}
 		}
 		return null;
 	}
 	
+	//TODO doc
+	public Set<GKAEdge> getEdges(String... edgeNames) {
+		Set<GKAEdge> edges = new HashSet<>();
+		
+		for (String name : edgeNames) {
+			GKAEdge edge = getEdge(name);
+			if (edge != null)
+				edges.add(edge);
+		}
+		return edges;
+	}
+	
+	//TODO doc
 	public GKAEdge getEdgeBy(long uniqueId) {
-		for (GKAEdge e : getGraph().edgeSet())
+		for (GKAEdge edge : getGraph().edgeSet())
 		{
-			if (e.getUniqueId() == uniqueId)
+			if (edge.getUniqueId() == uniqueId)
 			{
-				return e;
+				return edge;
 			}
 		}
 		return null;
+	}
+	
+	//TODO doc
+	public Set<GKAEdge> getEdgesBy(long... edgeIds) {
+		Set<GKAEdge> edges = new HashSet<>();
+		
+		for (long id : edgeIds) {
+			GKAEdge edge = getEdgeBy(id);
+			if (edge != null)
+				edges.add(edge);
+		}
+		return edges;
 	}
 	
 	/**
@@ -581,12 +610,35 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	public Map<Long, GKAEdge> getEdgeMap() {
 		Map<Long, GKAEdge> resultMap = new HashMap<>();
 		
-		for (GKAEdge e : getGraph().edgeSet())
+		for (GKAEdge edge : getGraph().edgeSet())
 		{
-			resultMap.put(e.getUniqueId(), e);
+			resultMap.put(edge.getUniqueId(), edge);
 		}
 		return resultMap;
 	}
+	
+	
+	
+	//TODO
+	public Collection<GKAEdge> outgoingEdgesOf(GKAVertex source) {
+		Set<GKAEdge> edges = new HashSet<>();
+		
+		for (GKAEdge edgeOfSource : this.getGraph().edgesOf(source)) {
+			
+			if (source.equals( (GKAVertex) edgeOfSource.getSource() ) && // Wenn source als Source in Kante eingetragen ist 
+			   !source.equals( (GKAVertex) edgeOfSource.getTarget() )) { // und nicht gleichezeitig als Target (Selbstbezug-Ausschluss)
+				
+				edges.add(edgeOfSource);								 // dann ist edgeOfSource eine ausgehende Kante von source
+			}
+			
+		}
+		
+		return edges;
+	}
+	
+	
+	
+	
 	
 	/**
 	 * Prueft, ob die Kante edge im Graphen enthalten ist.
@@ -690,8 +742,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * Setzt die Faerbung aller Kanten zurueck.
 	 */
 	public void resetEdgeColors() {
-		for (GKAEdge e : getGraph().edgeSet()) {
-			colorEdge(e, COLOR_NEUTRAL_EDGE);
+		for (GKAEdge edge : getGraph().edgeSet()) {
+			colorEdge(edge, COLOR_NEUTRAL_EDGE);
 		}
 	}
 	
@@ -699,8 +751,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * Setzt die Faerbung aller Knoten zurueck.
 	 */
 	public void resetVertexColors() {
-		for (GKAVertex v : getGraph().vertexSet()) {
-			colorVertex(v, COLOR_NEUTRAL_VERTEX);
+		for (GKAVertex vertex : getGraph().vertexSet()) {
+			colorVertex(vertex, COLOR_NEUTRAL_VERTEX);
 		}
 	}
 	
@@ -828,9 +880,6 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return true, wenn Knoten im Graphen enthalten.
 	 */
 	public boolean containsVertex(GKAVertex vertex) {
-		for (GKAVertex v : getGraph().vertexSet()) {
-			System.out.println(v.toString());
-		}
 		return getGraph().vertexSet().contains(vertex);
 	}
 
@@ -852,9 +901,9 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @return Ermittelt das Knotenobjekt anhand seines Namens.
 	 */
 	public GKAVertex getVertex(String vertexName) {
-		for (GKAVertex v : getGraph().vertexSet()) {
-			if (v.getName().equals(vertexName)) {
-				return v;
+		for (GKAVertex vertex : getGraph().vertexSet()) {
+			if (vertex.getName().equals(vertexName)) {
+				return vertex;
 			}
 		}
 		return null;
@@ -888,22 +937,22 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 
 		Set<GKAEdge> incidentEdges = getGraph().edgesOf(sourceVertex);	// Alle am Knoten sourceVertex anliegenden Kanten ermitteln
 		
-		for (GKAEdge e : incidentEdges)								// Iteration ueber alle Kanten, die mit sourceVertex verbunden sind
+		for (GKAEdge edge : incidentEdges)								// Iteration ueber alle Kanten, die mit sourceVertex verbunden sind
 		{
-			if (e.getSource() != e.getTarget()) {          			// Schlaufen ausschliessen Source != Target
+			if (edge.getSource() != edge.getTarget()) {          		// Schlaufen ausschliessen Source != Target
 				
-				if (directed)                                       // Sonderregelung fuer gerichtete Graphen:                      
-				{													// Nur adjazente Knoten in die Ergebnisliste stecken,           
-					if (e.getSource() == sourceVertex) {     		// zu denen man vom Knoten sourceVertex aus kommen kann.        
-						resultList.add((GKAVertex)e.getTarget());  	// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
+				if (directed)                                       	// Sonderregelung fuer gerichtete Graphen:                      
+				{														// Nur adjazente Knoten in die Ergebnisliste stecken,           
+					if (edge.getSource() == sourceVertex) {     		// zu denen man vom Knoten sourceVertex aus kommen kann.        
+						resultList.add((GKAVertex)edge.getTarget());  	// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
 					}			
 				}
 				else
 				{
-					if (e.getSource() == sourceVertex) {				// Ist sourceVertex Source der Kante,
-						resultList.add((GKAVertex)e.getTarget());	// dann ist Target der Adjazent.
-					} else if (e.getTarget() == sourceVertex) {		// Ist sourceVertex Target der Kante,
-						resultList.add((GKAVertex)e.getSource());	// dann ist Source der Adjazent.
+					if (edge.getSource() == sourceVertex) {				// Ist sourceVertex Source der Kante,
+						resultList.add((GKAVertex)edge.getTarget());	// dann ist Target der Adjazent.
+					} else if (edge.getTarget() == sourceVertex) {		// Ist sourceVertex Target der Kante,
+						resultList.add((GKAVertex)edge.getSource());	// dann ist Source der Adjazent.
 					}
 				}
 			}
@@ -1020,8 +1069,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void printAllEdges() {
 		sendMessage("--Kanten--");
-		for (GKAEdge e : getGraph().edgeSet()) {
-			sendMessage(e.toString());
+		for (GKAEdge edge : getGraph().edgeSet()) {
+			sendMessage(edge.toString());
 		}
 	}
 
@@ -1030,8 +1079,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 */
 	public void printAllVertices() {
 		sendMessage("--Knoten--");
-		for (GKAVertex v : getGraph().vertexSet()) {
-			sendMessage(v.toString());
+		for (GKAVertex vertex : getGraph().vertexSet()) {
+			sendMessage(vertex.toString());
 		}
 	}
 	

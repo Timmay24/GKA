@@ -334,5 +334,30 @@ public class TestGKAGraph {
 		assertEquals(actualEdgeMap, desiredEdgeMap);
 	}
 	
-
+	@Test
+	public void testOutgoingEdgesOf() {
+		GKAGraph g1 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+		
+		g1.addEdge("v1", "v1", "e11", 1);
+		g1.addEdge("v1", "v2", "e12", 5);
+		g1.addEdge("v1", "v3", "e13", 2);
+		g1.addEdge("v3", "v1", "e31", 1);
+		g1.addEdge("v2", "v4", "e24", 3);
+		
+		Set<GKAEdge> desiredEdges1 = new HashSet<>(g1.getEdges("e12", "e13"));
+		assertEquals(desiredEdges1, g1.outgoingEdgesOf(g1.getVertex("v1")));
+		
+		//-------------------------------------------------------------------
+		
+		GKAGraph g2 = GKAGraph.valueOf(GraphType.DIRECTED_WEIGHTED);
+		
+		g2.addEdge("v1", "v1", "e11", 1);
+		g2.addEdge("v1", "v2", "e12", 5);
+		g2.addEdge("v1", "v3", "e13", 2);
+		g2.addEdge("v3", "v1", "e31", 1);
+		g2.addEdge("v2", "v4", "e24", 3);
+		
+		Set<GKAEdge> desiredEdges2 = new HashSet<>();
+		assertEquals(desiredEdges2, g2.outgoingEdgesOf(g2.getVertex("v4")));
+	}
 }
