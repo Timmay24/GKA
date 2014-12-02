@@ -50,7 +50,7 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 	private 		JButton 				btnClearHistory;
 	
 	private 		Vector<Vector<String>> 	history;
-	private final 	Vector<String>			headline = new Vector<>(Arrays.asList("Run","Algorithmus","Zeit (ms)", "Weglaenge", "Hits"));
+	private final 	Vector<String>			headline = new Vector<>(Arrays.asList("Run","Algorithmus","Zeit (ms)", "MaxFlow", "Hits"));
 
 
 	/**
@@ -180,11 +180,25 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 		tableHistory.setModel( new DefaultTableModel(history, headline) );
 	}
 
+	
+	/**
+	 * Kombi-Setter fuer Textfelder fuer den letzten Durchgang.
+	 * 
+	 * @param timeElapsed
+	 * @param wayLength
+	 * @param hitCount
+	 */
+	private void displayLastRun(String timeElapsed, String wayLength, String hitCount) {
+		txtTime.setText(timeElapsed);
+		txtLength.setText(wayLength);
+		txtHits.setText(hitCount);
+	}
+
 	/* (non-Javadoc)
-	 * @see controller.StatsListener#receiveStats(java.lang.String[])
+	 * @see controller.interfaces.StatsListener#onStatsReceived(java.lang.Object, java.lang.String[])
 	 */
 	@Override
-	public void receiveStats(String... stats) {
+	public void onStatsReceived(Object prototype, String... stats) {
 		Vector<String> row = new Vector<>();
 		
 		// Run-Nummer hinzugefuegen
@@ -200,19 +214,6 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 		// Table update
 		updateHistory();
 		
-		showLastRun(row.get(2), row.get(3), row.get(4));
-	}
-	
-	/**
-	 * Kombi-Setter fuer Textfelder fuer den letzten Durchgang.
-	 * 
-	 * @param timeElapsed
-	 * @param wayLength
-	 * @param hitCount
-	 */
-	private void showLastRun(String timeElapsed, String wayLength, String hitCount) {
-		txtTime.setText(timeElapsed);
-		txtLength.setText(wayLength);
-		txtHits.setText(hitCount);
+		displayLastRun(row.get(2), row.get(3), row.get(4));
 	}
 }

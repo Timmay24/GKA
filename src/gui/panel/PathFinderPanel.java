@@ -44,6 +44,8 @@ public class PathFinderPanel extends JPanel {
 	 */
 	public PathFinderPanel(GraphController graphController, JTextArea reportTextArea) {
 		checkNotNull(graphController);
+		checkNotNull(reportTextArea);
+		
 		this.setBounds(496, 445, 288, 137);
 		this.setLayout(null);
 

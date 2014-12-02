@@ -49,7 +49,12 @@ public class Dijkstra implements PathFinder {
 		
 		if (startNode == endNode) { // Falls Start- und Zielknoten identisch sind, kann abgebrochen werden.
 			System.out.println("Startknoten == Zielknoten.");
-			g.sendStats(("Dijkstra"), String.valueOf((System.nanoTime() - startTime) / 1E6D),"s==t", String.valueOf(hitcount));
+			try {
+				g.sendStats(this.getClass().newInstance(), "Dijkstra", String.valueOf((System.nanoTime() - startTime) / 1E6D),"s==t", String.valueOf(hitcount));
+			} catch (InstantiationException | IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return Arrays.asList(startNode);
 		}
 		
@@ -157,7 +162,12 @@ public class Dijkstra implements PathFinder {
 		
 		
 		// Stats an die GUI melden
-		g.sendStats("Dijkstra", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(resultWay.size() - 1), String.valueOf(hitcount));
+		try {
+			g.sendStats(this.getClass().newInstance(), "Dijkstra", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(resultWay.size() - 1), String.valueOf(hitcount));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Da der Weg ueber die Vorgaenger rekonstruiert wurde,
 		// entspricht die Liste resultWay dem umgekehrten Weg

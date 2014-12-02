@@ -974,15 +974,19 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param goalVertex
 	 * @return
 	 */
-	public List<GKAVertex> findShortestWay(PathFinder algorithm, String startVertex, String goalVertex) {
+	public void findShortestWay(PathFinder algorithm, String startVertex, String goalVertex) {
+		checkNotNull(algorithm);
+		checkNotNull(startVertex);
+		checkNotNull(goalVertex);
+		
 		GKAVertex start = getVertex(startVertex);
 		GKAVertex goal = getVertex(goalVertex);
 		
 		if (start != null && goal != null) {
-			return findShortestWay(algorithm, start, goal);
+			findShortestWay(algorithm, start, goal);
 		} else {
 			sendMessage("FEHLER: Start- oder Zielknoten ungültig oder nicht existent.");
-			return null;
+			return ;//null;
 		}
 	}
 	
@@ -996,7 +1000,21 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		checkNotNull(sourceVertex);
 		checkNotNull(sinkVertex);
 		
-		return new Integer(0); // STUB
+		GKAVertex source = getVertex(sourceVertex);
+		GKAVertex sink = getVertex(sinkVertex);
+		
+		algorithm.getMaxFlow(this, source, sink);
+		
+		sendStats(algorithm,
+				algorithm.getClass().getSimpleName(),
+				String.valueOf(algorithm.getRuntime()),
+				String.valueOf(algorithm.getMaxFlow()),
+				String.valueOf(algorithm.getHitCounter())
+				);
+		
+		sendMessage("\nERFOLG: Der maximale Fluss zwischen " + sourceVertex + " und " + sinkVertex + " beträgt: " + algorithm.getMaxFlow());
+		
+		return algorithm.getMaxFlow();
 	}
 	
 	/**
@@ -1396,9 +1414,9 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			statsListeners.add(statsListener);
 	}
 	
-	public void sendStats(String... stats) {
+	public void sendStats(Object prototype, String... stats) {
 		for (StatsListener sl : statsListeners) {
-			sl.receiveStats(stats);
+			sl.onStatsReceived(prototype, stats);
 		}
 	}
 //	public void sendStats(Map<String, String> stats) {

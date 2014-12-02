@@ -178,7 +178,12 @@ public class FloydWarshall implements PathFinder {
 		
 		
 		// Stats uebermitteln
-		g.sendStats("Floyd-Wars.", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
+		try {
+			g.sendStats(this.getClass().newInstance(), "Floyd-Wars.", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		
 		return returnList;

@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 
 
 
+
 //import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -53,10 +54,12 @@ import javax.swing.text.DefaultCaret;
 
 
 
+
 //import main.graphs.Algorithms;
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
 import main.graphs.algorithms.interfaces.FlowCalculator;
+import main.graphs.algorithms.interfaces.PathFinder;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
@@ -73,6 +76,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 //import org.eclipse.wb.swing.FocusTraversalOnArray;
+
 
 
 
@@ -136,7 +140,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JTextField txtAESource;
 	private JTextField txtAETarget;
 //	private JTextField txtSearchStart;
-	private PathFinderStatsWindow statsWindow;
+	private PathFinderStatsWindow pathStatsWindow;
+	private FlowCalculatorStatsWindow flowStatsWindow;
 	private int	addVertexCounter = 0;
 
 	
@@ -178,7 +183,8 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	public MainWindow() {
 		graphController = new GraphController();
-		statsWindow = new PathFinderStatsWindow();
+		pathStatsWindow = new PathFinderStatsWindow();
+		flowStatsWindow = new FlowCalculatorStatsWindow();
 		initialize();
 		
 		graphController.addMessageListener(this); // Fuer den Empfang von Nachrichten
@@ -647,7 +653,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mntmPathFinderStats = new JMenuItem("Wegfindung");
 		mntmPathFinderStats.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				statsWindow.show();
+				pathStatsWindow.show();
 			}
 		});
 		mntmPathFinderStats.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/stats.png")));
@@ -734,22 +740,31 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 * @see controller.StatsListener#receiveStats(java.lang.String[])
 	 */
 	@Override
-	public void receiveStats(String... stats) {
+	public void onStatsReceived(Object prototype, String... stats) {
 		checkNotNull(stats);
-		statsWindow.receiveStats(stats);
-		statsWindow.show();
+		checkNotNull(prototype);
+		
+		if (prototype instanceof PathFinder) {
+			pathStatsWindow.onStatsReceived(prototype, stats);
+			pathStatsWindow.show();
+		} else if (prototype instanceof FlowCalculator) {
+			flowStatsWindow.onStatsReceived(prototype, stats);
+			flowStatsWindow.show();
+		}
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see controller.NodeListener#receiveStartNode(java.lang.String)
 	 */
 	@Override
 	public void receiveStartNode(String nodeName) {
-		if (nodeName == null)
+		if (nodeName == null) {
 			pathFinderPanel.setStart("");
-		else
+			flowCalculatorPanel.setStart("");
+		} else {
 			pathFinderPanel.setStart(nodeName);
+			flowCalculatorPanel.setStart(nodeName);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -757,10 +772,13 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveEndNode(String nodeName) {
-		if (nodeName == null)
+		if (nodeName == null) {
 			pathFinderPanel.setGoal("");
-		else
+			flowCalculatorPanel.setGoal("");
+		} else {
 			pathFinderPanel.setGoal(nodeName);
+			flowCalculatorPanel.setGoal(nodeName);
+		}
 	}
 
 	

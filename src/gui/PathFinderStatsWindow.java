@@ -180,7 +180,7 @@ public class PathFinderStatsWindow implements StatsListener {
 	 * @see controller.StatsListener#receiveStats(java.lang.String[])
 	 */
 	@Override
-	public void receiveStats(String... stats) {
+	public void onStatsReceived(Object prototype, String... stats) {
 		Vector<String> row = new Vector<>();
 		
 		// Run-Nummer hinzugefuegen
@@ -196,7 +196,7 @@ public class PathFinderStatsWindow implements StatsListener {
 		// Table update
 		updateHistory();
 		
-		showLastRun(row.get(2), row.get(3), row.get(4));
+		displayLastRun(row.get(2), row.get(3), row.get(4));
 	}
 	
 	/**
@@ -206,7 +206,7 @@ public class PathFinderStatsWindow implements StatsListener {
 	 * @param wayLength
 	 * @param hitCount
 	 */
-	private void showLastRun(String timeElapsed, String wayLength, String hitCount) {
+	private void displayLastRun(String timeElapsed, String wayLength, String hitCount) {
 		txtTime.setText(timeElapsed);
 		txtLength.setText(wayLength);
 		txtHits.setText(hitCount);

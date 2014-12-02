@@ -2,6 +2,6 @@ package controller.interfaces;
 
 public interface StatsListener {
 
-	public void receiveStats(String... stats);
+	public void onStatsReceived(Object prototype, String... stats);
 	
 }

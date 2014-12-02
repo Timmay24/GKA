@@ -166,7 +166,12 @@ public class BFS implements PathFinder {
 //		stats.put("hitcount", hitcount.toString());
 //		stats.put("timeelapsed", Double.valueOf((System.nanoTime() - startTime) / 1000000D).toString());
 		// transmitting stats to graph wrapper for further processment
-		g.sendStats("BFS", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
+		try {
+			g.sendStats(this.getClass().newInstance(), "BFS", String.valueOf((System.nanoTime() - startTime) / 1E6D), String.valueOf(returnList.size() - 1), String.valueOf(hitcount));
+		} catch (InstantiationException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return returnList;
 		
