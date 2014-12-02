@@ -49,7 +49,7 @@ public class TestSamePath {
 	public void testDeqFW() throws IllegalStateException, NoWayException {
 		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
-		g.openGraph(".\\src\\ressources\\d.gka".replace("\\", "/"));
+		g.openGraph("./src/ressources/d.gka");
 		
 		List<GKAVertex> dijWay = new ArrayList<>();
 		List<GKAVertex> floWay = new ArrayList<>();

@@ -21,8 +21,9 @@ public interface FlowCalculator {
 	 *            falls ein Laufzeitfehler eintritt //TODO: konkretisieren,
 	 *            wenn klar, welche Fehlertypen geworfen werden koennen.
 	 *            
-	 * @pre graph darf nicht null sein und muss gerichtet sein
-	 *      	  ({@code isDirected() == true})
+	 * @pre graph darf nicht null sein, muss gerichtet und gewichtet sein
+	 *      	  ({@code isDirected() == true}
+	 *      	   {@code isWeighted() == true})
 	 *      
 	 * @pre sourceNode darf nicht null sein
 	 * 
