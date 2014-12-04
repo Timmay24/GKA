@@ -248,7 +248,7 @@ public abstract class FlowCalculatorBase implements FlowCalculator {
 			// Wenn noch Restkapazitaet zwischen beiden Knoten vorhanden ist
 			if (getRemainingCapacityBetween(source, vertex) > 0) {
 				// umgekehrten fall pruefen und ggf. negativen wert vom pos. abziehen
-				// zur korrektur...
+				// zur korrektur...??
 				
 				// Zum benachbarten Knoten sind noch Restkapazitaeten uebrig => zum Set hinzufuegen
 				vertices.add(vertex);
