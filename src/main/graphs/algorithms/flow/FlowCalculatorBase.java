@@ -167,7 +167,17 @@ public abstract class FlowCalculatorBase implements FlowCalculator {
 							
 							// Auf dem Rueckweg, das ermittelte Minimum aus allen Zwischenfluessen auf dem Pfad
 							// zu allen auf dem Pfad liegenden aktuellen Fluessen aufaddieren
-							currentFlows.setValueAt(parentMap.get(adjacentNode), adjacentNode, currentFlows.getValueAt(parentMap.get(adjacentNode), adjacentNode) + _maxFlow);
+							currentFlows.setValueAt(
+									parentMap.get(adjacentNode),
+									adjacentNode,
+									currentFlows.getValueAt(parentMap.get(adjacentNode), adjacentNode) + _maxFlow
+									);
+							
+							// Rueckwaertskanten ebenfalls aktualisieren
+							currentFlows.setValueAt(adjacentNode,
+									parentMap.get(adjacentNode),
+									currentFlows.getValueAt(adjacentNode, parentMap.get(adjacentNode)) - _maxFlow
+									);
 							
 							// Vorgaenger durchruecken, um mit dem naechsten Iterationsschritt fortzufahren
 							adjacentNode = parentMap.get(adjacentNode);
@@ -237,6 +247,8 @@ public abstract class FlowCalculatorBase implements FlowCalculator {
 			
 			// Wenn noch Restkapazitaet zwischen beiden Knoten vorhanden ist
 			if (getRemainingCapacityBetween(source, vertex) > 0) {
+				// umgekehrten fall pruefen und ggf. negativen wert vom pos. abziehen
+				// zur korrektur...
 				
 				// Zum benachbarten Knoten sind noch Restkapazitaeten uebrig => zum Set hinzufuegen
 				vertices.add(vertex);
