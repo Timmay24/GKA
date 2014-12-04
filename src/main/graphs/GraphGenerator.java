@@ -39,9 +39,9 @@ public class GraphGenerator implements Runnable {
 				long	startTime = System.nanoTime();
 		
 		
-		g.sendMessage("/gph");
+		g.sendMessage("/gphide");
 		// Ladebalken mit max Wert fuettern
-		g.sendMessage("/pbi " + desiredEdgeCount);
+		g.sendMessage("/pbinit " + desiredEdgeCount);
 				
 		// Neuen Graph erzeugen
 		g.newGraph(graphType);
@@ -74,11 +74,11 @@ public class GraphGenerator implements Runnable {
 			int source = (int) (Math.random() * (desiredVertexCount - 1));
 			double weight = ((Math.random() * desiredEdgeCount) + ((desiredVertexCount / 2) + 1) * minWeight);
 			g.addEdge(PREFIX_VERTEX + String.valueOf(source), PREFIX_VERTEX + String.valueOf(target), PREFIX_EDGE + String.valueOf(++edgeIndex), (int) weight, false );
-			g.sendMessage("/pbu " + i);
+			g.sendMessage("/pbupdate " + i);
 		}
 		
-		g.sendMessage("/pbe");
-		g.sendMessage("/gps");
+		g.sendMessage("/pbend");
+		g.sendMessage("/gpshow");
 		g.sendMessage("ERFOLG: Zufallsgraph generiert in " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden.");
 		g.sendMessage("Knoten: " + desiredVertexCount);
 		g.sendMessage("Kanten: " + desiredEdgeCount);

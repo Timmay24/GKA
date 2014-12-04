@@ -16,7 +16,7 @@ import main.graphs.algorithms.interfaces.PathFinder;
  * @author Louisa
  *
  */
-public class FloydWarshall implements PathFinder {
+public class FloydWarshall extends PathFinderBase {
 	
 	// Konstante fuer Unendlich
 	private static final int INFINITY = Integer.MAX_VALUE/2;
@@ -30,7 +30,7 @@ public class FloydWarshall implements PathFinder {
 	 * //TODO update doc tag 
 	 */
 	@Override
-	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException {
+	public List<GKAVertex> findShortestWay() throws IllegalStateException {
 		
 		Preconditions.checkNotNull(g);
 		Preconditions.checkNotNull(startNode);
@@ -187,10 +187,5 @@ public class FloydWarshall implements PathFinder {
 
 		
 		return returnList;
-	}
-
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
 	}
 }

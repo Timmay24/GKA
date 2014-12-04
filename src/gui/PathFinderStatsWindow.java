@@ -79,7 +79,7 @@ public class PathFinderStatsWindow implements StatsListener {
 				
 		frmStatistiken = new JFrame();
 		frmStatistiken.setType(Type.UTILITY);
-		frmStatistiken.setTitle("Statistiken");
+		frmStatistiken.setTitle("Statistik - Wegfindung");
 		frmStatistiken.setResizable(false);
 		frmStatistiken.setModalExclusionType(ModalExclusionType.TOOLKIT_EXCLUDE);
 		frmStatistiken.setBounds(100, 100, 380, 377);

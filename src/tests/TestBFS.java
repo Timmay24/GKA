@@ -277,7 +277,7 @@ public class TestBFS {
 	/*Test 8
 	 * Directed Graph
 	 * */
-	@Test
+	@Test(expected = RuntimeException.class)
 	public void testFSW2() {
 	
 		

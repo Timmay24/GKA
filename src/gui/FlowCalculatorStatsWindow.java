@@ -36,14 +36,11 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 import controller.interfaces.StatsListener;
 
 
-//TODO Passende Stats anzeigen lassen
-// --> stats sender anpassen
-// --> stats empfaengen anpassen
 public class FlowCalculatorStatsWindow implements StatsListener {
 
 	private 		JFrame 					frmStatistiken;
 	private 		JTextField 				txtTime;
-	private 		JTextField 				txtLength;
+	private 		JTextField 				txtMaxFlow;
 	private 		JTextField 				txtHits;
 	private 		JTable 					tableHistory;
 	private 		JLabel 					chart;
@@ -83,7 +80,7 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 				
 		frmStatistiken = new JFrame();
 		frmStatistiken.setType(Type.UTILITY);
-		frmStatistiken.setTitle("Statistiken");
+		frmStatistiken.setTitle("Statistik - Flussberechnung");
 		frmStatistiken.setResizable(false);
 		frmStatistiken.setModalExclusionType(ModalExclusionType.TOOLKIT_EXCLUDE);
 		frmStatistiken.setBounds(100, 100, 380, 377);
@@ -110,16 +107,16 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 		label_1.setBounds(206, 21, 13, 20);
 		panelLastRun.add(label_1);
 		
-		JLabel label_2 = new JLabel("Wegl\u00E4nge:");
+		JLabel label_2 = new JLabel("Maximaler Fluss:");
 		label_2.setBounds(10, 47, 80, 20);
 		panelLastRun.add(label_2);
 		
-		txtLength = new JTextField();
-		txtLength.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtLength.setEditable(false);
-		txtLength.setColumns(10);
-		txtLength.setBounds(91, 47, 105, 20);
-		panelLastRun.add(txtLength);
+		txtMaxFlow = new JTextField();
+		txtMaxFlow.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtMaxFlow.setEditable(false);
+		txtMaxFlow.setColumns(10);
+		txtMaxFlow.setBounds(91, 47, 105, 20);
+		panelLastRun.add(txtMaxFlow);
 		
 		JLabel label_3 = new JLabel("Hitcounter:");
 		label_3.setBounds(10, 73, 80, 20);
@@ -139,14 +136,14 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 				history = new Vector<>();
 				updateHistory();
 				txtTime.setText("");
-				txtLength.setText("");
+				txtMaxFlow.setText("");
 				txtHits.setText("");
 				
 			}
 		});
 		btnClearHistory.setBounds(91, 104, 105, 23);
 		panelLastRun.add(btnClearHistory);
-		panelLastRun.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtTime, txtLength, txtHits, btnClearHistory, label, label_1, label_2, label_3}));
+		panelLastRun.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtTime, txtMaxFlow, txtHits, btnClearHistory, label, label_1, label_2, label_3}));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 161, 354, 181);
@@ -190,7 +187,7 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 	 */
 	private void displayLastRun(String timeElapsed, String wayLength, String hitCount) {
 		txtTime.setText(timeElapsed);
-		txtLength.setText(wayLength);
+		txtMaxFlow.setText(wayLength);
 		txtHits.setText(hitCount);
 	}
 

@@ -95,7 +95,7 @@ public class PathFinderPanel extends JPanel {
 		this.add(lblGoal);
 		
 		btnStart = new JButton("suchen");
-		btnStart.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/binocular.png")));
+		btnStart.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/path_stats.png")));
 		btnStart.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent arg0)

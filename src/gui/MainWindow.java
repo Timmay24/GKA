@@ -89,7 +89,7 @@ import static com.google.common.base.Preconditions.*;
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
 	private GraphController graphController;
-	private int[] verNo = {0,8,125};
+	private int[] verNo = {0,8,128};
 	private JButton btnAddEdge;
 	private JFrame mainFrame;
 	private JLabel label;
@@ -151,6 +151,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JTabbedPane tabsAnalysing;
 	private JMenuItem mntmAddVertex;
 	private JMenu mnKnoten;
+	private JMenuItem mntmFlowCalculatorStats;
 
 	
 
@@ -497,7 +498,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				newGraph(GraphType.DIRECTED_UNWEIGHTED);
 			}
 		});
-		mnGerichtet.add(mntmGerichtetUngewichtet);
 		
 		mntmGerichtetGewichtet = new JMenuItem("Gewichtet");
 		mntmGerichtetGewichtet.addActionListener(new ActionListener() {
@@ -506,6 +506,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			}
 		});
 		mnGerichtet.add(mntmGerichtetGewichtet);
+		mnGerichtet.add(mntmGerichtetUngewichtet);
 		
 		mnUngerichtet = new JMenu("Ungerichtet");
 		mnNeuerGraph.add(mnUngerichtet);
@@ -516,7 +517,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				newGraph(GraphType.UNDIRECTED_UNWEIGHTED);
 			}
 		});
-		mnUngerichtet.add(mntmUngerichtetUngewichtet);
 		
 		mntmUngerichtetGewichtet = new JMenuItem("Gewichtet");
 		mntmUngerichtetGewichtet.addActionListener(new ActionListener() {
@@ -525,6 +525,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 			}
 		});
 		mnUngerichtet.add(mntmUngerichtetGewichtet);
+		mnUngerichtet.add(mntmUngerichtetUngewichtet);
 		
 		separator_1 = new JSeparator();
 		separator_1.setForeground(Color.LIGHT_GRAY);
@@ -656,8 +657,17 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 				pathStatsWindow.show();
 			}
 		});
-		mntmPathFinderStats.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/stats.png")));
+		mntmPathFinderStats.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/path_stats.png")));
 		mnStatistik.add(mntmPathFinderStats);
+		
+		mntmFlowCalculatorStats = new JMenuItem("Flussberechnung");
+		mntmFlowCalculatorStats.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/flow_stats.png")));
+		mntmFlowCalculatorStats.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				flowStatsWindow.show();
+			}
+		});
+		mnStatistik.add(mntmFlowCalculatorStats);
 		
 		mnQuestionmark = new JMenu("");
 		mnQuestionmark.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/question_blue.png")));
@@ -678,27 +688,51 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 */
 	@Override
 	public void receiveMessage(String message) {
-		if (message.startsWith("/pbi ")) {
+		if (message.startsWith("/pbinit "))
+		{
 			lblProcessing.setVisible(true);
 			progressBar.setVisible(true);
 			progressBar.setValue(0);
-			progressBar.setMaximum(Integer.valueOf( message.substring(5) ));
+			progressBar.setMaximum(Integer.valueOf( message.substring("/pbinit ".length()) ));
 			report(progressBar.getMaximum() + " Elemente.\nVerarbeitung beginnt...");
-			
-		} else if (message.startsWith("/pbu ")) {
-			progressBar.setValue(Integer.valueOf(message.substring(5)));
-			
-		} else if (message.startsWith("/pbe")) {
+		}
+		else if (message.startsWith("/pbupdate "))
+		{
+			progressBar.setValue(Integer.valueOf(message.substring("/pbupdate ".length())));
+		}
+		else if (message.startsWith("/pbend"))
+		{
+			lblProcessing.setVisible(false);
+			progressBar.setVisible(false);	
+		}
+		else if (message.startsWith("/gpshow"))
+		{
+			graphPanel.setVisible(true);
+		}
+		else if (message.startsWith("/gphide"))
+		{
+			graphPanel.setVisible(false);
+		}
+		else if (message.startsWith("/pbindeterminate"))
+		{
+			progressBar.setIndeterminate(true);
+		}
+		else if (message.startsWith("/pbshow"))
+		{
+			lblProcessing.setVisible(true);
+			progressBar.setVisible(true);
+		}
+		else if (message.startsWith("/pbhide"))
+		{
 			lblProcessing.setVisible(false);
 			progressBar.setVisible(false);
-			
-		} else if (message.startsWith("/gps")) {
-			graphPanel.setVisible(true);
-			
-		} else if (message.startsWith("/gph")) {
-			graphPanel.setVisible(false);
-			
-		} else {
+		}
+		else if (message.startsWith("/pbdeterminate"))
+		{
+			progressBar.setIndeterminate(false);
+		}
+		else
+		{
 			report(message);
 		}
 	}

@@ -28,7 +28,7 @@ public class TestSamePath {
 		List<List<GKAVertex>> ways = new ArrayList<>();
 		long time = System.nanoTime();
 			
-		for (int i = 0; i < 2; i++) { //TODO set back to 100 times
+		for (int i = 0; i < 25; i++) { //TODO set back to 100 times
 			ways.add(g.findShortestWay(new Dijkstra(), g.getVertex("v5"), g.getVertex("v49")));
 		}
 		

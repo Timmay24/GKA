@@ -15,7 +15,7 @@ import main.graphs.algorithms.interfaces.PathFinder;
 import main.graphs.exceptions.NoWayException;
 import static com.google.common.base.Preconditions.*;
 
-public class Dijkstra implements PathFinder {
+public class Dijkstra extends PathFinderBase {
 
 	/**
 	 * @param g GraphWrapper des Graphen, auf dem der Weg gesucht werden soll
@@ -27,7 +27,7 @@ public class Dijkstra implements PathFinder {
 	 * //TODO update doc tag
 	 */
 	@Override
-	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws IllegalStateException, NoWayException {
+	public List<GKAVertex> findShortestWay() throws IllegalStateException, NoWayException {
 		Long startTime = System.nanoTime();
 		List<GKAVertex> resultWay = new ArrayList<>();
 		long hitcount = 0;
@@ -195,9 +195,5 @@ public class Dijkstra implements PathFinder {
 		}
 		return minNode;
 	}
-	
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
+
 }

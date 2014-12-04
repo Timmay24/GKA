@@ -94,7 +94,7 @@ public class FlowCalculatorPanel extends JPanel {
 		this.add(lblSink);
 		
 		btnStart = new JButton("berechnen");
-		btnStart.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/binocular.png"))); //TODO anderes icon einfuegen
+		btnStart.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/flow_stats.png")));
 		btnStart.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent arg0)

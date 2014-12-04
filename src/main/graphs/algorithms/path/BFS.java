@@ -14,7 +14,7 @@ import main.graphs.exceptions.NoWayException;
  * @author Louisa und Tim
  *
  */
-public class BFS implements PathFinder {
+public class BFS extends PathFinderBase {
 	
 	/**
 	 * Finds a shortest way from given startNode to given endNode within g, if it exists. 
@@ -27,7 +27,7 @@ public class BFS implements PathFinder {
 	 * //TODO update doc tag
 	 */
 	@Override
-	public List<GKAVertex> findShortestWay(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws NoWayException {
+	public List<GKAVertex> findShortestWay() throws NoWayException {
 		
 		long startTime = System.nanoTime();
 		
@@ -176,9 +176,5 @@ public class BFS implements PathFinder {
 		return returnList;
 		
 	}
-	
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
+
 }

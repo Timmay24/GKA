@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -619,21 +620,19 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	
 	
 	
-	//TODO
+	//TODO doc
 	public Collection<GKAEdge> outgoingEdgesOf(GKAVertex source) {
-		Set<GKAEdge> edges = new HashSet<>();
+		Set<GKAEdge> outgoingEdges = new HashSet<>();
 		
 		for (GKAEdge edgeOfSource : this.getGraph().edgesOf(source)) {
 			
-			if (source.equals( (GKAVertex) edgeOfSource.getSource() ) && // Wenn source als Source in Kante eingetragen ist 
+			if (source.equals( (GKAVertex) edgeOfSource.getSource() ) && // Wenn source-Knoten als Source in Kante eingetragen ist 
 			   !source.equals( (GKAVertex) edgeOfSource.getTarget() )) { // und nicht gleichezeitig als Target (Selbstbezug-Ausschluss)
 				
-				edges.add(edgeOfSource);								 // dann ist edgeOfSource eine ausgehende Kante von source
+				outgoingEdges.add(edgeOfSource);						 // dann ist edgeOfSource eine ausgehende Kante von source
 			}
-			
 		}
-		
-		return edges;
+		return outgoingEdges;
 	}
 	
 	
@@ -1003,16 +1002,16 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		GKAVertex source = getVertex(sourceVertex);
 		GKAVertex sink = getVertex(sinkVertex);
 		
-		algorithm.getMaxFlow(this, source, sink);
+		int maxFlow = algorithm.getMaxFlow(this, source, sink);
 		
 		sendStats(algorithm,
 				algorithm.getClass().getSimpleName(),
-				String.valueOf(algorithm.getRuntime()),
-				String.valueOf(algorithm.getMaxFlow()),
+				String.valueOf(algorithm.getRuntime() / 1E6D),
+				String.valueOf(maxFlow),
 				String.valueOf(algorithm.getHitCounter())
 				);
 		
-		sendMessage("\nERFOLG: Der maximale Fluss zwischen " + sourceVertex + " und " + sinkVertex + " beträgt: " + algorithm.getMaxFlow());
+		sendMessage("\nERFOLG: Der maximale Fluss zwischen " + sourceVertex + " und " + sinkVertex + " beträgt: " + maxFlow);
 		
 		return algorithm.getMaxFlow();
 	}
@@ -1020,65 +1019,78 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * Laesst im Graphen die kuerzesten Weg zwischen Start- und Zielknoten suchen.
 	 * 
-	 * @param start Startknoten.
-	 * @param goal Zielknoten.
+	 * @param algorithm Instanz einer Algorithmen-Klasse, die die Berechnung durchfuehren soll
+	 * @param start Startknoten
+	 * @param goal Zielknoten
 	 */
 	public List<GKAVertex> findShortestWay(PathFinder algorithm, GKAVertex start, GKAVertex goal) {
+		checkNotNull(algorithm);
 		checkNotNull(start);
 		checkNotNull(goal);
 		
 		List<GKAVertex> way = null;
 		resetColors();
 
-		try {
-			
-			way = algorithm.findShortestWay(this, start, goal);
-			
-			if (way.isEmpty())
-				return way;
 		
-			sendMessage("\nKürzester Weg:");
-			String wayString = "";
-			GKAVertex tempNodeA = null, tempNodeB = null;
-			for (GKAVertex v : way) {
-				wayString += v.toString();
-				wayString += " -> ";
-				
-				//// Code Fragment zum 
-				// Knoten durchschieben
-				tempNodeA = tempNodeB;
-				tempNodeB = v;
-				
-				// wenn zwei Knoten angewahlt wurden
-				if (tempNodeA != null && tempNodeB != null) {
-					// inzidente Kante holen
-					GKAEdge tempEdge = getGraph().getEdge(tempNodeA, tempNodeB);
-					if (tempEdge != null) {
-						// und einfaerben
-						colorEdgeRed(tempEdge);
-					}
-				}
-				// wenn tempNodeA noch null ist, wurde gerade der erste
-				// Knoten geholt => Startknoten
-//				if (tempNodeA == null) {
-					colorVertexStart(tempNodeB);
-//					// diesen einfaerben
-//					// ... TODO
-//				}
-			}
-			// zuletzt angewaehlten Knoten einfaerben (Zielknoten)
-			// ... TODO
-			colorVertexEnd(tempNodeB);
+			algorithm.injectReferences(this, start, goal);
 			
-			sendMessage(wayString.substring(0, wayString.length() - 4));
-			sendMessage("\n");
+//			Thread algo = new Thread( algorithm );
+//			algo.start();
+			algorithm.run();
+			
+			way = algorithm.getResultWay();
+			
+			printWay(way);
 			
 			return way;
-		} catch (IllegalStateException | NoWayException e) {
-			e.printStackTrace();
-			sendMessage("FEHLER: " + e.getMessage());
-			return null;
+	}
+	
+	public void printWay(List<GKAVertex> way) {
+		checkNotNull(way);
+		
+		sendMessage("/pbhide");
+		sendMessage("/gpshow");
+		sendMessage("/pbdeterminate");
+		
+		if (way.isEmpty())
+			return;
+	
+		sendMessage("\nKürzester Weg:");
+		String wayString = "";
+		GKAVertex tempNodeA = null, tempNodeB = null;
+		for (GKAVertex v : way) {
+			wayString += v.toString();
+			wayString += " -> ";
+			
+			//// Code Fragment zum 
+			// Knoten durchschieben
+			tempNodeA = tempNodeB;
+			tempNodeB = v;
+			
+			// wenn zwei Knoten angewahlt wurden
+			if (tempNodeA != null && tempNodeB != null) {
+				// inzidente Kante holen
+				GKAEdge tempEdge = getGraph().getEdge(tempNodeA, tempNodeB);
+				if (tempEdge != null) {
+					// und einfaerben
+					colorEdgeRed(tempEdge);
+				}
+			}
+			// wenn tempNodeA noch null ist, wurde gerade der erste
+			// Knoten geholt => Startknoten
+//			if (tempNodeA == null) {
+				colorVertexStart(tempNodeB);
+//				// diesen einfaerben
+//				// ... TODO
+//			}
 		}
+		// zuletzt angewaehlten Knoten einfaerben (Zielknoten)
+		// ... TODO
+		colorVertexEnd(tempNodeB);
+		
+		sendMessage(wayString.substring(0, wayString.length() - 4));
+		sendMessage("\n");
+		
 	}
 	
 		
@@ -1198,8 +1210,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			sendMessage("FEHLER: " + e.getMessage());
 			sendMessage("FEHLER: Graph öffnen fehlgeschlagen.");
 		}
-		sendMessage("/pbe");
-		sendMessage("/gps");
+		sendMessage("/pbend");
+		sendMessage("/gpshow");
 	}
 
     /**
@@ -1236,7 +1248,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			sendMessage("FEHLER: " + e.getMessage());
 			sendMessage("FEHLER: Graph konnte nicht gespeichert werden.");
 		};
-		sendMessage("/pbe");
+		sendMessage("/pbend");
 	}
 	
 	/**
@@ -1265,8 +1277,8 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		long startTime = System.nanoTime();
 		int lineCount = 0;
 		
-		sendMessage("/gph");
-		sendMessage("/pbi " + input.size());
+		sendMessage("/gphide");
+		sendMessage("/pbinit " + input.size());
 		
 		for (String line : input) {
 			m = p.matcher(line);
@@ -1320,7 +1332,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 					addEdge(source, target, edgeName, parsedEdgeWeight, false);
 				}
 			}
-			sendMessage("/pbu " + ++lineCount);
+			sendMessage("/pbupdate " + ++lineCount);
 		}
 		sendMessage("ERFOLG: Benoetigte Zeit: " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden");
 		return true;
@@ -1344,7 +1356,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		
 		long startTime = System.nanoTime();
 		int elemsProcessed = 0;
-		sendMessage("/pbi " + getGraph().edgeSet().size());
+		sendMessage("/pbinit " + getGraph().edgeSet().size());
 		
 		// zuerst Kanten
 		for (GKAEdge e : getGraph().edgeSet()) {
@@ -1352,23 +1364,23 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			resultList.add(outLine);
 			singleVertices.remove(e.getSource());
 			singleVertices.remove(e.getTarget());
-			sendMessage("/pbu " + ++elemsProcessed);
+			sendMessage("/pbupdate " + ++elemsProcessed);
 		}
 		
 //		// danach alleinstehende Knoten
 //		for (GKAVertex v : getGraph().vertexSet()) {
 //			if (getAllAdjacentsOf(v, false).isEmpty()) {
 //				resultList.add(v.getName() + ";");
-//				sendMessage("/pbu " + ++elemsProcessed);
+//				sendMessage("/pbupdate " + ++elemsProcessed);
 //			}
 //		}
 		elemsProcessed = 0;
-		sendMessage("/pbi " + singleVertices.size());
+		sendMessage("/pbinit " + singleVertices.size());
 		
 		// danach alleinstehende Knoten
 		for (GKAVertex v : singleVertices) {
 			resultList.add(v.getName() + ";");
-				sendMessage("/pbu " + ++elemsProcessed);
+				sendMessage("/pbupdate " + ++elemsProcessed);
 		}
 		
 		sendMessage("ERFOLG: Benoetigte Zeit: " + String.valueOf((System.nanoTime() - startTime) / 1E9D) + " Sekunden");
