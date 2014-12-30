@@ -172,6 +172,25 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	}
 	
 	
+	
+	/**
+	 * BASEFUNC
+	 * Generiert einen vollstaendigen Graphen mit einer Knotenanzahl von <tt>desiredVertexCount</tt>
+	 * 
+	 * @param desiredVertexCount Gewuenschte Knotenanzahl
+	 */
+	public void createCompleteGraph(int desiredVertexCount) {
+		String desiredVertexCountString = (String) JOptionPane.showInputDialog(null, "Anzahl zu generierender Knoten:", "Vollstaendiger Graph", JOptionPane.PLAIN_MESSAGE, null, null, desiredVertexCount);
+		if (!desiredVertexCountString.matches("\\d+"))
+			return;
+		
+		CompleteGraphGenerator generator = new CompleteGraphGenerator(this, graphType, Integer.parseInt(desiredVertexCountString));
+		new Thread(generator).start();
+	}
+	
+	
+	
+	
 	/**
 	 * Standartkonfiguration fuer den Zufallsgraphen.
 	 */
@@ -519,13 +538,33 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	
 	/**
 	 * BASEFUNC
-	 * Ermittelt das Kantenobjekt zwischen Source- und Targetknoten.
+	 * Ermittelt das erste Kantenobjekt zwischen Source- und Targetknoten.
 	 * 
-	 * @param edgeName Kante 
+	 * @param source Sourceknoten
+	 * @param target Targetknoten
 	 * @return Kantenobjekt zwischen Source- und Targetknoten.
 	 */
 	public GKAEdge getEdge(GKAVertex source, GKAVertex target) {
+		checkNotNull(source);
+		checkNotNull(target);
+		
 		return getGraph().getEdge(source, target);
+	}
+	
+	
+	/**
+	 * BASEFUNC
+	 * Liefert alle Kanten zwischen source und target.
+	 * 
+	 * @param source Sourceknoten
+	 * @param target Targetknoten
+	 * @return Set von Kanten zwischen Source- und Targetknoten.
+	 */
+	public Set<GKAEdge> getAllEdges(GKAVertex source, GKAVertex target) {
+		checkNotNull(source);
+		checkNotNull(target);
+		
+		return getGraph().getAllEdges(source, target);
 	}
 
 	/**
@@ -1488,6 +1527,21 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			return false;
 		
 		return true;
+	}
+	
+	
+	
+	
+	// Methoden fuer schnelleres Hinzufuegen von Knoten und Kanten bei Generierung von vollstaendigen Graphen
+	
+	public void addVertexWithoutChecks(String vertexName) {
+		getGraph().addVertex(GKAVertex.valueOf(vertexName));
+	}
+	
+	public void addEdgeWithoutChecks(GKAVertex source, GKAVertex target, String edgeName, Integer edgeWeight) {
+		GKAEdge edge = GKAEdge.valueOf(edgeName, edgeWeight, edgeIdCounter++);
+		
+		getGraph().addEdge(source, target, edge);
 	}
 	
 	

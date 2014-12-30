@@ -1,41 +1,31 @@
 package main.graphs.algorithms.flow;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.Matrix;
+import main.graphs.algorithms.GKAAlgorithmBase;
 import main.graphs.algorithms.interfaces.Batch;
 import main.graphs.algorithms.interfaces.FlowCalculator;
 
-public abstract class FlowCalculatorBase implements FlowCalculator {
+public abstract class FlowCalculatorBase extends GKAAlgorithmBase implements FlowCalculator {
 	
-	// Fuer Laufzeitmessung
-	protected long startTime = 0;
-	protected long timeElapsed = 0;
-	protected long hc = 0;
-	protected boolean running = false;
+	protected 	Batch<GKAVertex> 	nodesToProcess;
+	protected 	GKAGraph 			_graph; // Hilfsvariable mit Referenz auf den Arbeitsgraphen
+	protected 	int 				maxFlow = 0;
 	
-	protected Matrix<GKAVertex, GKAVertex, Integer> capacities;
-	protected Matrix<GKAVertex, GKAVertex, Integer> currentFlows;
-	
-	protected Batch<GKAVertex> nodesToProcess;
-	
-	protected GKAGraph _graph; // Hilfsvariable mit Referenz auf den Arbeitsgraphen
-	
-	protected int maxFlow = 0;
-	
+	protected 	Matrix<GKAVertex, GKAVertex, Integer> capacities;
+	protected 	Matrix<GKAVertex, GKAVertex, Integer> currentFlows;
 	
 	/**
 	 * Standart-Konstruktor, der von jeder Kindklasse zuerst aufgerufen werden muss,
@@ -86,7 +76,7 @@ public abstract class FlowCalculatorBase implements FlowCalculator {
 			}
 		}
 		
-		System.out.println(capacities); //debug
+//		System.out.println(capacities); //debug
 		
 		// Matrix, die aktuelle Fluesse halten soll, mit Nullen fuellen
 		currentFlows = new Matrix<>(vertices, vertices, 0);
@@ -266,55 +256,4 @@ public abstract class FlowCalculatorBase implements FlowCalculator {
 		return this.maxFlow;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see main.graphs.algorithms.interfaces.FlowCalculator#startTimeMeasurement()
-	 */
-	@Override
-	public void startTimeMeasurement() {
-		startTime = System.nanoTime();
-		running = true;
-	}
-	
-	/* (non-Javadoc)
-	 * @see main.graphs.algorithms.interfaces.FlowCalculator#stopTimeMeasurement()
-	 */
-	@Override
-	public void stopTimeMeasurement() {
-		timeElapsed = System.nanoTime() - startTime;
-		running = false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see main.graphs.algorithms.interfaces.FlowCalculator#getRuntime()
-	 */
-	@Override
-	public long getRuntime() {
-		return timeElapsed;
-	}
-
-	/* (non-Javadoc)
-	 * @see main.graphs.algorithms.interfaces.FlowCalculator#hitCounter()
-	 */
-	@Override
-	public long getHitCounter() {
-		return hc;
-	}
-	
-	/* (non-Javadoc)
-	 * @see main.graphs.algorithms.interfaces.FlowCalculator#isRunning()
-	 */
-	@Override
-	public boolean isRunning() {
-		return running;
-	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
-
 }

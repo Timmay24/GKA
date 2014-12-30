@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 
 
 
+
 //import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -55,10 +56,11 @@ import javax.swing.text.DefaultCaret;
 
 
 
+
 //import main.graphs.Algorithms;
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
-import main.graphs.algorithms.interfaces.FlowCalculator;
+import main.graphs.algorithms.interfaces.GKAAlgorithm;
 import main.graphs.algorithms.interfaces.PathFinder;
 
 import com.mxgraph.model.mxCell;
@@ -76,6 +78,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 //import org.eclipse.wb.swing.FocusTraversalOnArray;
+
 
 
 
@@ -152,6 +155,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenuItem mntmAddVertex;
 	private JMenu mnKnoten;
 	private JMenuItem mntmFlowCalculatorStats;
+	private JMenuItem mntmVollstaendigerGraph;
 
 	
 
@@ -205,7 +209,6 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	 * @param graphType
 	 */
 	private void newGraph(GraphType graphType) {
-		checkNotNull(graphType);
 		graphController.newGraph(graphType);
 	}
 	
@@ -519,6 +522,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		
 		mntmUngerichtetGewichtet = new JMenuItem("Gewichtet");
+		mntmUngerichtetGewichtet.setSelectedIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/arrow_right_green.png")));
 		mntmUngerichtetGewichtet.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				newGraph(GraphType.UNDIRECTED_WEIGHTED);
@@ -546,6 +550,15 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		mntmZufallsgraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/dice.png")));
 		mnNeuerGraph.add(mntmZufallsgraph);
+		
+		mntmVollstaendigerGraph = new JMenuItem("Vollst\u00E4ndiger Graph");
+		mntmVollstaendigerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/complete_graph.png")));
+		mntmVollstaendigerGraph.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.getGraphWrapper().createCompleteGraph(5);
+			}
+		});
+		mnNeuerGraph.add(mntmVollstaendigerGraph);
 		mntmBeispiel.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/example.png")));
 		mnNeuerGraph.add(mntmBeispiel);
 		
@@ -781,7 +794,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		if (prototype instanceof PathFinder) {
 			pathStatsWindow.onStatsReceived(prototype, stats);
 			pathStatsWindow.show();
-		} else if (prototype instanceof FlowCalculator) {
+		} else if (prototype instanceof GKAAlgorithm) {
 			flowStatsWindow.onStatsReceived(prototype, stats);
 			flowStatsWindow.show();
 		}
