@@ -87,24 +87,28 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 			//Schlüssel (Knoten) der Matrixzeile
 			GKAVertex line_vertex = resultRoute.get(resultRouteindex);
 			
+			shortest_distance = Integer.MAX_VALUE;
+			
 			for (int listindex = 0; listindex < list.size(); listindex++){
 				//Schlüssel (Knoten) der Matrixspalte
 				GKAVertex column_vertex = list.get(listindex);
 				
 				//Entfernung von einem Knoten zum anderen
-				int distance = distanceTable.getValueAt(line_vertex, column_vertex);
-				
-				/*Wenn ein kürzerer Abstand von source zu Target gefunden wurde,
-				 * dann übernehme die Distance und speichere den Knoten*/
-				if(distance < shortest_distance && !resultRoute.contains(column_vertex)){
-					shortest_distance = distance;
-					current_vertex_with_shortest_distance = column_vertex;
+				if(line_vertex != column_vertex){
+					int distance = distanceTable.getValueAt(line_vertex, column_vertex);
+					
+					/*Wenn ein kürzerer Abstand von source zu Target gefunden wurde,
+					 * dann übernehme die Distance und speichere den Knoten*/
+					if(distance < shortest_distance && !resultRoute.contains(column_vertex)){
+						shortest_distance = distance;
+						current_vertex_with_shortest_distance = column_vertex;
+					}
 				}
 			}
 			
 			/*Wenn der Knoten gefunden wurde, der am dichtesten vom line_vertex liegt,
 			 * wird dieser zur Rundgangliste hinzugefügt*/
-			if(current_vertex_with_shortest_distance != null){
+			if(current_vertex_with_shortest_distance != null && !resultRoute.contains(current_vertex_with_shortest_distance)){
 				resultRoute.add(current_vertex_with_shortest_distance);
 			}
 			

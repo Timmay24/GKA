@@ -87,6 +87,7 @@ public class TestNearestNeighbourHeuristicSearcher {
 		shortestWays.add(b);
 		shortestWays.add(d);
 		shortestWays.add(c);
+		shortestWays.add(a);
 		
 		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
 		
