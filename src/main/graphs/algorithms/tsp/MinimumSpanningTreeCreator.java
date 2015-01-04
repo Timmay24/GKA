@@ -8,25 +8,18 @@ import java.util.List;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
+import main.graphs.GraphType;
 import main.graphs.algorithms.GKAAlgorithmBase;
 import main.graphs.algorithms.path.BFS;
 
 public class MinimumSpanningTreeCreator extends GKAAlgorithmBase { 
 	
 	public void applyMinimumSpanningTreeTo(GKAGraph g) {
-		GKAGraph minimalGraph = GKAGraph.valueOf(g.getGraphType());
-		
-		for (GKAVertex v : g.getGraph().vertexSet()) {
-			System.out.println(v);
-		}
-		
-		
 		// Alle Kanten von g, aufsteigend sortiert, in einer Liste speichern, die abgearbeitet wird
 		List<GKAEdge> remainingEdges = getSortedListOf(g.getGraph().edgeSet());
 		
-		for (GKAEdge e : remainingEdges) {
-			System.out.println(e);
-		}
+		// Aktuellen Graphen zuruecksetzen
+		g.newGraph(g.getGraphType());
 		
 		// Hauptschleife
 		while (!remainingEdges.isEmpty()) {
@@ -36,27 +29,13 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase {
 			String edgeName = currentEdge.getName();
 			Integer edgeWeight = currentEdge.getWeight();
 			
-			System.out.println(sourceNode);
-			System.out.println(targetNode);
-			System.out.println(edgeName + "\n");
-			
-			if (!minimalGraph.containsVertex(targetNode) || !minimalGraph.containsVertex(sourceNode)) {
-				System.out.println(minimalGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight));
+			if (!g.containsVertex(targetNode) || !g.containsVertex(sourceNode)) {
+				g.addEdge(sourceNode, targetNode, edgeName, edgeWeight);
 				
-			} else if (minimalGraph.findShortestWay(new BFS(), sourceNode, targetNode).isEmpty()) {
-				System.out.println(minimalGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight));
+			} else if (g.findShortestWay(new BFS(), sourceNode, targetNode).isEmpty()) {
+				g.addEdge(sourceNode, targetNode, edgeName, edgeWeight);
 			}
-			
 		}
-
-		
-//		//DEBUG
-//		System.out.println("edges im minimalgraph");
-//		for (GKAEdge e : minimalGraph.getGraph().edgeSet()) {
-//			System.out.println(e.getName());
-//		}
-//		
-		
 	}
 	
 	public List<GKAEdge> getSortedListOf(Collection<GKAEdge> edges) {

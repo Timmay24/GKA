@@ -19,10 +19,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
+import javax.swing.text.html.MinimalHTMLWriter;
 
 import main.graphs.algorithms.interfaces.FlowCalculator;
 import main.graphs.algorithms.interfaces.PathFinder;
 import main.graphs.algorithms.interfaces.TSPAlgorithm;
+import main.graphs.algorithms.tsp.MinimumSpanningTreeCreator;
 import main.graphs.exceptions.NoWayException;
 
 import org.jgrapht.ListenableGraph;
@@ -180,7 +182,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * 
 	 * @param desiredVertexCount Gewuenschte Knotenanzahl
 	 */
-	public void createCompleteGraph(int desiredVertexCount) {
+	public void createCompleteGraph(int desiredVertexCount, GraphType graphType) {
 		String desiredVertexCountString = (String) JOptionPane.showInputDialog(null, "Anzahl zu generierender Knoten:", "Vollstaendiger Graph", JOptionPane.PLAIN_MESSAGE, null, null, desiredVertexCount);
 		if (!desiredVertexCountString.matches("\\d+"))
 			return;
@@ -1568,6 +1570,14 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		GKAEdge edge = GKAEdge.valueOf(edgeName, edgeWeight, edgeIdCounter++);
 		
 		getGraph().addEdge(source, target, edge);
+	}
+	
+	
+	
+	public void reduceToMinimumSpanningTree() {
+		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(this);
+		resetColors();
+		setLayout();
 	}
 	
 	
