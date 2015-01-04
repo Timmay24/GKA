@@ -72,7 +72,6 @@ public class TestNearestNeighbourHeuristicSearcher {
 		ef = g.getEdge("ef");
 		
 		
-		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g);
 		
 	}
 
