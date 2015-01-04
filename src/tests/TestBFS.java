@@ -80,7 +80,7 @@ public class TestBFS {
 	     shortWay1.add(b);
 	     shortWay1.add(e);
 	     shortWay1.add(m);
-	      
+	     
 	     assertEquals(shortWay1, graph1.findShortestWay(new BFS() , a, m));
 	     
 	     
