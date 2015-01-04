@@ -6,6 +6,7 @@ import java.util.List;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.algorithms.interfaces.PathFinder;
+import main.graphs.exceptions.NoWayException;
 
 public abstract class PathFinderBase implements PathFinder, Runnable {
 
@@ -23,7 +24,11 @@ public abstract class PathFinderBase implements PathFinder, Runnable {
 //		g.sendMessage("/gphide");
 		
 		
-		resultWay = findShortestWay();
+		try {
+			resultWay = findShortestWay();
+		} catch (NoWayException e) {
+			resultWay = new ArrayList<>();
+		}
 	}
 	
 	@Override

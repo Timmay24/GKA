@@ -11,14 +11,13 @@ import main.graphs.algorithms.interfaces.TSPAlgorithm;
 
 public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implements TSPAlgorithm {
 
-	public List<GKAVertex> getRoute(GKAGraph g, GKAVertex startNode, GKAVertex endNode) throws Exception {
+	protected GKAGraph g;
+	protected GKAVertex startNode;
+	protected List<GKAVertex> resultRoute;
+	
+	public List<GKAVertex> findRoute() {
 		
 		int hitcount = 0;
-		
-		//Für eine Rundreise müssen start- und Endknoten gleich sein
-		if (startNode != endNode){
-			throw new Exception("Start und Endknoten sind nicht die gleichen");
-		}
 		
 		List<GKAVertex> resultRoute = new ArrayList<>();
 
@@ -118,6 +117,21 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		System.out.println(resultRoute.toString());
 		
 		return resultRoute;
+	}
+
+	@Override
+	public void run() {
+		this.resultRoute = findRoute();
+	}
+
+	public List<GKAVertex> getRoute() {
+		return this.resultRoute;
+	}
+	
+	@Override
+	public void injectReferences(GKAGraph g, GKAVertex startNode) {
+		this.g = g;
+		this.startNode = startNode;
 	}
 	
 }

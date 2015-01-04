@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 
 import main.graphs.algorithms.interfaces.FlowCalculator;
 import main.graphs.algorithms.interfaces.PathFinder;
+import main.graphs.algorithms.interfaces.TSPAlgorithm;
 import main.graphs.exceptions.NoWayException;
 
 import org.jgrapht.ListenableGraph;
@@ -1012,7 +1013,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	 * @param goalVertex
 	 * @return
 	 */
-	public void findShortestWay(PathFinder algorithm, String startVertex, String goalVertex) {
+	public List<GKAVertex> findShortestWay(PathFinder algorithm, String startVertex, String goalVertex) {
 		checkNotNull(algorithm);
 		checkNotNull(startVertex);
 		checkNotNull(goalVertex);
@@ -1021,10 +1022,10 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		GKAVertex goal = getVertex(goalVertex);
 		
 		if (start != null && goal != null) {
-			findShortestWay(algorithm, start, goal);
+			return findShortestWay(algorithm, start, goal);
 		} else {
 			sendMessage("FEHLER: Start- oder Zielknoten ungültig oder nicht existent.");
-			return ;//null;
+			return new ArrayList<>();
 		}
 	}
 	
@@ -1070,19 +1071,44 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		List<GKAVertex> way = null;
 		resetColors();
 
+	
+		algorithm.injectReferences(this, start, goal);
 		
-			algorithm.injectReferences(this, start, goal);
-			
 //			Thread algo = new Thread( algorithm );
 //			algo.start();
-			algorithm.run();
-			
-			way = algorithm.getResultWay();
-			
-			printWay(way);
-			
-			return way;
+		algorithm.run();
+		
+		way = algorithm.getResultWay();
+		
+		if (way.isEmpty())
+			System.out.println("Kein Weg!");
+		
+		printWay(way);
+		
+		return way;
 	}
+	
+	
+	public List<GKAVertex> findRoute(TSPAlgorithm algorithm, GKAVertex start) {
+		checkNotNull(algorithm);
+		checkNotNull(start);
+		
+		List<GKAVertex> way = null;
+		resetColors();
+
+		
+		algorithm.injectReferences(this, start);
+		
+		algorithm.run();
+		
+		way = algorithm.getRoute();
+		
+		printWay(way);
+		
+		return way;
+	}
+	
+	
 	
 	public void printWay(List<GKAVertex> way) {
 		checkNotNull(way);

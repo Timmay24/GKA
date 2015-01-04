@@ -3,42 +3,60 @@ package main.graphs.algorithms.tsp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.algorithms.GKAAlgorithmBase;
-import main.graphs.algorithms.interfaces.TSPAlgorithm;
+import main.graphs.algorithms.path.BFS;
 
-public class MinimumSpanningTreeCreator extends GKAAlgorithmBase implements TSPAlgorithm {
-
+public class MinimumSpanningTreeCreator extends GKAAlgorithmBase { 
+	
 	public void applyMinimumSpanningTreeTo(GKAGraph g) {
 		GKAGraph minimalGraph = GKAGraph.valueOf(g.getGraphType());
 		
 		for (GKAVertex v : g.getGraph().vertexSet()) {
-			minimalGraph.addVertex(v);
+			System.out.println(v);
 		}
-		
 		
 		
 		// Alle Kanten von g, aufsteigend sortiert, in einer Liste speichern, die abgearbeitet wird
 		List<GKAEdge> remainingEdges = getSortedListOf(g.getGraph().edgeSet());
 		
+		for (GKAEdge e : remainingEdges) {
+			System.out.println(e);
+		}
+		
 		// Hauptschleife
 		while (!remainingEdges.isEmpty()) {
 			GKAEdge currentEdge = remainingEdges.remove(0);
+			String sourceNode = ((GKAVertex)currentEdge.getSource()).getName();
+			String targetNode = ((GKAVertex)currentEdge.getTarget()).getName();
+			String edgeName = currentEdge.getName();
+			Integer edgeWeight = currentEdge.getWeight();
 			
-			minimalGraph.addEdge((GKAVertex)currentEdge.getSource(), (GKAVertex)currentEdge.getTarget(), currentEdge.getName());
+			System.out.println(sourceNode);
+			System.out.println(targetNode);
+			System.out.println(edgeName + "\n");
 			
-			// Falls die hinzugefuegte Kante einen Zyklus verursacht, wird sie wieder entfernt
-			if (hasCycle(minimalGraph)) {
-				minimalGraph.removeEdge(currentEdge.getName());
+			if (!minimalGraph.containsVertex(targetNode) || !minimalGraph.containsVertex(sourceNode)) {
+				System.out.println(minimalGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight));
+				
+			} else if (minimalGraph.findShortestWay(new BFS(), sourceNode, targetNode).isEmpty()) {
+				System.out.println(minimalGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight));
 			}
 			
 		}
+
+		
+//		//DEBUG
+//		System.out.println("edges im minimalgraph");
+//		for (GKAEdge e : minimalGraph.getGraph().edgeSet()) {
+//			System.out.println(e.getName());
+//		}
+//		
+		
 	}
 	
 	public List<GKAEdge> getSortedListOf(Collection<GKAEdge> edges) {
@@ -52,11 +70,6 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase implements TSPA
 		});
 		
 		return result;
-	}
-	
-	private boolean hasCycle(GKAGraph g) {
-		
-		return false;
 	}
 	
 }

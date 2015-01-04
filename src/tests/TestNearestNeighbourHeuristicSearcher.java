@@ -6,6 +6,7 @@ import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
 import main.graphs.GraphType;
 import main.graphs.algorithms.path.Dijkstra;
+import main.graphs.algorithms.tsp.MinimumSpanningTreeCreator;
 import main.graphs.algorithms.tsp.NearestNeighbourHeuristicSearcher;
 
 import java.util.ArrayList;
@@ -70,13 +71,15 @@ public class TestNearestNeighbourHeuristicSearcher {
 		df = g.getEdge("df");
 		ef = g.getEdge("ef");
 		
+		
+		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g);
+		
 	}
 
 	
 	@Test
 	public void testNearestNeighbour() {
 		
-//		assertEquals(shortestWays, g.getRoute(new NearestNeighbourHeuristicSearcher(), a, a));
 	
 		shortestWays.add(a);
 		shortestWays.add(e);
@@ -85,6 +88,7 @@ public class TestNearestNeighbourHeuristicSearcher {
 		shortestWays.add(d);
 		shortestWays.add(c);
 		
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
 		
 	}
 
