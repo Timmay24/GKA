@@ -19,7 +19,13 @@ import org.junit.Test;
 public class TestNearestNeighbourHeuristicSearcher {
 	
 	List<GKAVertex> shortestWays = new ArrayList<>();
+	List<GKAVertex> shortestWays1 = new ArrayList<>();
+	List<GKAVertex> shortestWays2 = new ArrayList<>();
+	List<GKAVertex> shortestWays3 = new ArrayList<>();
+	List<GKAVertex> shortestWays4 = new ArrayList<>();
+	
 	GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
+	GKAGraph g1 = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 	
 	GKAVertex a,b,c,d,e,f;
 	GKAEdge ab,ac,ad,ae,af,
@@ -27,6 +33,7 @@ public class TestNearestNeighbourHeuristicSearcher {
 			cd,ce,cf,
 			de,df,
 			ef;
+
 	@Before
 	public void setUp() throws Exception {
 		
@@ -77,9 +84,8 @@ public class TestNearestNeighbourHeuristicSearcher {
 
 	
 	@Test
-	public void testNearestNeighbour() {
+	public void testNearestNeighbourGraphG() {
 		
-	
 		shortestWays.add(a);
 		shortestWays.add(e);
 		shortestWays.add(f);
@@ -89,7 +95,133 @@ public class TestNearestNeighbourHeuristicSearcher {
 		shortestWays.add(a);
 		
 		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		assertEquals(shortestWays, g.findRoute(new NearestNeighbourHeuristicSearcher(), a));
+		
+		
+		
+		shortestWays1.add(b);
+		shortestWays1.add(d);
+		shortestWays1.add(a);
+		shortestWays1.add(e);
+		shortestWays1.add(f);
+		shortestWays1.add(c);
+		shortestWays1.add(b);
+		
+		assertEquals(shortestWays1, g.findRoute(new NearestNeighbourHeuristicSearcher(), b));
+		
+		shortestWays2.add(e);
+		shortestWays2.add(f);
+		shortestWays2.add(b);
+		shortestWays2.add(d);
+		shortestWays2.add(a);
+		shortestWays2.add(c);
+		shortestWays2.add(e);
+		
+		assertEquals(shortestWays2, g.findRoute(new NearestNeighbourHeuristicSearcher(), e));
 		
 	}
+	
+	
+	
+		
+		
 
 }

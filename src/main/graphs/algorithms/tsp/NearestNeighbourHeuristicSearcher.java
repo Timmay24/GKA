@@ -17,15 +17,15 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 	
 	public List<GKAVertex> findRoute() {
 		
-		int hitcount = 0;
+//		hc = 0;
 		
 		List<GKAVertex> resultRoute = new ArrayList<>();
 
-		
-		
 		//Matrix fuer den kuerzesten Abstand zwischen Knoten
 		Matrix<GKAVertex, GKAVertex, Integer> distanceTable = new Matrix<>();
 		
+		//Startzeit
+		startTimeMeasurement();
 		
 		/**
 		 * Aufbau der Matritzen:
@@ -37,7 +37,7 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		list.add(startNode);
 		for (int i = 0; i < list.size(); i++) {
 			for (GKAVertex v : g.getAllAdjacentsOf(list.get(i))) {
-				hitcount++;
+				hc++;
 				if (!list.contains(v)) {
 					list.add(v);
 				}
@@ -61,7 +61,7 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 				if (firstVertex != secondVertex) {
 					//Kantenlänge holen
 					distanceTable.setValueAt(firstVertex, secondVertex, (g.getEdge(firstVertex, secondVertex).getWeight()));
-//					System.out.println(g.getEdge(firstVertex, secondVertex).getWeight());
+					hc++;
 				} else if (firstVertex == secondVertex) {
 					distanceTable.setValueAt(firstVertex, secondVertex, null);
 				}
@@ -118,7 +118,11 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		 * Der Startknoten ist also zweimal in der Liste vorhanden.*/
 		resultRoute.add(startNode);
 		
+		//Endzeit
+		stopTimeMeasurement();
+		
 		System.out.println(resultRoute.toString());
+		System.out.println(timeElapsed);
 		
 		return resultRoute;
 	}
