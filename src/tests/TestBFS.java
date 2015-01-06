@@ -26,7 +26,7 @@ public class TestBFS {
 	
 //	@Ignore
 	@Test
-	public void testFindShortestWay() throws NoWayException {
+	public void testFindShortestWay() {
 		/*Test 1
 		 * Undirected Graph
 		 * */
@@ -198,7 +198,6 @@ public class TestBFS {
 	}
 	
 	
-//	@Ignore
 	@Test
 	public void testReverse(){
 		
@@ -277,10 +276,9 @@ public class TestBFS {
 	/*Test 8
 	 * Directed Graph
 	 * */
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testFSW2() {
 	
-		
 	    GKAVertex b1 = GKAVertex.valueOf("1");
 	    GKAVertex b2 = GKAVertex.valueOf("2");
 	    GKAVertex b3 = GKAVertex.valueOf("3");
@@ -332,6 +330,6 @@ public class TestBFS {
 	    /*Start vertex: 1 (b1)
 		 * End vertex: 5 (b5)
 		 */
-	    assertNull(graph3.findShortestWay(new BFS(), b3, b10));
+	    assertTrue(graph3.findShortestWay(new BFS(), b3, b10).isEmpty());
 	}
 }

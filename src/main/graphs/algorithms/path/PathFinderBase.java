@@ -13,7 +13,7 @@ public abstract class PathFinderBase implements PathFinder, Runnable {
 	protected GKAGraph g;
 	protected GKAVertex startNode;
 	protected GKAVertex endNode;
-	protected List<GKAVertex> resultWay = new ArrayList<GKAVertex>();
+	protected List<GKAVertex> resultWay = new ArrayList<>();
 	
 	protected abstract List<GKAVertex> findShortestWay() throws RuntimeException;
 
@@ -23,11 +23,10 @@ public abstract class PathFinderBase implements PathFinder, Runnable {
 //		g.sendMessage("/pbshow");
 //		g.sendMessage("/gphide");
 		
-		
 		try {
 			resultWay = findShortestWay();
 		} catch (NoWayException e) {
-			resultWay = new ArrayList<>();
+			e.printStackTrace();
 		}
 	}
 	

@@ -155,7 +155,11 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenuItem mntmAddVertex;
 	private JMenu mnKnoten;
 	private JMenuItem mntmFlowCalculatorStats;
-	private JMenuItem mntmVollstaendigerGraph;
+	private JMenuItem mntmUngerichtetGewichtet_1;
+	private JMenu mnExtras;
+	private JMenuItem mntmApplayMST;
+	private JMenu mnVollstndigerGraph;
+	private JMenuItem mntmUngerichtetUngewichtet_1;
 
 	
 
@@ -551,14 +555,26 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		mntmZufallsgraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/dice.png")));
 		mnNeuerGraph.add(mntmZufallsgraph);
 		
-		mntmVollstaendigerGraph = new JMenuItem("Vollst\u00E4ndiger Graph");
-		mntmVollstaendigerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/complete_graph.png")));
-		mntmVollstaendigerGraph.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				graphController.getGraphWrapper().createCompleteGraph(5);
+		mnVollstndigerGraph = new JMenu("Vollst\u00E4ndiger Graph");
+		mnVollstndigerGraph.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/complete_graph.png")));
+		mnNeuerGraph.add(mnVollstndigerGraph);
+		
+		mntmUngerichtetGewichtet_1 = new JMenuItem("Ungerichtet + Gewichtet");
+		mnVollstndigerGraph.add(mntmUngerichtetGewichtet_1);
+		
+		mntmUngerichtetUngewichtet_1 = new JMenuItem("Ungerichtet + Ungewichtet");
+		mntmUngerichtetUngewichtet_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				graphController.getGraphWrapper().createCompleteGraph(5, GraphType.UNDIRECTED_UNWEIGHTED);
 			}
 		});
-		mnNeuerGraph.add(mntmVollstaendigerGraph);
+		mnVollstndigerGraph.add(mntmUngerichtetUngewichtet_1);
+		mntmUngerichtetGewichtet_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.getGraphWrapper().createCompleteGraph(5, GraphType.UNDIRECTED_WEIGHTED);
+				
+			}
+		});
 		mntmBeispiel.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/example.png")));
 		mnNeuerGraph.add(mntmBeispiel);
 		
@@ -660,6 +676,18 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		});
 		mntmAddVertex.setIcon(new ImageIcon(MainWindow.class.getResource("/ressources/images/add.png")));
 		mnKnoten.add(mntmAddVertex);
+		
+		mnExtras = new JMenu("Extras");
+		menuBar.add(mnExtras);
+		
+		mntmApplayMST = new JMenuItem("Auf minimalen Spannbaum reduzieren");
+		mntmApplayMST.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				graphController.getGraphWrapper().reduceToMinimumSpanningTree();
+				pathStatsWindow.hide();
+			}
+		});
+		mnExtras.add(mntmApplayMST);
 		
 		mnStatistik = new JMenu("Statistik");
 		menuBar.add(mnStatistik);

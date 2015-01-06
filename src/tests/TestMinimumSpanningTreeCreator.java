@@ -31,7 +31,7 @@ public class TestMinimumSpanningTreeCreator {
 	}
 	
 	@Test
-	public void testApplayMinimumSpanningTree() {
+	public void testApplyMinimumSpanningTree() {
 		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
 		GKAVertex a,b,c,d,e,f;

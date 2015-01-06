@@ -1082,9 +1082,6 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		
 		way = algorithm.getResultWay();
 		
-		if (way.isEmpty())
-			System.out.println("Kein Weg!");
-		
 		printWay(way);
 		
 		return way;

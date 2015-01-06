@@ -59,10 +59,17 @@ public class FlowCalculatorStatsWindow implements StatsListener {
 	}
 	
 	/**
-	 * Laesst dieses Fenster konstruieren und anzeigen.
+	 * Zeigt dieses Fenster an.
 	 */
 	public void show() {
 		this.frmStatistiken.setVisible(true);
+	}
+	
+	/**
+	 * Versteckt dieses Fenster an.
+	 */
+	public void hide() {
+		this.frmStatistiken.setVisible(false);
 	}
 
 	/**

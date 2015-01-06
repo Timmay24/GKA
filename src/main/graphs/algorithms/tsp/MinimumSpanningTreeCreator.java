@@ -8,9 +8,7 @@ import java.util.List;
 import main.graphs.GKAEdge;
 import main.graphs.GKAGraph;
 import main.graphs.GKAVertex;
-import main.graphs.GraphType;
 import main.graphs.algorithms.GKAAlgorithmBase;
-import main.graphs.algorithms.path.BFS;
 
 public class MinimumSpanningTreeCreator extends GKAAlgorithmBase { 
 	
