@@ -81,10 +81,9 @@ public class TestMinimumSpanningTreeCreator {
 		df = g.getEdge("df");
 		ef = g.getEdge("ef");
 		
-		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g);
+		GKAGraph mst = null;
 		
-		Set<GKAEdge> desiredEdges = new HashSet<>(Arrays.asList());
-		
+		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g, mst);
 		
 	}
 
