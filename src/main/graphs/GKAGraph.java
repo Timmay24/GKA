@@ -1578,6 +1578,20 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	}
 	
 	
+	public GKAGraph clone() {
+		GKAGraph clone = GKAGraph.valueOf(getGraphType());
+		for (GKAEdge edge : getGraph().edgeSet()) {
+			String source = ((GKAVertex) edge.getSource()).toString();
+			String target = ((GKAVertex) edge.getTarget()).toString();
+			String edgeName = edge.getName();
+			Integer weight = edge.getWeight();
+			
+			clone.addEdge(source, target, edgeName, weight);
+		}
+		return clone;
+	}
+	
+	
 	
 	/**
 	 *	TODO
