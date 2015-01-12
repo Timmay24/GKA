@@ -984,15 +984,15 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 				
 				if (directed)                                       	// Sonderregelung fuer gerichtete Graphen:                      
 				{														// Nur adjazente Knoten in die Ergebnisliste stecken,           
-					if (edge.getSource() == sourceVertex) {     		// zu denen man vom Knoten sourceVertex aus kommen kann.        
+					if (edge.getSource().equals(sourceVertex)) {     		// zu denen man vom Knoten sourceVertex aus kommen kann.        
 						resultList.add((GKAVertex)edge.getTarget());  	// D.h. Adjazenten hinter eingehenden Kanten werden ausgenommen.
 					}			
 				}
 				else
 				{
-					if (edge.getSource() == sourceVertex) {				// Ist sourceVertex Source der Kante,
+					if (edge.getSource().equals(sourceVertex)) {				// Ist sourceVertex Source der Kante,
 						resultList.add((GKAVertex)edge.getTarget());	// dann ist Target der Adjazent.
-					} else if (edge.getTarget() == sourceVertex) {		// Ist sourceVertex Target der Kante,
+					} else if (edge.getTarget().equals(sourceVertex)) {		// Ist sourceVertex Target der Kante,
 						resultList.add((GKAVertex)edge.getSource());	// dann ist Source der Adjazent.
 					}
 				}
