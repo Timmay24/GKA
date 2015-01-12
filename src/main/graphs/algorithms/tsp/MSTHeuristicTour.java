@@ -15,6 +15,12 @@ import main.graphs.algorithms.GKAAlgorithmBase;
 
 public class MSTHeuristicTour extends GKAAlgorithmBase {
 
+	List<GKAVertex> tourList;
+	
+	public MSTHeuristicTour() {
+		tourList = new ArrayList<>();
+	}
+	
 	/**
 	 * Errechnet eine möglichst kurze Rundreise innerhalb des Graphen g ab dem Startknoten startNode
 	 * 
@@ -31,11 +37,7 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		// MST vom Ausgangsgraphen g erzeugen und in einen gerichteten + gewichteten MST konvertieren,
 		// in dem zu jeder Kante eine Rückwärtskante existiert. (null bewirkt, dass nicht direkt der Graph g verändert wird)
 		GKAGraph mst = getGraphCopyWithBackEdges(new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g, null));
-		
-	
 		GKAGraph tour = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
-		
-
 		
 		
 		/**
@@ -53,58 +55,62 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		
 		//Liste für den Weg einer Tour erstellen über mehrfachkanten
 		int vertexlistIndex = 0;
-		while(vertexlistIndex < vertexlist.size()){
+		while (vertexlistIndex < vertexlist.size()) {
 			GKAVertex vertex = vertexlist.get(vertexlistIndex);
 			List<GKAVertex> list = new ArrayList<GKAVertex>(mst.getAllAdjacentsOf(vertex));
-			if(!list.isEmpty()){
-				if(list.size() > 1){
+			if (!list.isEmpty()) {
+				if (list.size() > 1) {
 					list.removeAll(vertexlist);
 				}
-				GKAVertex adjacentVertex = list.get(0);
 				
+				GKAVertex adjacentVertex = list.get(0);
+
 				// Gefundenen adjazenten Knoten in die tourliste hinzufügen
 				vertexlist.add(adjacentVertex);
-				
-				//Kante zwischen startNode und elem (adjazenten Knoten) löschen
+
+				// Kante zwischen startNode und elem (adjazenten Knoten) löschen
 				mst.removeEdge(vertex, adjacentVertex);
 			}
 			vertexlistIndex++;
 		}
 		
 		
-		List<GKAVertex> tourlist = new ArrayList<GKAVertex>();
+		List<GKAVertex> tourlist = new ArrayList<>();
 		
 		//tourlist ohne duplikate aus der vertexlist erzeugen
-		for ( Iterator<GKAVertex> iterator = vertexlist.iterator(); iterator.hasNext();){
+		for (Iterator<GKAVertex> iterator = vertexlist.iterator(); iterator.hasNext();) {
 			GKAVertex nextVertex = iterator.next();
-			
-			if(!tourlist.contains(nextVertex)){
+
+			if (!tourlist.contains(nextVertex)) {
 				tourlist.add(nextVertex);
 			}
 		}
 		
 		
 		/* Die Kenten zu einem neuen Graphen tour hinzufügen */
-		for(int index=0; index<tourlist.size();index++){
+		for (int index = 0; index < tourlist.size(); index++) {
 			GKAVertex source;
 			GKAVertex target;
-			
+
 			if (index != tourlist.size() - 1) {
 				source = tourlist.get(index);
 				target = tourlist.get(index + 1);
-				
+
 			} else {
 				source = tourlist.get(index);
 				target = tourlist.get(0);
 			}
-			
+
 			GKAEdge edge = g.getEdge(source, target);
 			String edgeName = edge.getName();
 			int edgeWeight = edge.getWeight();
 			tour.addEdge(source, target, edgeName, edgeWeight);
 		}
 		
-		 stopTimeMeasurement();
+		tourlist.add(startNode);
+		tourList = tourlist;
+		
+		stopTimeMeasurement();
 		
 		return tour;
 	}
@@ -131,6 +137,10 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		}
 		
 		return resultGraph;
+	}
+
+	public List<GKAVertex> getTourList() {
+		return tourList;
 	}
 	
 }

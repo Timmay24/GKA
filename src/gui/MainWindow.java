@@ -5,6 +5,7 @@ import gui.menu.JMenuSave;
 import gui.menu.JMenuSaveAs;
 import gui.panel.FlowCalculatorPanel;
 import gui.panel.PathFinderPanel;
+import gui.panel.TourPanel;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +20,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 
 
 
@@ -57,6 +59,7 @@ import javax.swing.text.DefaultCaret;
 
 
 
+
 //import main.graphs.Algorithms;
 import main.graphs.GKAEdge;
 import main.graphs.GraphType;
@@ -85,6 +88,7 @@ import java.awt.event.KeyEvent;
 
 
 
+
 import javax.swing.JTabbedPane;
 
 import static com.google.common.base.Preconditions.*;
@@ -92,7 +96,7 @@ import static com.google.common.base.Preconditions.*;
 public class MainWindow implements MessageListener, CellListener<mxCell>, AdapterUpdateListener, StatsListener, SetListener, NodeListener {
 	
 	private GraphController graphController;
-	private int[] verNo = {0,8,128};
+	private int[] verNo = {0,9,152};
 	private JButton btnAddEdge;
 	private JFrame mainFrame;
 	private JLabel label;
@@ -160,6 +164,7 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 	private JMenuItem mntmApplayMST;
 	private JMenu mnVollstndigerGraph;
 	private JMenuItem mntmUngerichtetUngewichtet_1;
+	private TourPanel tourPanel;
 
 	
 
@@ -479,11 +484,13 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		// Tabs der Algorithmen
 		pathFinderPanel = new PathFinderPanel(graphController, reportTextArea);
 		flowCalculatorPanel = new FlowCalculatorPanel(graphController, reportTextArea);
+		tourPanel = new TourPanel(graphController, reportTextArea);
 		
 		tabsAnalysing = new JTabbedPane(JTabbedPane.TOP);
 		tabsAnalysing.setBounds(496, 348, 288, 187);
 		tabsAnalysing.addTab("Wegfindung", pathFinderPanel);
 		tabsAnalysing.addTab("Flussberechnung", flowCalculatorPanel);
+		tabsAnalysing.addTab("Rundreisen", tourPanel);
 		mainFrame.getContentPane().add(tabsAnalysing);
 		
 		menuBar = new JMenuBar();
@@ -836,9 +843,11 @@ public class MainWindow implements MessageListener, CellListener<mxCell>, Adapte
 		if (nodeName == null) {
 			pathFinderPanel.setStart("");
 			flowCalculatorPanel.setStart("");
+			tourPanel.setStart("");
 		} else {
 			pathFinderPanel.setStart(nodeName);
 			flowCalculatorPanel.setStart(nodeName);
+			tourPanel.setStart(nodeName);
 		}
 	}
 

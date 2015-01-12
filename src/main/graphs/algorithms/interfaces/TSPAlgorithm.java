@@ -11,5 +11,4 @@ public interface TSPAlgorithm extends GKAAlgorithm, Runnable {
 	
 	public List<GKAVertex> getRoute();
 	
-	
 }

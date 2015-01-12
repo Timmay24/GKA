@@ -24,7 +24,9 @@ import javax.swing.text.html.MinimalHTMLWriter;
 import main.graphs.algorithms.interfaces.FlowCalculator;
 import main.graphs.algorithms.interfaces.PathFinder;
 import main.graphs.algorithms.interfaces.TSPAlgorithm;
+import main.graphs.algorithms.tsp.MSTHeuristicTour;
 import main.graphs.algorithms.tsp.MinimumSpanningTreeCreator;
+import main.graphs.algorithms.tsp.NearestNeighbourHeuristicSearcher;
 import main.graphs.exceptions.NoWayException;
 
 import org.jgrapht.ListenableGraph;
@@ -398,6 +400,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * Delegiert an die BASEFUNC (eigene Typisierung) mit festgelegter Ausgabe von Warnungen.
 	 */
+	@Deprecated
 	private boolean addEdge(GKAVertex source, GKAVertex target, GKAEdge newEdge) {
 		return addEdge(source, target, newEdge, true);
 	}
@@ -405,6 +408,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	/**
 	 * Delegiert an BASEFUNC (Mischtypisierung) mit festgelegter Ausgabe von Warnungen.
 	 */
+	@Deprecated
 	private boolean addEdge(String sourceName, String targetName, GKAEdge newEdge) {
 		return addEdge(sourceName, targetName, newEdge, true);
 	}
@@ -1074,40 +1078,110 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		List<GKAVertex> way = null;
 		resetColors();
 
-	
 		algorithm.injectReferences(this, start, goal);
-		
-//			Thread algo = new Thread( algorithm );
-//			algo.start();
 		algorithm.run();
-		
 		way = algorithm.getResultWay();
+		printWay(way);
+		return way;
+	}
+	
+	/**
+	 * BASEFUNC
+	 * Sucht eine möglichst kurze Rundreise mittels Nearest-Neighbour-Heuristic
+	 * 
+	 * @param start
+	 * @return Liste mit Knoten in Reihenfolge, in der sie besucht wurden 
+	 */
+	public List<GKAVertex> findRoute(GKAVertex start) {
+		checkNotNull(start);
+		TSPAlgorithm algorithm = new NearestNeighbourHeuristicSearcher();
+		
+		List<GKAVertex> way = null;
+		resetColors();
+		
+		algorithm.injectReferences(this, start);
+		algorithm.run();
+		way = algorithm.getRoute();
 		
 		printWay(way);
+		sendMessage("Laufzeit: " + (algorithm.getRuntime() / 1E6D) + " Millisekunden");
 		
 		return way;
 	}
 	
-	
-	public List<GKAVertex> findRoute(TSPAlgorithm algorithm, GKAVertex start) {
-		checkNotNull(algorithm);
+	public List<GKAVertex> findRoute(String start) {
 		checkNotNull(start);
+		GKAVertex startNode = getVertex(start);
+		checkNotNull(startNode);
+		return findRoute(startNode);
+	}
+	
+	/**
+	 * BASEFUNC
+	 * Sucht eine möglichst kurze Rundreise mittels MST-Heuristic
+	 * 
+	 * @param start
+	 * @return Liste mit Knoten in Reihenfolge, in der sie besucht wurden 
+	 */
+	public List<GKAVertex> findTour(GKAVertex start) {
+		checkNotNull(start);
+		MSTHeuristicTour algorithm = new MSTHeuristicTour();
 		
 		List<GKAVertex> way = null;
 		resetColors();
 
-		
-		algorithm.injectReferences(this, start);
-		
-		algorithm.run();
-		
-		way = algorithm.getRoute();
-		
-		printWay(way);
+		algorithm.getTour(this, start);
+		way = algorithm.getTourList();
+		printTour(way);
+		sendMessage("Laufzeit: " + (algorithm.getRuntime() / 1E6D) + " Millisekunden");
 		
 		return way;
 	}
 	
+	private void printTour(List<GKAVertex> way) {
+		checkNotNull(way);
+
+		sendMessage("/pbhide");
+		sendMessage("/gpshow");
+		sendMessage("/pbdeterminate");
+
+		if (way.isEmpty())
+			return;
+	
+		sendMessage("\nRundreise:");
+		String wayString = "";
+		GKAVertex tempNodeA = null, tempNodeB = null;
+		for (GKAVertex v : way) {
+			wayString += v.toString();
+			wayString += " -> ";
+			
+			//// Code Fragment zum 
+			// Knoten durchschieben
+			tempNodeA = tempNodeB;
+			tempNodeB = v;
+			
+			// wenn zwei Knoten angewahlt wurden
+			if (tempNodeA != null && tempNodeB != null) {
+				// inzidente Kante holen
+				GKAEdge tempEdge = getGraph().getEdge(tempNodeA, tempNodeB);
+				if (tempEdge != null) {
+					// und einfaerben
+					colorEdgeRed(tempEdge);
+				}
+			}
+				colorVertexStart(tempNodeB);
+		}
+		colorVertexEnd(tempNodeB);
+		
+		sendMessage(wayString.substring(0, wayString.length() - 4));
+	}
+	
+	public List<GKAVertex> findTour(String start) {
+		checkNotNull(start);
+		GKAVertex startNode = getVertex(start);
+		checkNotNull(startNode);
+		return findTour(startNode);
+	}
 	
 	
 	public void printWay(List<GKAVertex> way) {
@@ -1141,21 +1215,13 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 					colorEdgeRed(tempEdge);
 				}
 			}
-			// wenn tempNodeA noch null ist, wurde gerade der erste
-			// Knoten geholt => Startknoten
-//			if (tempNodeA == null) {
 				colorVertexStart(tempNodeB);
-//				// diesen einfaerben
-//				// ... TODO
-//			}
 		}
 		// zuletzt angewaehlten Knoten einfaerben (Zielknoten)
 		// ... TODO
 		colorVertexEnd(tempNodeB);
 		
 		sendMessage(wayString.substring(0, wayString.length() - 4));
-		sendMessage("\n");
-		
 	}
 	
 		
@@ -1573,7 +1639,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 	
 	
 	public void reduceToMinimumSpanningTree() {
-		new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(this);
+		setGraph(new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(this).getGraph());
 		resetColors();
 		setLayout();
 	}

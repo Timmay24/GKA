@@ -17,8 +17,6 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 	
 	public List<GKAVertex> findRoute() {
 		
-//		hc = 0;
-		
 		List<GKAVertex> resultRoute = new ArrayList<>();
 
 		//Matrix fuer den kuerzesten Abstand zwischen Knoten
@@ -59,7 +57,7 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 				GKAVertex secondVertex = list.get(columnIndex);
 				
 				if (firstVertex != secondVertex) {
-					//Kantenlänge holen
+					// Kantenlänge holen
 					distanceTable.setValueAt(firstVertex, secondVertex, (g.getEdge(firstVertex, secondVertex).getWeight()));
 					hc++;
 				} else if (firstVertex == secondVertex) {
@@ -94,12 +92,12 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 				GKAVertex column_vertex = list.get(listindex);
 				
 				//Entfernung von einem Knoten zum anderen
-				if(line_vertex != column_vertex){
+				if (line_vertex != column_vertex) {
 					int distance = distanceTable.getValueAt(line_vertex, column_vertex);
 					
 					/*Wenn ein kürzerer Abstand von source zu Target gefunden wurde,
 					 * dann übernehme die Distance und speichere den Knoten*/
-					if(distance < shortest_distance && !resultRoute.contains(column_vertex)){
+					if (distance < shortest_distance && !resultRoute.contains(column_vertex)) {
 						shortest_distance = distance;
 						current_vertex_with_shortest_distance = column_vertex;
 					}
@@ -108,7 +106,7 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 			
 			/*Wenn der Knoten gefunden wurde, der am dichtesten vom line_vertex liegt,
 			 * wird dieser zur Rundgangliste hinzugefügt*/
-			if(current_vertex_with_shortest_distance != null && !resultRoute.contains(current_vertex_with_shortest_distance)){
+			if (current_vertex_with_shortest_distance != null && !resultRoute.contains(current_vertex_with_shortest_distance)) {
 				resultRoute.add(current_vertex_with_shortest_distance);
 			}
 			
@@ -120,9 +118,6 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		
 		//Endzeit
 		stopTimeMeasurement();
-		
-		System.out.println(resultRoute.toString());
-		System.out.println(timeElapsed);
 		
 		return resultRoute;
 	}
