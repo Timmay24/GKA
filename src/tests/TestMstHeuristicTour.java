@@ -63,8 +63,10 @@ public class TestMstHeuristicTour {
 		df = g.getEdge("df");
 		ef = g.getEdge("ef");
 		
-//		new MSTHeuristicTour().getTour(g, a);
+		new MSTHeuristicTour().getTour(g, a);
 		new MSTHeuristicTour().getTour(g, e);
+		
+		
 		
 //		new MSTHeuristicTour().getGraphCopyWithBackEdges(g);
 		
