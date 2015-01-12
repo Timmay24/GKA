@@ -134,23 +134,24 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 			} else {
 				jGraph = new ListenableUndirectedGraph<>( new Pseudograph<GKAVertex, GKAEdge>(GKAEdge.class));
 			}
-	
-			jgxAdapter = new JGraphXAdapter<GKAVertex, GKAEdge>(jGraph);
-	
-			// Der Kantenstyle wird gesondert angepasst, sollte es sich um einen
-			// gerichteten Graphen handeln
-			if (!graphType.isDirected()) {
-				jgxAdapter.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_ENDARROW, "none");
-			}
-	
-			createGraphComponent(jgxAdapter);
-			setGraphConfig();
-			
-			// just to know...
-//			for (String key : getAdapter().getStylesheet().getDefaultEdgeStyle().keySet()) {
-//				System.out.println(key + " => " + getAdapter().getStylesheet().getDefaultEdgeStyle().get(key));
-//			}
 		}
+		
+		setGraph(jGraph); // neuen Graphen "anmelden"
+	}
+	
+	
+	/**
+	 * @param jGraph
+	 */
+	public void setGraph(ListenableGraph<GKAVertex, GKAEdge> jGraph) {
+		jgxAdapter = new JGraphXAdapter<GKAVertex, GKAEdge>(jGraph);
+		
+		if (!graphType.isDirected()) {
+			jgxAdapter.getStylesheet().getDefaultEdgeStyle().put(mxConstants.STYLE_ENDARROW, "none");
+		}
+		
+		createGraphComponent(jgxAdapter);
+		setGraphConfig();
 	}
 	
 	/**
@@ -213,7 +214,7 @@ public class GKAGraph implements MessageSender, CellSender<mxCell>, AdapterUpdat
 		addMouseAdapter();
 		sendAdapterUpdate(getGraphComponent()); // Gibt Listenern Bescheid, dass der Adapter erneuert wurde.
 	}
-
+	
 	/**
 	 * Erzeugt einen Beispielgraphen (gerichtet + gewichtet)
 	 * 
