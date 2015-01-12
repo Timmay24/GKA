@@ -63,8 +63,10 @@ public class TestMstHeuristicTour {
 		df = g.getEdge("df");
 		ef = g.getEdge("ef");
 		
-		new MSTHeuristicTour().getTour(g, a);
-		new MSTHeuristicTour().getTour(g, e);
+		for(int i=0; i<100; i++){
+			new MSTHeuristicTour().getTour(g, a);
+		}
+//		new MSTHeuristicTour().getTour(g, e);
 		
 		
 		

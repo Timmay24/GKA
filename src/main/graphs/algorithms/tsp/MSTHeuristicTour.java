@@ -26,6 +26,8 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		checkNotNull(g);
 		checkNotNull(startNode);
 		
+		startTimeMeasurement();
+		
 		// MST vom Ausgangsgraphen g erzeugen und in einen gerichteten + gewichteten MST konvertieren,
 		// in dem zu jeder Kante eine Rückwärtskante existiert. (null bewirkt, dass nicht direkt der Graph g verändert wird)
 		GKAGraph mst = getGraphCopyWithBackEdges(new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g, null));
@@ -102,6 +104,7 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 			tour.addEdge(source, target, edgeName, edgeWeight);
 		}
 		
+		 stopTimeMeasurement();
 		
 		return tour;
 	}
