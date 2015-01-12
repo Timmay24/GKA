@@ -30,12 +30,10 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		// in dem zu jeder Kante eine Rückwärtskante existiert. (null bewirkt, dass nicht direkt der Graph g verändert wird)
 		GKAGraph mst = getGraphCopyWithBackEdges(new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g, null));
 		
-		// Festlegung, in welchem Graphen die Tour abgebildet werden soll
-		GKAGraph gclone = g.clone();
-		GKAGraph tour = g;
+	
+		GKAGraph tour = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
-		// Neuen Graphen (ungerichtet + gewichtet) erzeugen
-		tour.newGraph(GraphType.UNDIRECTED_WEIGHTED);
+
 		
 		
 		/**
@@ -98,7 +96,7 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 				target = tourlist.get(0);
 			}
 			
-			GKAEdge edge = gclone.getEdge(source, target);
+			GKAEdge edge = g.getEdge(source, target);
 			String edgeName = edge.getName();
 			int edgeWeight = edge.getWeight();
 			tour.addEdge(source, target, edgeName, edgeWeight);
