@@ -8,8 +8,6 @@ public class GKAAlgorithmBase implements GKAAlgorithm {
 	protected long timeElapsed;
 	protected long hc;
 
-	protected GKAAlgorithmBase() {}
-
 	/* (non-Javadoc)
 	 * @see main.graphs.algorithms.interfaces.FlowCalculator#startTimeMeasurement()
 	 */
@@ -49,5 +47,5 @@ public class GKAAlgorithmBase implements GKAAlgorithm {
 	public String toString() {
 		return this.getClass().getSimpleName();
 	}
-
+	
 }

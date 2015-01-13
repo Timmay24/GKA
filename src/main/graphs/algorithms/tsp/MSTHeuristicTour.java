@@ -15,10 +15,12 @@ import main.graphs.algorithms.GKAAlgorithmBase;
 
 public class MSTHeuristicTour extends GKAAlgorithmBase {
 
-	List<GKAVertex> tourList;
+	protected 	List<GKAVertex> 	tourList;
+	protected 	int 				tourLength;
+	protected	int					mstLength;
 	
 	public MSTHeuristicTour() {
-		tourList = new ArrayList<>();
+		reset();
 	}
 	
 	/**
@@ -32,11 +34,17 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		checkNotNull(g);
 		checkNotNull(startNode);
 		
+		reset();
+		
 		startTimeMeasurement();
 		
 		// MST vom Ausgangsgraphen g erzeugen und in einen gerichteten + gewichteten MST konvertieren,
 		// in dem zu jeder Kante eine Rückwärtskante existiert. (null bewirkt, dass nicht direkt der Graph g verändert wird)
-		GKAGraph mst = getGraphCopyWithBackEdges(new MinimumSpanningTreeCreator().applyMinimumSpanningTreeTo(g, null));
+		MinimumSpanningTreeCreator mstCreator = new MinimumSpanningTreeCreator();
+		GKAGraph mstNoDups = mstCreator.applyMinimumSpanningTreeTo(g, null);
+		mstLength = mstCreator.getMSTLength();
+		
+		GKAGraph mst = getGraphCopyWithBackEdges(mstNoDups);
 		GKAGraph tour = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
 		
 		
@@ -104,6 +112,7 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 			GKAEdge edge = g.getEdge(source, target);
 			String edgeName = edge.getName();
 			int edgeWeight = edge.getWeight();
+			tourLength += edgeWeight;
 			tour.addEdge(source, target, edgeName, edgeWeight);
 		}
 		
@@ -141,6 +150,21 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 
 	public List<GKAVertex> getTourList() {
 		return tourList;
+	}
+
+	public int getTourLength() {
+		return tourLength;
+	}
+	
+	public int getMSTLength() {
+		return mstLength;
+	}
+	
+	private void reset() {
+		tourList = new ArrayList<>();
+		tourLength = 0;
+		mstLength = 0;
+		hc = 0;
 	}
 	
 }

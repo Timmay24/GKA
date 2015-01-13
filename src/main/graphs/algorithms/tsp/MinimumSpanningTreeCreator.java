@@ -15,6 +15,12 @@ import main.graphs.algorithms.interfaces.PathFinder;
 
 public class MinimumSpanningTreeCreator extends GKAAlgorithmBase { 
 	
+	protected	int		mstLength;
+	
+	public MinimumSpanningTreeCreator() {
+		reset();
+	}
+
 	/**
 	 * @param graph Ausgangsgraph
 	 * @return Referenz auf den Zielgraphen (in diesem Fall == graph)
@@ -35,7 +41,9 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase {
 	public GKAGraph applyMinimumSpanningTreeTo(GKAGraph sourceGraph, GKAGraph targetGraph) {
 		checkNotNull(sourceGraph);
 		
-		long startTime = System.nanoTime();
+		reset();
+		
+		startTimeMeasurement();
 		
 		// Alle Kanten von g, aufsteigend sortiert, in einer Liste speichern, die abgearbeitet wird
 		List<GKAEdge> remainingEdges = getSortedListOf(sourceGraph.getGraph().edgeSet());
@@ -54,12 +62,15 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase {
 			Integer edgeWeight = currentEdge.getWeight();
 			
 			// Falls source oder target im Zielgraphen nicht vorhanden sind
+			hc++;
 			if (!targetGraph.containsVertex(sourceNode) || !targetGraph.containsVertex(targetNode)) {
 				// kann die Kante eingetragen werden
-				targetGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight, false);
+				mstLength += edgeWeight;
+				targetGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight, false); hc++;
 				
 			} else {
 				PathFinder bfs = new BFS();
+				hc += 2;
 				bfs.injectReferences(targetGraph, targetGraph.getVertex(sourceNode), targetGraph.getVertex(targetNode));
 				// Prüfen, ob es bereits einen Weg zwischen source und target Knoten gibt
 				bfs.run();
@@ -67,12 +78,14 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase {
 				// Falls es keinen Weg gibt (=> Wegliste leer)
 				if (bfs.getResultWay().isEmpty()) {
 					// kann die Kante eingetragen werden
-					targetGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight, false);
+					mstLength += edgeWeight;
+					targetGraph.addEdge(sourceNode, targetNode, edgeName, edgeWeight, false); hc++;
 				}
 			}
 		}
-		sourceGraph.sendMessage("MST erzeugt in " + (System.nanoTime() - startTime) / 1E9D + " Sekunden");
 		
+		stopTimeMeasurement();
+
 		// Referenz zum Zielgraphen zurückgeben
 		return targetGraph;
 	}
@@ -97,6 +110,15 @@ public class MinimumSpanningTreeCreator extends GKAAlgorithmBase {
 		});
 		
 		return result;
+	}
+	
+	protected void reset() {
+		mstLength = 0;
+		hc = 0;
+	}
+
+	public int getMSTLength() {
+		return mstLength;
 	}
 	
 }

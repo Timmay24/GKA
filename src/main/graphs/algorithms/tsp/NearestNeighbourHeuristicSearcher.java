@@ -11,18 +11,23 @@ import main.graphs.algorithms.interfaces.TSPAlgorithm;
 
 public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implements TSPAlgorithm {
 
-	protected GKAGraph g;
-	protected GKAVertex startNode;
-	protected List<GKAVertex> resultRoute;
+	protected 	GKAGraph 			g;
+	protected 	GKAVertex 			startNode;
+	
+	protected 	List<GKAVertex> 	resultRoute;
+	protected 	int 				routeLength;
+	
+	public NearestNeighbourHeuristicSearcher() {
+		reset();
+	}
 	
 	public List<GKAVertex> findRoute() {
 		
-		List<GKAVertex> resultRoute = new ArrayList<>();
-
+		reset();
+		
 		//Matrix fuer den kuerzesten Abstand zwischen Knoten
 		Matrix<GKAVertex, GKAVertex, Integer> distanceTable = new Matrix<>();
 		
-		//Startzeit
 		startTimeMeasurement();
 		
 		/**
@@ -41,7 +46,6 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 				}
 			}
 		}
-		
 		
 		
 		/**
@@ -107,6 +111,7 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 			/*Wenn der Knoten gefunden wurde, der am dichtesten vom line_vertex liegt,
 			 * wird dieser zur Rundgangliste hinzugefügt*/
 			if (current_vertex_with_shortest_distance != null && !resultRoute.contains(current_vertex_with_shortest_distance)) {
+				routeLength += shortest_distance;
 				resultRoute.add(current_vertex_with_shortest_distance);
 			}
 			
@@ -116,7 +121,6 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		 * Der Startknoten ist also zweimal in der Liste vorhanden.*/
 		resultRoute.add(startNode);
 		
-		//Endzeit
 		stopTimeMeasurement();
 		
 		return resultRoute;
@@ -137,34 +141,14 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		this.startNode = startNode;
 	}
 	
+	public int getRouteLength() {
+		return routeLength;
+	}
+	
+	protected void reset() {
+		resultRoute = new ArrayList<>();
+		routeLength = 0;
+		hc = 0;
+	}
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
