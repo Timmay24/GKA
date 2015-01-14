@@ -65,7 +65,7 @@ public class TestRandomRoutes {
 		System.out.println("----------------------------------");
 		System.out.println("             MST | NN");
 		System.out.println("Tourlänge:   " + gl(lengthMSTH, lengthNNHS));
-		System.out.println("Länge MSTx2: " + lengthMST);
+		System.out.println("Länge MSTx2: " + lengthMST * 2);
 		System.out.println("Laufzeit:    " + gl(runtimeMSTH, runtimeNNHS) + " ms");
 		System.out.println("--------------------------------------------------------------\n");
 	}

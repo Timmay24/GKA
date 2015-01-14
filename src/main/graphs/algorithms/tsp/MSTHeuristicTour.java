@@ -86,16 +86,14 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 		List<GKAVertex> tourlist = new ArrayList<>();
 		
 		//tourlist ohne duplikate aus der vertexlist erzeugen
-		for (Iterator<GKAVertex> iterator = vertexlist.iterator(); iterator.hasNext();) {
-			GKAVertex nextVertex = iterator.next();
-
+		for (GKAVertex nextVertex : vertexlist) {
 			if (!tourlist.contains(nextVertex)) {
 				tourlist.add(nextVertex);
 			}
 		}
 		
 		
-		/* Die Kenten zu einem neuen Graphen tour hinzufügen */
+		/* Die Kanten zu einem neuen Graphen tour hinzufügen */
 		for (int index = 0; index < tourlist.size(); index++) {
 			GKAVertex source;
 			GKAVertex target;
@@ -125,7 +123,7 @@ public class MSTHeuristicTour extends GKAAlgorithmBase {
 	}
 	
 	/**
-	 * Erzeugt ein Abbild von graph mit je einer Rückwärtskante pro norm. Kante
+	 * Erzeugt ein Abbild von graph mit je einer Rückwärtskante pro normaler Kante
 	 * 
 	 * @param graph Ausgangsgraph
 	 * @return Abbildgraphen + Rückwärtskanten
