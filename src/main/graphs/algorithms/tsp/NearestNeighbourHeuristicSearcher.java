@@ -51,8 +51,8 @@ public class NearestNeighbourHeuristicSearcher extends GKAAlgorithmBase implemen
 		/**
 		 * Aufbau der Matritzen:
 		 * Die Knotennamen sind Spalten und Zeilennamen. 
-		 * Matix Elemente: Integerwerte(=> Kantengewichtung)
-		 * Ist Spalten und zeilenname eines Feldes in der Matrix identisch so wird in dieses Feld Null hereingeschrieben,
+		 * Matrix Elemente: Integerwerte(=> Kantengewichtung)
+		 * Ist Spalten und zeilenname eines Feldes in der Matrix identisch so wird in dieses Feld null hereingeschrieben,
 		 * weil man es fuer den weiteren Algorithmus nicht verwenden muss. 
 		 */
 		for (int rowIndex = 0; rowIndex < list.size(); rowIndex++) {

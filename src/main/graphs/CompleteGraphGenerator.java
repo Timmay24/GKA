@@ -73,6 +73,8 @@ public class CompleteGraphGenerator implements Runnable {
 		g.sendMessage("/pbinit " + targetEdgeCount);
 		
 		while (!vertices.isEmpty()) {
+			// Nächsten, in der Liste stehenden, Knoten entnehmen,
+			// von dem aus Kanten zu den verbleibenden Knoten generiert werden sollen
 			GKAVertex source = vertices.remove(0);
 			
 			for (GKAVertex target : vertices) {
@@ -82,7 +84,6 @@ public class CompleteGraphGenerator implements Runnable {
 				g.sendMessage("/pbupdate " + edgeIndex);
 			}
 		}
-		
 		
 		long actualEdgeCount = g.getGraph().edgeSet().size();
 		
