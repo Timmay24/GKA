@@ -1,5 +1,6 @@
 package tests;
 
+import static junit.framework.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +73,8 @@ public class TestRandomRoutes {
 		System.out.println("Länge MSTx2: " + lengthMST * 2);
 		System.out.println("Laufzeit:    " + gl(runtimeMSTH, runtimeNNHS) + " ms");
 		System.out.println("--------------------------------------------------------------\n");
+		
+		assertFalse(lengthMSTH > (lengthMST*2) || (lengthNNHS > (lengthMST*2)));
 	}
 	
 	private String gl(long a, long b) {
