@@ -38,7 +38,10 @@ public class TestRandomRoutes {
 	private void doIteration(int vertexCount, int minWeight) {
 		// Zufälligen Graphen generieren und...
 		GKAGraph g = GKAGraph.valueOf(GraphType.UNDIRECTED_WEIGHTED);
-		new CompleteGraphGenerator(g, g.getGraphType(), vertexCount, minWeight).run();
+		CompleteGraphGenerator gen = new CompleteGraphGenerator(g, g.getGraphType(), vertexCount, minWeight);
+		gen.run();
+		long genRunTime = (long) (gen.getRunTime() / 1E6D);
+		
 		// ...Startknoten auswählen
 		GKAVertex startNode = new ArrayList<GKAVertex>(g.getGraph().vertexSet()).get((int)(Math.random() * g.getGraph().vertexSet().size()));
 		
@@ -60,6 +63,7 @@ public class TestRandomRoutes {
 		
 		System.out.println("### Durchlauf " + run++);
 		System.out.println("Knotenanzahl: " + vertexCount);
+		System.out.println("Generierung:  " + genRunTime + " ms");
 		System.out.println("MST Tour: " + wayMSTH);
 		System.out.println("NN  Tour: " + wayNNHS);
 		System.out.println("----------------------------------");
