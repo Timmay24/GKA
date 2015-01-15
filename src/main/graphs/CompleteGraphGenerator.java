@@ -15,7 +15,7 @@ public class CompleteGraphGenerator implements Runnable {
 	protected long		desiredVertexCount;
 	protected int		minWeight;
 	protected int		maxWeight;
-	protected int		triangleInequalityBuffer;
+	protected long		runtime;
 	
 	/**
 	 * KONSTRUKTOR
@@ -40,7 +40,7 @@ public class CompleteGraphGenerator implements Runnable {
 		this.desiredVertexCount = desiredVertexCount;
 		this.minWeight = minWeight;
 	}
-
+	
 	@Override
 	public void run() {
 		final 	String 	PREFIX_EDGE = "e";
@@ -49,6 +49,9 @@ public class CompleteGraphGenerator implements Runnable {
 				long	startTime = System.nanoTime();
 				
 		
+		// Laufzeitzähler zurücksetzen
+		runtime = 0;
+				
 		// Neuen Graph erzeugen
 		g.newGraph(graphType);
 		
@@ -85,6 +88,8 @@ public class CompleteGraphGenerator implements Runnable {
 			}
 		}
 		
+		runtime = System.nanoTime() - startTime;
+		
 		long actualEdgeCount = g.getGraph().edgeSet().size();
 		
 		g.sendMessage("/pbend");
@@ -94,8 +99,15 @@ public class CompleteGraphGenerator implements Runnable {
 		g.setLayout();
 	}
 	
+	/**
+	 * @return Randomiserte Zahl zwischen (minWeight) und (minWeight*2) für die Kantengewichtung
+	 */
 	private int getRandomWeight() {
 		return (int) (Math.random() * minWeight + minWeight);
+	}
+	
+	public long getRunTime() {
+		return runtime;
 	}
 	
 }
