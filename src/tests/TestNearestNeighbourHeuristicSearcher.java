@@ -77,9 +77,6 @@ public class TestNearestNeighbourHeuristicSearcher {
 		de = g.getEdge("de");
 		df = g.getEdge("df");
 		ef = g.getEdge("ef");
-		
-		
-		
 	}
 
 	
@@ -94,108 +91,9 @@ public class TestNearestNeighbourHeuristicSearcher {
 		shortestWays.add(c);
 		shortestWays.add(a);
 		
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		assertEquals(shortestWays, g.findRoute(a));
-		
-		
+		for (int i = 0; i < 100; i++) {
+			assertEquals(shortestWays, g.findRoute(a));
+		}
 		
 		shortestWays1.add(b);
 		shortestWays1.add(d);
